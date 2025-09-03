@@ -1,0 +1,15 @@
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\bin\Debug\net8.0\Лаба 2.exe
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\bin\Debug\net8.0\Лаба 2.deps.json
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\bin\Debug\net8.0\Лаба 2.runtimeconfig.json
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\bin\Debug\net8.0\Лаба 2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\bin\Debug\net8.0\Лаба 2.pdb
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.AssemblyInfoInputs.cache
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.AssemblyInfo.cs
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.csproj.CoreCompileInputs.cache
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.sourcelink.json
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\refint\Лаба 2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.pdb
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\Лаба 2.genruntimeconfig.cache
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Методы и средства криптографической защ инф\Лаба 2\obj\Debug\net8.0\ref\Лаба 2.dll
