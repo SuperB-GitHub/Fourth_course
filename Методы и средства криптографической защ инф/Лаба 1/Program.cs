@@ -12,9 +12,9 @@ class Program
             if (key.Key == ConsoleKey.D1)
             {
                 Console.Clear();
-                string text = "ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
-                //string entext = ОМИ__ЕХ__ЕЛПБН_БМЮЛРОНДОНТЮИЛУУЛО_ЗОЕЮМЬЖСИБЕ_АШИВИР_ФЕЕТО, ЕВОШ_ЬЙ_ТЫРЬОССЧАРМ, _ЯТЕТАУ_Н, ВМЬЖ.ИИ
-                string keyword = "МЫСЛЕННО";
+                //string text = "ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
+                //string text = "ОМИ__ЕХ__ЕЛПБН_БМЮЛРОНДОНТЮИЛУУЛО_ЗОЕЮМЬЖСИБЕ_АШИВИР_ФЕЕТО,ЕВОШ_ЬЙ_ТЫРЬОССЧАРМ,_ЯТЕТАУ_Н,ВМЬЖ.ИИ";
+                //string keyword = "МЫСЛЕННО";
                 int rows = 12;
                 int cols = 8;
                 Console.WriteLine($"Выберите действие:\n 1 - Шифрование\n 2 - Расшифрование");
@@ -23,12 +23,10 @@ class Program
                 if (key.Key == ConsoleKey.D1)
                 {
                     Console.Clear();
-                    //Console.WriteLine($"Введите текст:");
-                    //string? text = Console.ReadLine();
-                    //Console.WriteLine($"Введите ключ:");
-                    //string? keyword = Console.ReadLine();
-                    //int cols = keyword.Length;
-                    //int rows = 
+                    Console.WriteLine($"Введите текст:");
+                    string? text = Console.ReadLine();
+                    Console.WriteLine($"Введите ключ:");
+                    string? keyword = Console.ReadLine();
 
                     string encrypted = EncryptOne(text, keyword, rows, cols);
                     Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
@@ -36,10 +34,10 @@ class Program
                 else if (key.Key == ConsoleKey.D2)
                 {
                     Console.Clear();
-                    //Console.WriteLine($"Введите текст:");
-                    //string? text = Console.ReadLine();
-                    //Console.WriteLine($"Введите ключ:");
-                    //string? keyword = Console.ReadLine();
+                    Console.WriteLine($"Введите текст:");
+                    string? text = Console.ReadLine();
+                    Console.WriteLine($"Введите ключ:");
+                    string? keyword = Console.ReadLine();
 
                     string decrypted = DecryptOne(text, keyword, rows, cols);
                     Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
@@ -144,13 +142,11 @@ class Program
             }
         }
 
-        PrintTable(table, keyword, keyValues, result);
-        string encryptedStr = new string(result.ToArray());
-
-        return encryptedStr;
+        PrintTable(text, table, keyword, keyValues, result, true);
+        return new string([.. result]);
     }
 
-    static string DecryptOne(string? encryptedText, string? keyword, int rows, int cols)
+    static string DecryptOne(string? text, string? keyword, int rows, int cols)
     {
         char[,] table = new char[cols, rows];
 
@@ -168,23 +164,23 @@ class Program
                 {
                     if (keyValues[col] == realCol)
                     {
-                        table[col, row] = encryptedText[index++];
+                        table[col, row] = text[index++];
                         realCol++;
                     }
                 }
             }
         }
 
-        StringBuilder result = new StringBuilder();
+        List<char> result = new List<char>();
         for (int col = 0; col < cols; col++)
         {
             for (int row = 0; row < rows; row++)
             {
-                result.Append(table[col, row]);
+                result.Add(table[col, row]);
             }
         }
-        PrintTable(table, keyword, keyValues, result);
-        return result.ToString().Replace('_', ' ');
+        PrintTable(text, table, keyword, keyValues, result, false);
+        return new string([.. result]).Replace('_',' ');
     }
 
     static string DecryptTwo(string? encryptedText, int[,] square)
@@ -307,99 +303,158 @@ class Program
         return square;
     }
 
-    static void PrintTable(char[,] table, string keyword, int[] keyValues, List<char> result)
+    static void PrintTable(string? text ,char[,] table, string keyword, int[] keyValues, List<char> result, bool isEncode)
     {
         int cols = table.GetLength(0);
         int rows = table.GetLength(1);
         int cellWidth = 3;
 
-        for (int j = 0; j < 2; j++)
+        CreateHorizontal(cols, rows, cellWidth);
+
+        if (isEncode)
         {
-            Console.Write("+");
+            Console.Write("|");
             for (int i = 0; i < cols; i++)
             {
-                Console.Write(new string('-', cellWidth));
-                Console.Write("+");
-            }
-            Console.Write(new string(' ', cellWidth * 3));
-        }
-        Console.WriteLine();
-
-        Console.Write("|");
-        for (int i = 0; i < cols; i++)
-        {
-            Console.Write($" {keyword[i]} ");
-            Console.Write("|");
-        }
-
-        Console.Write(new string(' ', cellWidth * 3));
-
-        Console.Write("|");
-        for (int i = 1; i < cols+1; i++)
-        {
-            int key = 0;
-            while (keyValues[key]!=i)
-            {
-                key++;
-            }
-            Console.Write($" {keyword[key]} ");
-            Console.Write("|");
-        }
-        Console.WriteLine();
-
-        Console.Write("|");
-        for (int i = 0; i < cols; i++)
-        {
-            Console.Write($" {keyValues[i]} ");
-            Console.Write("|");
-        }
-
-        Console.Write(new string(' ', cellWidth * 3));
-
-        Console.Write("|");
-        for (int i = 0; i < cols; i++)
-        {
-            Console.Write($" {i+1} ");
-            Console.Write("|");
-        }
-        Console.WriteLine();
-
-        for (int j = 0; j < 2; j++)
-        {
-            Console.Write("+");
-            for (int i = 0; i < cols; i++)
-            {
-                Console.Write(new string('-', cellWidth));
-                Console.Write("+");
-            }
-            Console.Write(new string(' ', cellWidth * 3));
-        }
-        Console.WriteLine();
-
-        int index = 0;
-        for (int r = 0; r < rows; r++)
-        {
-            Console.Write("|");
-            for (int c = 0; c < cols; c++)
-            {
-                Console.Write($" {table[c, r]} ");
+                Console.Write($" {keyword[i]} ");
                 Console.Write("|");
             }
 
             Console.Write(new string(' ', cellWidth * 3));
 
             Console.Write("|");
+            for (int i = 1; i < cols + 1; i++)
+            {
+                int key = 0;
+                while (keyValues[key] != i)
+                {
+                    key++;
+                }
+                Console.Write($" {keyword[key]} ");
+                Console.Write("|");
+            }
+            Console.WriteLine();
+
+            Console.Write("|");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write($" {keyValues[i]} ");
+                Console.Write("|");
+            }
+
+            Console.Write(new string(' ', cellWidth * 3));
+
+            Console.Write("|");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write($" {i + 1} ");
+                Console.Write("|");
+            }
+            Console.WriteLine();
+        }
+        else
+        {
+            Console.Write("|");
+            for (int i = 1; i < cols + 1; i++)
+            {
+                int key = 0;
+                while (keyValues[key] != i)
+                {
+                    key++;
+                }
+                Console.Write($" {keyword[key]} ");
+                Console.Write("|");
+            }
             
-            for (int c = 1; c <= cols; c++)
+
+            Console.Write(new string(' ', cellWidth * 3));
+
+            Console.Write("|");
+            for (int i = 0; i < cols; i++)
             {
-                Console.Write($" {result[index]} ");
-                index++;
+                Console.Write($" {keyword[i]} ");
+                Console.Write("|");
+            }
+            Console.WriteLine();
+
+            Console.Write("|");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write($" {i + 1} ");
                 Console.Write("|");
             }
 
+            Console.Write(new string(' ', cellWidth * 3));
+
+            Console.Write("|");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write($" {keyValues[i]} ");
+                Console.Write("|");
+            }
             Console.WriteLine();
         }
 
+        CreateHorizontal(cols, rows, cellWidth);
+
+        if (isEncode)
+        {
+            int index = 0;
+            for (int r = 0; r < rows; r++)
+            {
+                Console.Write("|");
+                for (int c = 0; c < cols; c++)
+                {
+                    Console.Write($" {table[c, r]} ");
+                    Console.Write("|");
+                }
+
+                Console.Write(new string(' ', cellWidth * 3));
+
+                Console.Write("|");
+
+                for (int c = 1; c <= cols; c++)
+                {
+                    Console.Write($" {result[index]} ");
+                    index++;
+                    Console.Write("|");
+                }
+
+                Console.WriteLine();
+            }
+        }
+        else
+        {
+            int index = 0;
+            for (int r = 0; r < rows; r++)
+            {
+                Console.Write("|");
+                for (int c = 1; c <= cols; c++)
+                {
+                    Console.Write($" {text[index]} ");
+                    index++;
+                    Console.Write("|");
+                }
+
+                Console.Write(new string(' ', cellWidth * 3));
+
+                Console.Write("|");
+                for (int c = 0; c < cols; c++)
+                {
+                    Console.Write($" {table[c, r]} ");
+                    Console.Write("|");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+
+            CreateHorizontal(cols, rows, cellWidth);
+    }
+
+    static void CreateHorizontal(int cols, int rows, int cellWidth)
+    {
         for (int j = 0; j < 2; j++)
         {
             Console.Write("+");
