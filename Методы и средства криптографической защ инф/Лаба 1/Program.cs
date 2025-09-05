@@ -12,8 +12,9 @@ class Program
             if (key.Key == ConsoleKey.D1)
             {
                 Console.Clear();
-                //string text = "ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
-                //string keyword = "МЫСЛЕННО";
+                string text = "ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
+                //string entext = ОМИ__ЕХ__ЕЛПБН_БМЮЛРОНДОНТЮИЛУУЛО_ЗОЕЮМЬЖСИБЕ_АШИВИР_ФЕЕТО, ЕВОШ_ЬЙ_ТЫРЬОССЧАРМ, _ЯТЕТАУ_Н, ВМЬЖ.ИИ
+                string keyword = "МЫСЛЕННО";
                 int rows = 12;
                 int cols = 8;
                 Console.WriteLine($"Выберите действие:\n 1 - Шифрование\n 2 - Расшифрование");
@@ -22,10 +23,12 @@ class Program
                 if (key.Key == ConsoleKey.D1)
                 {
                     Console.Clear();
-                    Console.WriteLine($"Введите текст:");
-                    string? text = Console.ReadLine();
-                    Console.WriteLine($"Введите ключ:");
-                    string? keyword = Console.ReadLine();
+                    //Console.WriteLine($"Введите текст:");
+                    //string? text = Console.ReadLine();
+                    //Console.WriteLine($"Введите ключ:");
+                    //string? keyword = Console.ReadLine();
+                    //int cols = keyword.Length;
+                    //int rows = 
 
                     string encrypted = EncryptOne(text, keyword, rows, cols);
                     Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
@@ -33,14 +36,12 @@ class Program
                 else if (key.Key == ConsoleKey.D2)
                 {
                     Console.Clear();
-                    Console.WriteLine($"Введите текст:");
-                    string? text = Console.ReadLine();
-                    Console.WriteLine($"Введите ключ:");
-                    string? keyword = Console.ReadLine();
+                    //Console.WriteLine($"Введите текст:");
+                    //string? text = Console.ReadLine();
+                    //Console.WriteLine($"Введите ключ:");
+                    //string? keyword = Console.ReadLine();
 
-                    //string encrypted = EncryptOne(text, keyword, rows, cols);
                     string decrypted = DecryptOne(text, keyword, rows, cols);
-                    //Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
                     Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
                 }
                 else
@@ -64,26 +65,10 @@ class Program
                 if (key.Key == ConsoleKey.D1)
                 {
                     Console.Clear();
+                    int[,] square = CreateMagicSquare();
+
                     Console.WriteLine($"Введите текст:");
                     string? text = Console.ReadLine();
-
-                    int[,] square = new int[3, 3];
-
-                    Console.WriteLine("Введите 9 целых чисел для заполнения матрицы 3x3 (по строкам):");
-
-                    // Вводим элементы матрицы
-                    for (int i = 0; i < 3; i++)
-                    {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Console.Write($"Элемент [{i + 1},{j + 1}]: ");
-                            while (!int.TryParse(Console.ReadLine(), out square[i, j]))
-                            {
-                                Console.Write("Некорректный ввод. Введите целое число: ");
-                            }
-                        }
-                        
-                    }
 
                     string decrypted = DecryptTwo(text, square);
                     Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
@@ -92,29 +77,12 @@ class Program
                 {
                     Console.Clear();
 
+                    int[,] square = CreateMagicSquare();
+
                     Console.WriteLine($"Введите текст:");
                     string? text = Console.ReadLine();
 
-                    int[,] square = new int[3, 3];
-
-                    Console.WriteLine("Введите 9 целых чисел для заполнения матрицы 3x3 (по строкам):");
-
-                    // Вводим элементы матрицы
-                    for (int i = 0; i < 3; i++)
-                    {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Console.Write($"Элемент [{i + 1},{j + 1}]: ");
-                            while (!int.TryParse(Console.ReadLine(), out square[i, j]))
-                            {
-                                Console.Write("Некорректный ввод. Введите целое число: ");
-                            }
-                        }
-                    }
-
-                    //string decrypted = DecryptTwo(text, square);
                     string encrypted = EncryptTwo(text, square);
-                    //Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
                     Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
                 }
                 else
@@ -132,6 +100,10 @@ class Program
 
     static string EncryptOne(string? text, string? keyword, int rows, int cols)
     {
+        var indexed = keyword.Select((c, i) => new { Char = c, Index = i }).ToList();
+        var sorted = indexed.OrderBy(x => x.Char).ThenBy(x => x.Index).ToList();
+        int[] keyValues = indexed.Select(x => sorted.FindIndex(s => s.Char == x.Char && s.Index == x.Index) + 1).ToArray();
+
         string cleanText = new string(text.ToUpper().Select(c => c != ' ' ? c : '_').ToArray());
 
         char[,] table = new char[cols, rows];
@@ -152,10 +124,6 @@ class Program
             }
         }
 
-        var indexed = keyword.Select((c, i) => new { Char = c, Index = i }).ToList();
-        var sorted = indexed.OrderBy(x => x.Char).ThenBy(x => x.Index).ToList();
-
-        int[] keyValues = indexed.Select(x => sorted.FindIndex(s => s.Char == x.Char && s.Index == x.Index) + 1).ToArray();
 
         List<char> result = new List<char>();
 
@@ -176,6 +144,7 @@ class Program
             }
         }
 
+        PrintTable(table, keyword, keyValues, result);
         string encryptedStr = new string(result.ToArray());
 
         return encryptedStr;
@@ -214,7 +183,7 @@ class Program
                 result.Append(table[col, row]);
             }
         }
-
+        PrintTable(table, keyword, keyValues, result);
         return result.ToString().Replace('_', ' ');
     }
 
@@ -280,10 +249,8 @@ class Program
 
     static bool IsMagicSquare(int[,] matrix)
     {
-        // Считаем сумму первой строки (её будем сравнивать с остальными)
         int magicSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2];
 
-        // Проверка остальных строк
         for (int i = 1; i < 3; i++)
         {
             int rowSum = matrix[i, 0] + matrix[i, 1] + matrix[i, 2];
@@ -291,7 +258,6 @@ class Program
                 return false;
         }
 
-        // Проверка столбцов
         for (int j = 0; j < 3; j++)
         {
             int colSum = matrix[0, j] + matrix[1, j] + matrix[2, j];
@@ -299,17 +265,151 @@ class Program
                 return false;
         }
 
-        // Проверка главной диагонали (сверху-слева направо-вниз)
         int diag1 = matrix[0, 0] + matrix[1, 1] + matrix[2, 2];
         if (diag1 != magicSum)
             return false;
 
-        // Проверка побочной диагонали (сверху-справа налево-вниз)
         int diag2 = matrix[0, 2] + matrix[1, 1] + matrix[2, 0];
         if (diag2 != magicSum)
             return false;
 
-        // Если всё совпадает — это магический квадрат
         return true;
+    }
+
+    static int[,] CreateMagicSquare()
+    {
+        bool magic = false;
+        int[,] square = new int[3, 3];
+        while (magic == false)
+        {
+            Console.WriteLine("Введите 9 целых чисел для заполнения матрицы 3x3 (по строкам):");
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.Write($"Элемент [{i + 1},{j + 1}]: ");
+                    while (!int.TryParse(Console.ReadLine(), out square[i, j]))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+                }
+
+            }
+            magic = IsMagicSquare(square);
+            if (magic == false)
+            {
+                Console.Clear();
+                Console.WriteLine("Не магический квадрат!");
+            }
+        }
+
+        return square;
+    }
+
+    static void PrintTable(char[,] table, string keyword, int[] keyValues, List<char> result)
+    {
+        int cols = table.GetLength(0);
+        int rows = table.GetLength(1);
+        int cellWidth = 3;
+
+        for (int j = 0; j < 2; j++)
+        {
+            Console.Write("+");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write(new string('-', cellWidth));
+                Console.Write("+");
+            }
+            Console.Write(new string(' ', cellWidth * 3));
+        }
+        Console.WriteLine();
+
+        Console.Write("|");
+        for (int i = 0; i < cols; i++)
+        {
+            Console.Write($" {keyword[i]} ");
+            Console.Write("|");
+        }
+
+        Console.Write(new string(' ', cellWidth * 3));
+
+        Console.Write("|");
+        for (int i = 1; i < cols+1; i++)
+        {
+            int key = 0;
+            while (keyValues[key]!=i)
+            {
+                key++;
+            }
+            Console.Write($" {keyword[key]} ");
+            Console.Write("|");
+        }
+        Console.WriteLine();
+
+        Console.Write("|");
+        for (int i = 0; i < cols; i++)
+        {
+            Console.Write($" {keyValues[i]} ");
+            Console.Write("|");
+        }
+
+        Console.Write(new string(' ', cellWidth * 3));
+
+        Console.Write("|");
+        for (int i = 0; i < cols; i++)
+        {
+            Console.Write($" {i+1} ");
+            Console.Write("|");
+        }
+        Console.WriteLine();
+
+        for (int j = 0; j < 2; j++)
+        {
+            Console.Write("+");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write(new string('-', cellWidth));
+                Console.Write("+");
+            }
+            Console.Write(new string(' ', cellWidth * 3));
+        }
+        Console.WriteLine();
+
+        int index = 0;
+        for (int r = 0; r < rows; r++)
+        {
+            Console.Write("|");
+            for (int c = 0; c < cols; c++)
+            {
+                Console.Write($" {table[c, r]} ");
+                Console.Write("|");
+            }
+
+            Console.Write(new string(' ', cellWidth * 3));
+
+            Console.Write("|");
+            
+            for (int c = 1; c <= cols; c++)
+            {
+                Console.Write($" {result[index]} ");
+                index++;
+                Console.Write("|");
+            }
+
+            Console.WriteLine();
+        }
+
+        for (int j = 0; j < 2; j++)
+        {
+            Console.Write("+");
+            for (int i = 0; i < cols; i++)
+            {
+                Console.Write(new string('-', cellWidth));
+                Console.Write("+");
+            }
+            Console.Write(new string(' ', cellWidth * 3));
+        }
+        Console.WriteLine();
     }
 }
