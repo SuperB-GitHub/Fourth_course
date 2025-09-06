@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 class Program
 {
@@ -15,18 +16,45 @@ class Program
                 //string text = "ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
                 //string text = "ОМИ__ЕХ__ЕЛПБН_БМЮЛРОНДОНТЮИЛУУЛО_ЗОЕЮМЬЖСИБЕ_АШИВИР_ФЕЕТО,ЕВОШ_ЬЙ_ТЫРЬОССЧАРМ,_ЯТЕТАУ_Н,ВМЬЖ.ИИ";
                 //string keyword = "МЫСЛЕННО";
-                int rows = 12;
-                int cols = 8;
+                int rows = 0; //12
+                int cols = 0; //8
                 Console.WriteLine($"Выберите действие:\n 1 - Шифрование\n 2 - Расшифрование");
                 key = Console.ReadKey();
 
                 if (key.Key == ConsoleKey.D1)
                 {
                     Console.Clear();
+                    Console.WriteLine($"Введите кол-во строк: ");
+                    while (!int.TryParse(Console.ReadLine(), out rows))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
+                    Console.WriteLine($"Введите кол-во столбцов: ");
+                    while (!int.TryParse(Console.ReadLine(), out cols))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
                     Console.WriteLine($"Введите текст:");
                     string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text) || text.Length!=rows*cols)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым или не равен размерам таблицы.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine();
+
+                    }
+
                     Console.WriteLine($"Введите ключ:");
                     string? keyword = Console.ReadLine();
+                    while (string.IsNullOrEmpty(keyword) || keyword.Length!=cols)
+                    {
+                        Console.WriteLine("Ошибка: ключ не может быть пустым или не равен количесту столбцов.");
+                        Console.WriteLine($"Введите ключ:");
+                        keyword = Console.ReadLine();
+                    }
 
                     string encrypted = EncryptOne(text, keyword, rows, cols);
                     Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
@@ -34,10 +62,37 @@ class Program
                 else if (key.Key == ConsoleKey.D2)
                 {
                     Console.Clear();
+                    Console.WriteLine($"Введите кол-во строк: ");
+                    while (!int.TryParse(Console.ReadLine(), out rows))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
+                    Console.WriteLine($"Введите кол-во столбцов: ");
+                    while (!int.TryParse(Console.ReadLine(), out cols))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
                     Console.WriteLine($"Введите текст:");
                     string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text) || text.Length != rows * cols)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым или не равен размерам таблицы.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine();
+
+                    }
+
                     Console.WriteLine($"Введите ключ:");
                     string? keyword = Console.ReadLine();
+                    while (string.IsNullOrEmpty(keyword) || keyword.Length != cols)
+                    {
+                        Console.WriteLine("Ошибка: ключ не может быть пустым или не равен количесту столбцов.");
+                        Console.WriteLine($"Введите ключ:");
+                        keyword = Console.ReadLine();
+                    }
 
                     string decrypted = DecryptOne(text, keyword, rows, cols);
                     Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
@@ -67,7 +122,15 @@ class Program
 
                     Console.WriteLine($"Введите текст:");
                     string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text) || text.Length > 9)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым или > 9.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine();
+                    }
 
+                    PrintTableTwo(text, square);
                     string decrypted = DecryptTwo(text, square);
                     Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
                 }
@@ -79,8 +142,16 @@ class Program
 
                     Console.WriteLine($"Введите текст:");
                     string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text) || text.Length > 9)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым или > 9.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine();
+                    }
 
                     string encrypted = EncryptTwo(text, square);
+                    PrintTableTwo(encrypted, square);
                     Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
                 }
                 else
@@ -142,7 +213,7 @@ class Program
             }
         }
 
-        PrintTable(text, table, keyword, keyValues, result, true);
+        PrintTableOne(text, table, keyword, keyValues, result, true);
         return new string([.. result]);
     }
 
@@ -179,7 +250,7 @@ class Program
                 result.Add(table[col, row]);
             }
         }
-        PrintTable(text, table, keyword, keyValues, result, false);
+        PrintTableOne(text, table, keyword, keyValues, result, false);
         return new string([.. result]).Replace('_',' ');
     }
 
@@ -303,7 +374,7 @@ class Program
         return square;
     }
 
-    static void PrintTable(string? text ,char[,] table, string keyword, int[] keyValues, List<char> result, bool isEncode)
+    static void PrintTableOne(string? text ,char[,] table, string keyword, int[] keyValues, List<char> result, bool isEncode)
     {
         int cols = table.GetLength(0);
         int rows = table.GetLength(1);
@@ -451,6 +522,40 @@ class Program
 
 
             CreateHorizontal(cols, rows, cellWidth);
+    }
+
+    static void PrintTableTwo(string? text, int[,] table)
+    {
+        int cols = table.GetLength(0);
+        int rows = table.GetLength(1);
+        int cellWidth = 3;
+
+        CreateHorizontal(cols, rows, cellWidth);
+
+        int index = 0;
+        for (int r = 0; r < rows; r++)
+        {
+            Console.Write("|");
+            for (int c = 0; c < cols; c++)
+            {
+                Console.Write($" {table[r, c]} ");
+                Console.Write("|");
+            }
+
+            Console.Write(new string(' ', cellWidth * 3));
+
+            Console.Write("|");
+
+            for (int c = 1; c <= cols; c++)
+            {
+                Console.Write($" {text[index]} ");
+                index++;
+                Console.Write("|");
+            }
+
+            Console.WriteLine();
+            CreateHorizontal(cols, rows, cellWidth);
+        }
     }
 
     static void CreateHorizontal(int cols, int rows, int cellWidth)
