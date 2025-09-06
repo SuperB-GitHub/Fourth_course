@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 class Program
@@ -13,9 +15,9 @@ class Program
             if (key.Key == ConsoleKey.D1)
             {
                 Console.Clear();
-                //string text = "ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
-                //string text = "ОМИ__ЕХ__ЕЛПБН_БМЮЛРОНДОНТЮИЛУУЛО_ЗОЕЮМЬЖСИБЕ_АШИВИР_ФЕЕТО,ЕВОШ_ЬЙ_ТЫРЬОССЧАРМ,_ЯТЕТАУ_Н,ВМЬЖ.ИИ";
-                //string keyword = "МЫСЛЕННО";
+                string text = ""; //"ИЛЛЮЗИИ, ЧЕМ БОЛЬШЕ О НИХ ДУМАЕШЬ, ИМЕЮТ СВОЙСТВО МНОЖИТЬСЯ, ПРИОБРЕТАТЬ БОЛЕЕ ВЫРАЖЕННУЮ ФОРМУ.";
+                //string text; //"ОМИ__ЕХ__ЕЛПБН_БМЮЛРОНДОНТЮИЛУУЛО_ЗОЕЮМЬЖСИБЕ_АШИВИР_ФЕЕТО,ЕВОШ_ЬЙ_ТЫРЬОССЧАРМ,_ЯТЕТАУ_Н,ВМЬЖ.ИИ";
+                string keyword = ""; //"МЫСЛЕННО";
                 int rows = 0; //12
                 int cols = 0; //8
                 Console.WriteLine($"Выберите действие:\n 1 - Шифрование\n 2 - Расшифрование");
@@ -23,78 +25,16 @@ class Program
 
                 if (key.Key == ConsoleKey.D1)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Введите кол-во строк: ");
-                    while (!int.TryParse(Console.ReadLine(), out rows))
-                    {
-                        Console.Write("Некорректный ввод. Введите целое число: ");
-                    }
+                    InputOne(ref rows, ref cols, ref text, ref keyword);
 
-                    Console.WriteLine($"Введите кол-во столбцов: ");
-                    while (!int.TryParse(Console.ReadLine(), out cols))
-                    {
-                        Console.Write("Некорректный ввод. Введите целое число: ");
-                    }
-
-                    Console.WriteLine($"Введите текст:");
-                    string? text = Console.ReadLine();
-                    while (string.IsNullOrEmpty(text) || text.Length!=rows*cols)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Ошибка: текст не может быть пустым или не равен размерам таблицы.");
-                        Console.WriteLine($"Введите текст:");
-                        text = Console.ReadLine();
-
-                    }
-
-                    Console.WriteLine($"Введите ключ:");
-                    string? keyword = Console.ReadLine();
-                    while (string.IsNullOrEmpty(keyword) || keyword.Length!=cols)
-                    {
-                        Console.WriteLine("Ошибка: ключ не может быть пустым или не равен количесту столбцов.");
-                        Console.WriteLine($"Введите ключ:");
-                        keyword = Console.ReadLine();
-                    }
-
-                    string encrypted = EncryptOne(text, keyword, rows, cols);
+                    string encrypted = EncryptOne(text, keyword.ToUpper(), rows, cols);
                     Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
                 }
                 else if (key.Key == ConsoleKey.D2)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"Введите кол-во строк: ");
-                    while (!int.TryParse(Console.ReadLine(), out rows))
-                    {
-                        Console.Write("Некорректный ввод. Введите целое число: ");
-                    }
+                    InputOne(ref rows, ref cols, ref text, ref keyword);
 
-                    Console.WriteLine($"Введите кол-во столбцов: ");
-                    while (!int.TryParse(Console.ReadLine(), out cols))
-                    {
-                        Console.Write("Некорректный ввод. Введите целое число: ");
-                    }
-
-                    Console.WriteLine($"Введите текст:");
-                    string? text = Console.ReadLine();
-                    while (string.IsNullOrEmpty(text) || text.Length != rows * cols)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Ошибка: текст не может быть пустым или не равен размерам таблицы.");
-                        Console.WriteLine($"Введите текст:");
-                        text = Console.ReadLine();
-
-                    }
-
-                    Console.WriteLine($"Введите ключ:");
-                    string? keyword = Console.ReadLine();
-                    while (string.IsNullOrEmpty(keyword) || keyword.Length != cols)
-                    {
-                        Console.WriteLine("Ошибка: ключ не может быть пустым или не равен количесту столбцов.");
-                        Console.WriteLine($"Введите ключ:");
-                        keyword = Console.ReadLine();
-                    }
-
-                    string decrypted = DecryptOne(text, keyword, rows, cols);
+                    string decrypted = DecryptOne(text, keyword.ToUpper(), rows, cols);
                     Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
                 }
                 else
@@ -124,7 +64,6 @@ class Program
                     string? text = Console.ReadLine();
                     while (string.IsNullOrEmpty(text) || text.Length > 9)
                     {
-                        Console.Clear();
                         Console.WriteLine("Ошибка: текст не может быть пустым или > 9.");
                         Console.WriteLine($"Введите текст:");
                         text = Console.ReadLine();
@@ -144,7 +83,6 @@ class Program
                     string? text = Console.ReadLine();
                     while (string.IsNullOrEmpty(text) || text.Length > 9)
                     {
-                        Console.Clear();
                         Console.WriteLine("Ошибка: текст не может быть пустым или > 9.");
                         Console.WriteLine($"Введите текст:");
                         text = Console.ReadLine();
@@ -167,7 +105,41 @@ class Program
         }
     }
 
-    static string EncryptOne(string? text, string? keyword, int rows, int cols)
+    static void InputOne(ref int rows, ref int cols, ref string text, ref string keyword)
+    {
+        Console.Clear();
+        Console.WriteLine($"Введите кол-во строк: ");
+        while (!int.TryParse(Console.ReadLine(), out rows))
+        {
+            Console.Write("Некорректный ввод. Введите целое число: ");
+        }
+
+        Console.WriteLine($"Введите кол-во столбцов: ");
+        while (!int.TryParse(Console.ReadLine(), out cols))
+        {
+            Console.Write("Некорректный ввод. Введите целое число: ");
+        }
+
+        Console.WriteLine($"Введите текст:");
+        text = Console.ReadLine()!;
+        while (string.IsNullOrEmpty(text) || text.Length != rows * cols)
+        {
+            Console.WriteLine("Ошибка: текст не может быть пустым или не равен размерам таблицы.");
+            Console.WriteLine($"Введите текст:");
+            text = Console.ReadLine()!;
+        }
+
+        Console.WriteLine($"Введите ключ:");
+        keyword = Console.ReadLine()!;
+        while (string.IsNullOrEmpty(keyword) || keyword.Length != cols)
+        {
+            Console.WriteLine("Ошибка: ключ не может быть пустым или не равен количесту столбцов.");
+            Console.WriteLine($"Введите ключ:");
+            keyword = Console.ReadLine()!;
+        }
+    }
+
+    static string EncryptOne(string text, string keyword, int rows, int cols)
     {
         var indexed = keyword.Select((c, i) => new { Char = c, Index = i }).ToList();
         var sorted = indexed.OrderBy(x => x.Char).ThenBy(x => x.Index).ToList();
@@ -217,7 +189,7 @@ class Program
         return new string([.. result]);
     }
 
-    static string DecryptOne(string? text, string? keyword, int rows, int cols)
+    static string DecryptOne(string text, string keyword, int rows, int cols)
     {
         char[,] table = new char[cols, rows];
 
@@ -254,7 +226,7 @@ class Program
         return new string([.. result]).Replace('_',' ');
     }
 
-    static string DecryptTwo(string? encryptedText, int[,] square)
+    static string DecryptTwo(string encryptedText, int[,] square)
     {
         var positions = new (int row, int col)[9];
         for (int i = 0; i < 3; i++)
@@ -282,7 +254,7 @@ class Program
         return result;
     }
 
-    static string EncryptTwo(string? text, int[,] square)
+    static string EncryptTwo(string text, int[,] square)
     {
         var positions = new (int row, int col)[9];
         for (int i = 0; i < 3; i++)
@@ -312,35 +284,6 @@ class Program
         }
 
         return result.ToString();
-    }
-
-    static bool IsMagicSquare(int[,] matrix)
-    {
-        int magicSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2];
-
-        for (int i = 1; i < 3; i++)
-        {
-            int rowSum = matrix[i, 0] + matrix[i, 1] + matrix[i, 2];
-            if (rowSum != magicSum)
-                return false;
-        }
-
-        for (int j = 0; j < 3; j++)
-        {
-            int colSum = matrix[0, j] + matrix[1, j] + matrix[2, j];
-            if (colSum != magicSum)
-                return false;
-        }
-
-        int diag1 = matrix[0, 0] + matrix[1, 1] + matrix[2, 2];
-        if (diag1 != magicSum)
-            return false;
-
-        int diag2 = matrix[0, 2] + matrix[1, 1] + matrix[2, 0];
-        if (diag2 != magicSum)
-            return false;
-
-        return true;
     }
 
     static int[,] CreateMagicSquare()
@@ -374,7 +317,36 @@ class Program
         return square;
     }
 
-    static void PrintTableOne(string? text ,char[,] table, string keyword, int[] keyValues, List<char> result, bool isEncode)
+    static bool IsMagicSquare(int[,] matrix)
+    {
+        int magicSum = matrix[0, 0] + matrix[0, 1] + matrix[0, 2];
+
+        for (int i = 1; i < 3; i++)
+        {
+            int rowSum = matrix[i, 0] + matrix[i, 1] + matrix[i, 2];
+            if (rowSum != magicSum)
+                return false;
+        }
+
+        for (int j = 0; j < 3; j++)
+        {
+            int colSum = matrix[0, j] + matrix[1, j] + matrix[2, j];
+            if (colSum != magicSum)
+                return false;
+        }
+
+        int diag1 = matrix[0, 0] + matrix[1, 1] + matrix[2, 2];
+        if (diag1 != magicSum)
+            return false;
+
+        int diag2 = matrix[0, 2] + matrix[1, 1] + matrix[2, 0];
+        if (diag2 != magicSum)
+            return false;
+
+        return true;
+    }
+
+    static void PrintTableOne(string text ,char[,] table, string keyword, int[] keyValues, List<char> result, bool isEncode)
     {
         int cols = table.GetLength(0);
         int rows = table.GetLength(1);
@@ -524,7 +496,7 @@ class Program
             CreateHorizontal(cols, rows, cellWidth);
     }
 
-    static void PrintTableTwo(string? text, int[,] table)
+    static void PrintTableTwo(string text, int[,] table)
     {
         int cols = table.GetLength(0);
         int rows = table.GetLength(1);
