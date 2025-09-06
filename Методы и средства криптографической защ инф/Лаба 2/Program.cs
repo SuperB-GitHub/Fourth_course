@@ -14,8 +14,9 @@ class Program
             {
                 Console.Clear();
 
-                string text = "МЫ ДОЛЖНЫ ПРИЗНАТЬ ОЧЕВИДНОЕ: ПОНИМАЮТ ЛИШЬ ТЕ, КТО ХОЧЕТ ПОНЯТЬ";
-                int shift = 7;
+                //string text = "МЫ ДОЛЖНЫ ПРИЗНАТЬ ОЧЕВИДНОЕ: ПОНИМАЮТ ЛИШЬ ТЕ, КТО ХОЧЕТ ПОНЯТЬ";
+                //УВ КХТНФВ ЦЧПОФЖЩГ ХЮЛИПКФХЛ: ЦХФПУЖЕЩ ТПЯГ ЩЛ, СЩХ ЬХЮЛЩ ЦХФЁЩГ
+                //int shift = 7;
 
                 Console.WriteLine($"Выберите действие:\n 1 - Шифрование\n 2 - Дешифрование");
                 key = Console.ReadKey();
@@ -23,17 +24,50 @@ class Program
                 if (key.Key == ConsoleKey.D1)
                 {
                     Console.Clear();
-                    Console.WriteLine($"Текст: {text}\n");
+
+                    Console.WriteLine($"Введите текст:");
+                    string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine()!;
+                    }
+
+                    Console.WriteLine($"Введите число сдвигов: ");
+                    int shift;
+                    while (!int.TryParse(Console.ReadLine(), out shift))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
                     string encrypted = CaesarOne(text, shift);
-                    Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
+                    Console.WriteLine($"\nЗашифрованный текст: {encrypted}\n");
                 }
                 else if (key.Key == ConsoleKey.D2)
                 {
                     Console.Clear();
-                    string encrypted = CaesarOne(text, shift);
-                    string decrypted = CaesarOne(encrypted, -shift);
-                    Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
-                    Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
+
+                    Console.WriteLine($"Введите текст:");
+                    string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine()!;
+                    }
+
+                    Console.WriteLine($"Введите число сдвигов: ");
+                    int shift;
+                    while (!int.TryParse(Console.ReadLine(), out shift))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
+                    string decrypted = CaesarOne(text, -shift);
+                    Console.WriteLine($"\nРасшифрованный текст: {decrypted}\n");
                 }
                 else
                 {
