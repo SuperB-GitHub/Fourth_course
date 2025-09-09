@@ -102,7 +102,7 @@ class Program
 
                     Console.WriteLine($"Введите число a: ");
                     int a;
-                    while (!int.TryParse(Console.ReadLine() , out a) || NOD(a, 33) != 1)
+                    while (!int.TryParse(Console.ReadLine(), out a) || NOD(a, 33) != 1)
                     {
                         Console.Write("Некорректный ввод. Введите целое и взаимно простое к 33 число: ");
                     }
@@ -121,10 +121,34 @@ class Program
                 else if (key.Key == ConsoleKey.D2)
                 {
                     Console.Clear();
-                    //string decrypted = DecryptTwo(text, square);
-                    //string encrypted = EncryptTwo(decrypted, square);
-                    //Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
-                    //Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
+
+                    Console.WriteLine($"Введите текст:");
+                    string? text = Console.ReadLine();
+                    while (string.IsNullOrEmpty(text))
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Ошибка: текст не может быть пустым.");
+                        Console.WriteLine($"Введите текст:");
+                        text = Console.ReadLine()!;
+                    }
+
+                    Console.WriteLine($"Введите число a: ");
+                    int a;
+                    while (!int.TryParse(Console.ReadLine(), out a) || NOD(a, 33) != 1)
+                    {
+                        Console.Write("Некорректный ввод. Введите целое и взаимно простое к 33 число: ");
+                    }
+
+                    Console.WriteLine($"Введите число b: ");
+                    int b;
+                    while (!int.TryParse(Console.ReadLine(), out b))
+                    {
+                        Console.Write("Некорректный ввод. Введите целое число: ");
+                    }
+
+                    PrintCaesarTwoTable(a, b);
+                    string decrypted = AffineCaesarEncrypt(text, a, b);
+                    Console.WriteLine($"Расшифрованный текст: {decrypted}\n");
                 }
                 else
                 {
@@ -380,5 +404,42 @@ class Program
         }
         Console.WriteLine();
         CreateHorizontal(Alphabet.Length, 2);
+    }
+
+    static string BuildAlphabetWithShiftAndKeyword(int shift, string keyword)
+    {
+        string alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        int n = alphabet.Length;
+
+        string shiftedStart = "";
+        for (int i = 0; i < n; i++)
+        {
+            int newIndex = (i - shift + n) % n;
+            shiftedStart += alphabet[newIndex];
+        }
+
+        HashSet<char> keyChars = new HashSet<char>();
+        string uniqueKeyword = "";
+
+        foreach (char c in keyword.ToUpper())
+        {
+            if (alphabet.Contains(c) && keyChars.Add(c))
+            {
+                uniqueKeyword += c;
+            }
+        }
+
+        string remaining = "";
+        foreach (char c in alphabet)
+        {
+            if (!keyChars.Contains(c))
+            {
+                remaining += c;
+            }
+        }
+
+        string result = shiftedStart.Substring(0, shift) + uniqueKeyword + remaining;
+
+        return result;
     }
 }
