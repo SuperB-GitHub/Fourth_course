@@ -114,7 +114,7 @@ class Program
                         Console.Write("Некорректный ввод. Введите целое число: ");
                     }
 
-                    //PrintCaesarTwoTable(a);
+                    PrintCaesarTwoTable(a, b);
                     string encrypted = AffineCaesarEncrypt(text, a, b);
                     Console.WriteLine($"\nЗашифрованный текст: {encrypted}\n");
                 }
@@ -272,7 +272,7 @@ class Program
         CreateHorizontal(Alphabet.Length, 1);
     }
 
-    public static string AffineCaesarEncrypt(string text, int a, int b)
+    static string AffineCaesarEncrypt(string text, int a, int b)
     {
         string alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
         int n = alphabet.Length;
@@ -293,7 +293,7 @@ class Program
 
                     char encryptedChar = alphabet[encryptedIndex];
 
-                    result += encryptedChar);
+                    result += encryptedChar;
                 }
                 else
                 {
@@ -309,7 +309,7 @@ class Program
         return result;
     }
 
-    private static int NOD(int a, int b)
+    static int NOD(int a, int b)
     {
         a = Math.Abs(a);
         b = Math.Abs(b);
@@ -320,5 +320,65 @@ class Program
             a = temp;
         }
         return a;
+    }
+
+    static void PrintCaesarTwoTable(int a, int b)
+    {
+        string Alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+
+        Console.WriteLine("Таблица замены (Афинный шифр Цезаря):");
+        CreateHorizontal(Alphabet.Length, 2);
+
+        Console.Write("|");
+        for (int _ = 0; _ < Alphabet.Length; _++)
+        {
+            if(_ < 10)
+            {
+                Console.Write($"{_} |");
+            }
+            else
+            {
+                Console.Write($"{_}|");
+            }
+                
+        }
+        Console.WriteLine();
+        CreateHorizontal(Alphabet.Length, 2);
+
+        Console.Write("|");
+        foreach (char c in Alphabet)
+        {
+            Console.Write($"{c} |");
+        }
+        Console.WriteLine();
+
+        CreateHorizontal(Alphabet.Length, 2);
+
+        List<int> newInds = [];
+        Console.Write("|");
+        for (int i = 0; i < Alphabet.Length; i++)
+        {
+            int newIndex = (a * i + b) % Alphabet.Length;
+            newInds.Add(newIndex);
+            Console.Write($"{Alphabet[newIndex]} |");
+        }
+        Console.WriteLine();
+
+        CreateHorizontal(Alphabet.Length, 2);
+
+        Console.Write("|");
+        foreach (int i in newInds)
+        {
+            if (i < 10)
+            {
+                Console.Write($"{i} |");
+            }
+            else
+            {
+                Console.Write($"{i}|");
+            }
+        }
+        Console.WriteLine();
+        CreateHorizontal(Alphabet.Length, 2);
     }
 }
