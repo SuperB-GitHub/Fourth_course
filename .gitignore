@@ -1,5 +1,6 @@
 # Visual Studio files
 *.suo
+.suo
 *.user
 *.userosscache
 *.sln.docstates
@@ -12,6 +13,7 @@
 # Build output and debug files
 bin/
 obj/
+v17/
 *.exe
 *.pdb
 *.dll
