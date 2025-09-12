@@ -52,7 +52,7 @@ namespace Лаба_1
             List<int> qs = new List<int>();
 
             int i = 1;
-
+            Console.WriteLine($"\nОбычный алгоритм Евклида:");
             while (true)
             {
                 int dividend = rs[i - 1];
@@ -61,6 +61,7 @@ namespace Лаба_1
                 int q = dividend / divisor;
                 int r = dividend % divisor;
 
+                Console.WriteLine($"{dividend} = {q} * {divisor} + {r}");
                 qs.Add(q);
 
                 if (r == 0)
@@ -78,10 +79,12 @@ namespace Лаба_1
             List<int> fs = isX ? new List<int> { 1, 0 } : new List<int> { 0, 1 };
 
             int i = 1;
-
+            Console.WriteLine(isX ? $"\nПоиск X:" : $"\nПоиск Y:");
             while (fs.Count != qs.Count+1)
             {
                 int f = fs[i - 1] - qs[i - 1] * fs[i];
+                Console.Write(isX ? $"x{i + 1}" : $"y{i + 1}");
+                Console.WriteLine($" = {fs[i - 1]} - {qs[i - 1]} * {fs[i]} = {f}");
                 fs.Add(f);
                 i++;
             }
@@ -105,7 +108,7 @@ namespace Лаба_1
         static void CreateTable(List<int> rs, List<int> qs, List<int> xs, List<int> ys)
         {
             Console.WriteLine();
-            int intrv = rs.First().ToString().Length + 2;
+            int intrv = rs.First().ToString().Length;
             CreateHorizontal(5, intrv);
             Console.WriteLine($"|{"i".PadRight(intrv)}|{"r".PadRight(intrv)}|{"x".PadRight(intrv)}|{"y".PadRight(intrv)}|{"q".PadRight(intrv)}|");
             CreateHorizontal(5, intrv);
