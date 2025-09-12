@@ -1,14 +1,17 @@
-# Visual Studio files
+# Visual Studio settings and layout files
 *.suo
 *.user
 *.userosscache
 *.vssscc
 *.vsixmanifest
 
-# Document layout and UI state files
+# Document layout backup files (VS 2022+)
 *.DocumentLayout.backup.json
 *.DocumentLayout.json
-*.layout.json
+
+# VS-specific folders and subfolders
+.vs/
+.vscode/
 
 # Build output and debug files
 bin/
@@ -22,7 +25,6 @@ obj/
 *.tmp
 
 # IDE-specific files
-.vscode/
 *.vshost.exe
 *.vshost.exe.config
 
