@@ -1,0 +1,53 @@
+# Visual Studio files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vssscc
+*.vsscc
+*.vssscc
+*.vssscc
+*.vssscc
+
+# Build output and debug files
+bin/
+obj/
+*.exe
+*.pdb
+*.dll
+*.json
+*.cache
+*.log
+*.tmp
+
+# VS Code settings
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
+*.backup
+
+# IDE-specific files
+*.layout.json
+*.vsixmanifest
+*.vshost.exe
+*.vshost.exe.config
+
+# .NET Core specific
+[Build]/
+[Debug]/
+[Release]/
+*.csproj.user
+*.snk
+
+# Generated files
+*.vsdx
+*.vssscc
+*.vssscc
+*.vssscc
+*.vssscc
+
+# Other temporary or auto-generated files
+Thumbs.db
+.DS_Store

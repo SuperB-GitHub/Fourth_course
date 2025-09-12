@@ -28,7 +28,7 @@ class Program
                     InputOne(ref rows, ref cols, ref text, ref keyword);
 
                     string encrypted = EncryptOne(text, keyword.ToUpper(), rows, cols);
-                    Console.WriteLine($"Зашифрованный текст: {encrypted}\n");
+                    Console.WriteLine($"Зашифрованный текст: {encrypted.Replace("__", "_|_")}\n");
                 }
                 else if (key.Key == ConsoleKey.D2)
                 {
@@ -121,12 +121,12 @@ class Program
         }
 
         Console.WriteLine($"Введите текст:");
-        text = Console.ReadLine()!;
+        text = Console.ReadLine()!.Replace("_|_", "__");
         while (string.IsNullOrEmpty(text) || text.Length != rows * cols)
         {
             Console.WriteLine("Ошибка: текст не может быть пустым или не равен размерам таблицы.");
             Console.WriteLine($"Введите текст:");
-            text = Console.ReadLine()!;
+            text = Console.ReadLine()!.Replace("_|_", "__");
         }
 
         Console.WriteLine($"Введите ключ:");
