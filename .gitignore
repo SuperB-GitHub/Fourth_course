@@ -1,19 +1,18 @@
 # Visual Studio files
 *.suo
-.suo
 *.user
 *.userosscache
-*.sln.docstates
 *.vssscc
-*.vsscc
-*.vssscc
-*.vssscc
-*.vssscc
+*.vsixmanifest
+
+# Document layout and UI state files
+*.DocumentLayout.backup.json
+*.DocumentLayout.json
+*.layout.json
 
 # Build output and debug files
 bin/
 obj/
-v17/
 *.exe
 *.pdb
 *.dll
@@ -22,17 +21,8 @@ v17/
 *.log
 *.tmp
 
-# VS Code settings
-.vscode/
-
-# Temporary files
-*.tmp
-*.temp
-*.backup
-
 # IDE-specific files
-*.layout.json
-*.vsixmanifest
+.vscode/
 *.vshost.exe
 *.vshost.exe.config
 
@@ -46,10 +36,7 @@ v17/
 # Generated files
 *.vsdx
 *.vssscc
-*.vssscc
-*.vssscc
-*.vssscc
 
-# Other temporary or auto-generated files
+# Temporary files
 Thumbs.db
 .DS_Store
