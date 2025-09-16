@@ -2,7 +2,7 @@
 {
     static void Main()
     {
-        List<Книга> книгаs = new List<Книга>
+        List<Книга> книги = new List<Книга>
         {
            new Книга(1001, "Лев Толстой", 2005, 120),
            new Книга(1002, "Фёдор Достоевский", 2010, 80),
@@ -17,8 +17,14 @@
         };
 
         Console.Write("Введите имя автора: ");
-        string Автор = Console.ReadLine();
-        int Количество = ПодсчётЭкземпляров(книгаs, Автор);
+        string? Автор = Console.ReadLine();
+        while (string.IsNullOrEmpty(Автор))
+        {
+            Console.WriteLine("Ошибка: текст не может быть пустым.");
+            Console.WriteLine("Введите имя автора:");
+            Автор = Console.ReadLine()!;
+        }
+        int Количество = ПодсчётЭкземпляров(книги, Автор);
 
         Console.WriteLine($"Общее количество экземпляров книг автора \"{Автор}\", изданных с 2007 по 2016 гг.: {Количество}");
         Console.ReadKey();
@@ -26,15 +32,15 @@
 
     static int ПодсчётЭкземпляров(List<Книга> книги, string автор)
     {
-        int sum = 0;
+        int сумма = 0;
         foreach (var книга in книги)
         {
             if (книга.Автор.Contains(автор) && книга.Год >= 2007 && книга.Год <= 2016)
             {
-                sum += книга.Кол_во;
+                сумма += книга.Кол_во;
             }
         }
-        return sum;
+        return сумма;
     }
 }
 
@@ -52,16 +58,14 @@ class Книга
         _Год = Год;
         _Кол_во = Кол_во;
     }
-
     public long ЕРН
     {
         get { return _ЕРН; }
         set { _ЕРН = value; }
     }
-
     public string Автор
     {
-        get { return _Автор; }
+        get { return _Автор!; }
         set
         {
             if (value.Length > 20)
@@ -74,19 +78,9 @@ class Книга
         get { return _Год; }
         set { _Год = value; }
     }
-
     public int Кол_во
     {
         get { return _Кол_во; }
         set { _Кол_во = value; }
-    }
-
-    public void ВыводИнфо()
-    {
-        Console.WriteLine($"Единый регистрационный номер: {_ЕРН}");
-        Console.WriteLine($"Автор: {_Автор}");
-        Console.WriteLine($"Год издания: {_Год}");
-        Console.WriteLine($"Количество экземпляров: {_Кол_во}");
-        Console.WriteLine(new string('-', 30));
     }
 }
