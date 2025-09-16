@@ -12,3 +12,18 @@ C:\Users\mrcov\Desktop\Задания 7 семестр\Надежность и �
 C:\Users\mrcov\Desktop\Задания 7 семестр\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.pdb
 C:\Users\mrcov\Desktop\Задания 7 семестр\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.genruntimeconfig.cache
 C:\Users\mrcov\Desktop\Задания 7 семестр\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\ref\Lab2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\bin\Debug\net8.0\Lab2.exe
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\bin\Debug\net8.0\Lab2.deps.json
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\bin\Debug\net8.0\Lab2.runtimeconfig.json
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\bin\Debug\net8.0\Lab2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\bin\Debug\net8.0\Lab2.pdb
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.AssemblyInfoInputs.cache
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.AssemblyInfo.cs
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.csproj.CoreCompileInputs.cache
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.sourcelink.json
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\refint\Lab2.dll
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.pdb
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\Lab2.genruntimeconfig.cache
+C:\Users\ForMi\OneDrive\Desktop\Fourth_course\Надежность и безопасность ПО\ПЗ № 2 Оценка характеристик программ с использованием метрики Джилба\Lab2\obj\Debug\net8.0\ref\Lab2.dll
