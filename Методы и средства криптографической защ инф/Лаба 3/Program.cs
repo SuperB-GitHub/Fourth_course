@@ -17,7 +17,8 @@ class Program
                 Input(out string text, out string keyword);
                 PrintTable(keyword);
 
-                ToBigrams(text);
+                List<string> bigrams = ToBigrams(text);
+                Console.WriteLine(string.Join(" ", bigrams));
 
             }
             else if (key.Key == ConsoleKey.D2)
@@ -27,7 +28,8 @@ class Program
                 Input(out string text, out string keyword);
                 PrintTable(keyword);
 
-                ToBigrams(text);
+                List<string> bigrams = ToBigrams(text);
+                Console.WriteLine(string.Join(" ", bigrams));
             }
             else
             {
@@ -62,8 +64,7 @@ class Program
     }
     static void PrintTable(string keyword)
     {
-        string newAlph = BuildAlphabetWithShiftAndKeyword(0, keyword);
-        newAlph = newAlph.Remove(newAlph.IndexOf('Ё'), 1);
+        string newAlph = BuildNewAlphWithKeyword(keyword);
 
         Console.WriteLine("Таблица замены (Шифр Трисемуса):");
 
@@ -80,9 +81,9 @@ class Program
             CreateHorizontal(8, 1);
         }
     }
-    static string BuildAlphabetWithShiftAndKeyword(int shift, string keyword)
+    static string BuildNewAlphWithKeyword(string keyword)
     {
-        string alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        string alphabet = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
         int n = alphabet.Length;
 
         HashSet<char> keyChars = new HashSet<char>();
@@ -105,10 +106,7 @@ class Program
             }
         }
 
-        string shiftedStart = remaining.Substring(remaining.Length - shift);
-        string shiftedEnd = remaining.Substring(0, remaining.Length - shift);
-
-        string result = shiftedStart + uniqueKeyword + shiftedEnd;
+        string result = uniqueKeyword + remaining;
 
         return result;
     }
@@ -124,60 +122,61 @@ class Program
     }
     static List<string> ToBigrams(string text)
     {
-        string alph = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        string alph = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
         List<string> bigramms = new List<string>();
         string bigramm = "";
 
         foreach (char c in text.ToUpper())
         {
-            if (alph.Contains(c) && bigramm.Length <= 1 && !bigramm.Contains(c)) 
+            if (alph.Contains(c))
             {
-                bigramm += c;
+                if (bigramm.Contains(c))
+                {
+                    bigramm += "Ъ";
+                    bigramms.Add(bigramm);
+
+                    bigramm = "";
+                    bigramm += c;
+                }
+                else
+                {
+                    bigramm += c;
+                }
             }
-            else if (alph.Contains(c) && bigramm.Length <= 1 && ())
+            else if (c != ' ')
             {
-                
-            }
-            else
-            {
+                if (bigramm.Length == 1)
+                {
+                    bigramm += "Ъ";
+                    bigramms.Add(bigramm);
+
+                    bigramm = "";
+                }
+
+                bigramms.Add(c.ToString());
             }
 
             if (bigramm.Length == 2)
             {
-                
+                bigramms.Add(bigramm);
+                bigramm = "";
             }
         }
 
-        foreach (char c in text.ToUpper())
-            if (c >= 'А' && c <= 'Я')
-                sb.Append(c);
-
-        string clean = sb.ToString();
-        
-        int i = 0;
-
-        while (i < clean.Length)
+        if (bigramm.Length == 1)
         {
-            if (i + 1 >= clean.Length)
-            {
-                // Одна буква осталась — добавляем Ъ
-                bigrams.Add(clean[i] + "Ъ");
-                i++;
-            }
-            else if (clean[i] == clean[i + 1])
-            {
-                // Две одинаковые — вставляем Ъ между
-                bigrams.Add(clean[i] + "Ъ");
-                i++; // Переходим ко второй (она станет началом следующей пары)
-            }
-            else
-            {
-                // Нормальная пара
-                bigrams.Add(clean[i] + "" + clean[i + 1]);
-                i += 2;
-            }
+            bigramm += "Ъ";
+            bigramms.Add(bigramm);
+            bigramm = "";
         }
 
-        return bigrams;
+        return bigramms;
+    }
+    static string EncryptPlayfair(string text, string keyword)
+    {
+        string alph = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        string newAlph = BuildNewAlphWithKeyword(keyword);
+        List<string> bigrams = ToBigrams(text);
+
     }
 }
