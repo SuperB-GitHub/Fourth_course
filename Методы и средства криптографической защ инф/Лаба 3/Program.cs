@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 class Program
 {
@@ -17,10 +18,7 @@ class Program
                 Input(out string text, out string keyword);
                 PrintTable(keyword);
 
-                List<string> bigrams = ToBigrams(text);
-                Console.WriteLine(string.Join(" ", bigrams));
-
-
+                Console.WriteLine($"\nЗашифрованный текст:\n{EncryptPlayfair(text, keyword, true)}");
             }
             else if (key.Key == ConsoleKey.D2)
             {
@@ -29,8 +27,7 @@ class Program
                 Input(out string text, out string keyword);
                 PrintTable(keyword);
 
-                List<string> bigrams = ToBigrams(text);
-                Console.WriteLine(string.Join(" ", bigrams));
+                Console.WriteLine($"\nРасшифрованный текст:\n{EncryptPlayfair(text, keyword, false)}");
             }
             else
             {
@@ -173,34 +170,78 @@ class Program
 
         return bigramms;
     }
-    static string EncryptPlayfair(string text, string keyword)
+    static string EncryptPlayfair(string text, string keyword, bool isEncrypt)
     {
-        string alph = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
         string newAlph = BuildNewAlphWithKeyword(keyword);
+        char[,] array = new char[4, 8];
+
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 8; j++)
+                array[i, j] = newAlph[i * 8 + j];
+
+
         List<string> bigrams = ToBigrams(text);
+        Console.WriteLine($"\nБиграммы исходного текста:\n{string.Join(" ", bigrams)}");
+        string bigramsCrypted = $"\nБиграммы после шифра:\n";
         string result = "";
 
-        for (int i = 0; i < bigrams.Count(); i++)
+        foreach (string bigram in bigrams)
         {
-            string bigramm = bigrams[i];
-            result += RulesForEncrypt(bigramm, newAlph);
+            if (bigram.Length == 2)
+            {
+                string newBigram = isEncrypt ? RulesForPlayfair(bigram, array, true): RulesForPlayfair(bigram, array, false);
+                bigramsCrypted += newBigram + " ";
+                result += newBigram;
+            }
+            else
+            {
+                bigramsCrypted += bigram + " ";
+                result += bigram + " ";
+            }
         }
-
+        Console.WriteLine(bigramsCrypted);
         return result;
     }
-    static string RulesForEncrypt(string bigramm, string newAlph)
+    static string RulesForPlayfair(string bigram, char[,] array, bool isEncrypt)
     {
-        if (bigramm[0]/8 == bigramm[1]/8)
+        char a = bigram[0];
+        char b = bigram[1];
+
+        var (rowA, colA) = FindPosition(a, array);
+        var (rowB, colB) = FindPosition(b, array);
+
+        if (rowA == rowB)
         {
-            
+            int shift = isEncrypt ? 1 : -1;
+            colA = Mod(colA + shift, 8);
+            colB = Mod(colB + shift, 8);
         }
-        else if (bigramm[0]%8 == bigramm[1]%8)
+        else if (colA == colB)
         {
-            
+            int shift = isEncrypt ? 1 : -1;
+            rowA = Mod(rowA + shift, 4);
+            rowB = Mod(rowB + shift, 4);
         }
         else
         {
-            
+            (colA, colB) = (colB, colA);
         }
+
+        char encryptedA = array[rowA, colA];
+        char encryptedB = array[rowB, colB];
+
+        return $"{encryptedA}{encryptedB}";
+    }
+    static (int row, int col) FindPosition(char c, char[,] table)
+    {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 8; j++)
+                if (table[i, j] == c)
+                    return (i, j);
+        throw new ArgumentException($"Символ {c} не найден в таблице");
+    }
+    static int Mod(int a, int m)
+    {
+        return (a % m + m) % m;
     }
 }
