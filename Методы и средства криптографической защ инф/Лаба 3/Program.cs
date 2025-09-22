@@ -20,6 +20,7 @@ class Program
                 List<string> bigrams = ToBigrams(text);
                 Console.WriteLine(string.Join(" ", bigrams));
 
+
             }
             else if (key.Key == ConsoleKey.D2)
             {
@@ -177,6 +178,29 @@ class Program
         string alph = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
         string newAlph = BuildNewAlphWithKeyword(keyword);
         List<string> bigrams = ToBigrams(text);
+        string result = "";
 
+        for (int i = 0; i < bigrams.Count(); i++)
+        {
+            string bigramm = bigrams[i];
+            result += RulesForEncrypt(bigramm, newAlph);
+        }
+
+        return result;
+    }
+    static string RulesForEncrypt(string bigramm, string newAlph)
+    {
+        if (bigramm[0]/8 == bigramm[1]/8)
+        {
+            
+        }
+        else if (bigramm[0]%8 == bigramm[1]%8)
+        {
+            
+        }
+        else
+        {
+            
+        }
     }
 }
