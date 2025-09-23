@@ -21,12 +21,19 @@
             }
 
             Console.Write($"Введите значение модуля: ");
-            while (!int.TryParse(Console.ReadLine(), out m))
+            while (!int.TryParse(Console.ReadLine(), out m) || NOD(a, m) != 1)
             {
-                Console.Write("Некорректный ввод. Введите целое число: ");
+                if (NOD(a, m) != 1)
+                {
+                    Console.Write($"Некорректный ввод. Введите взаимнопростое с а = {a} число: ");
+                }
+                else
+                {
+                    Console.Write("Некорректный ввод. Введите целое число: ");
+                }
             }
 
-            if (deg % 2 == 0)
+            if (deg % 2 == 0 && a<0)
             {
                 a = Math.Abs(a);
                 Console.WriteLine($"\nТ.к. {deg} - чётное, то (-{a})^{deg} = {a}^{deg}");
@@ -47,20 +54,20 @@
         string output = "";
         int equivDeg = CheckRule(a, m);
 
-        output = $"{a}^{deg} (mod {m}) ≡ [{a}^{equivDeg} ≡ 1 (mod {m})] ≡";
+        output = $"{a}^{deg} (mod {m}) ≡ [{a}^{equivDeg} ≡ 1 (mod {m})]";
 
         deg = deg - (deg / equivDeg) * equivDeg;
 
-        output += $" 1 * {a}^{deg} (mod {m})";
+        output += $" ≡ 1 * {a}^{deg} (mod {m})";
 
         if (a>m)
         {
             output += $" ≡ [{a} ≡";
             a = Mod(a, m);
-            output += $" {a} (mod {m})] ";
+            output += $" {a} (mod {m})]";
         }
 
-        output += $"≡ {a}^{deg} (mod {m})";
+        output += $" ≡ {a}^{deg} (mod {m})";
 
         int aPow = (int)(Math.Pow(a, deg));
 
@@ -76,11 +83,11 @@
     }
     static int CheckRule(int a, int m)
     {
-        if (IsPrime(m) && NOD(a,m)==1)
+        if (IsPrime(m))
         {
             Console.WriteLine($"\nТ.к. {m} - простое и НОД({a},{m}) = 1, то исп М.Т.Ф.:");
             Console.WriteLine($"a^p-1 ≡ 1 (mod p)");
-            Console.WriteLine($"{a}^{m-1} ≡ 1 (mod {m})\n");
+            Console.WriteLine($"{a}^{m - 1} ≡ 1 (mod {m})\n");
             return m - 1;
         }
         else
