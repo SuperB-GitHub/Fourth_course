@@ -54,14 +54,16 @@
         string output = "";
         int equivDeg = CheckRule(a, m);
 
-        output = $"{a}^{deg} (mod {m}) ≡ [{a}^{equivDeg} ≡ 1 (mod {m})]";
+        output = $"{a}^{deg} (mod {m}) ≡ [{a}^{equivDeg} ≡ 1 (mod {m})] ≡ {a}^({deg / equivDeg}*{equivDeg})";
 
         deg = deg - (deg / equivDeg) * equivDeg;
+
+        output += $" * {a}^{deg} (mod {m})";
 
         output += $" ≡ 1 * {a}^{deg} (mod {m})";
 
         if (a>m)
-        {
+        { 
             output += $" ≡ [{a} ≡";
             a = Mod(a, m);
             output += $" {a} (mod {m})]";
