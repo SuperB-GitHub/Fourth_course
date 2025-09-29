@@ -7,21 +7,21 @@
         while (true)
         {
             Console.Clear();
-            int a, deg, m;
+            long a, deg, m;
             Console.Write($"Введите число a: ");
-            while (!int.TryParse(Console.ReadLine(), out a))
+            while (!long.TryParse(Console.ReadLine(), out a))
             {
                 Console.Write("Некорректный ввод. Введите целое число: ");
             }
 
             Console.Write($"Введите его степень: ");
-            while (!int.TryParse(Console.ReadLine(), out deg))
+            while (!long.TryParse(Console.ReadLine(), out deg))
             {
                 Console.Write("Некорректный ввод. Введите целое число: ");
             }
 
             Console.Write($"Введите значение модуля: ");
-            while (!int.TryParse(Console.ReadLine(), out m) || NOD(a, m) != 1)
+            while (!long.TryParse(Console.ReadLine(), out m) || NOD(a, m) != 1)
             {
                 if (NOD(a, m) != 1)
                 {
@@ -39,7 +39,7 @@
                 Console.WriteLine($"\nТ.к. {deg} - чётное, то (-{a})^{deg} = {a}^{deg}");
             }
 
-            int answer = Calculate(a, deg, m);
+            long answer = Calculate(a, deg, m);
             Console.WriteLine($"\nОтвет: {answer}, {a}^{deg} ≡ {answer} (mod {m})");
 
             Console.Write($"\nЖелаете продолжить? (Enter) ");
@@ -48,11 +48,11 @@
 
         }
     }
-    static int Calculate(int a, int deg, int m)
+    static long Calculate(long a, long deg, long m)
     {
-        int result = 0;
+        long result = 0;
         string output = "";
-        int equivDeg = CheckRule(a, m);
+        long equivDeg = CheckRule(a, m);
 
         output = $"{a}^{deg} (mod {m}) ≡ [{a}^{equivDeg} ≡ 1 (mod {m})] ≡ {a}^({deg / equivDeg}*{equivDeg})";
 
@@ -71,7 +71,7 @@
 
         output += $" ≡ {a}^{deg} (mod {m})";
 
-        int aPow = (int)(Math.Pow(a, deg));
+        long aPow = (long)(Math.Pow(a, deg));
 
         output += $" = {aPow} (mod {m})";
 
@@ -83,7 +83,7 @@
         return result;
 
     }
-    static int CheckRule(int a, int m)
+    static long CheckRule(long a, long m)
     {
         if (IsPrime(m))
         {
@@ -94,7 +94,7 @@
         }
         else
         {
-            int newDeg = EulerPhi(m);
+            long newDeg = EulerPhi(m);
             Console.WriteLine($"\nТ.к. {m} - составное и НОД({a},{m}) = 1, то исп т.Эйлера:");
             Console.WriteLine($"a^φ(m) ≡ 1 (mod m)");
             Console.WriteLine($"{a}^φ({m}) ≡ 1 (mod {m})");
@@ -102,19 +102,19 @@
             return newDeg;
         }
     }
-    static int NOD(int a, int b)
+    static long NOD(long a, long b)
     {
         a = Math.Abs(a);
         b = Math.Abs(b);
         while (b != 0)
         {
-            int temp = b;
+            long temp = b;
             b = a % b;
             a = temp;
         }
         return a;
     }
-    static bool IsPrime(int number)
+    static bool IsPrime(long number)
     {
         if (number <= 1) return false;
 
@@ -122,7 +122,7 @@
 
         if (number % 2 == 0 || number % 3 == 0) return false;
 
-        for (int i = 5; i * i <= number; i += 6)
+        for (long i = 5; i * i <= number; i += 6)
         {
             if (number % i == 0 || number % (i + 2) == 0)
                 return false;
@@ -130,20 +130,20 @@
 
         return true;
     }
-    static int EulerPhi(int n)
+    static long EulerPhi(long n)
     {
         if (n <= 0) return 0;
         if (n == 1) return 1;
 
-        int result = 0;
-        for (int i = 1; i <= n; i++)
+        long result = 0;
+        for (long i = 1; i <= n; i++)
         {
             if (NOD(i, n) == 1)
                 result++;
         }
         return result;
     }
-    static int Mod(int a, int m)
+    static long Mod(long a, long m)
     {
         return (a % m + m) % m;
     }
