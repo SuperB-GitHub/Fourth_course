@@ -140,4 +140,64 @@
         }
         return op;
     }
+    static int Solutions(ref int a, ref int b, ref int m)
+    {
+        string output = "\nТ.к.";
+        int sol = NOD(a, m);
+
+        output += $" НОД({a},{m}) = {sol}";
+
+        if (b % sol != 0)
+        {
+            output += $" и {b} не делится на {sol}, то уравнение не имеет решения.";
+            Console.WriteLine(output);
+            return -1;
+        }
+        else
+        {
+            output += $" и {b} делится на {sol}, то сравнение разрешено и имеет {sol} решений:";
+            output += $"\n{a}x ≡ {b} (mod {m}) | :{sol}";
+            a = a / sol; b = b / sol; m = m / sol;
+            output += $"\n{a}x ≡ {b} (mod {m})";
+            Console.WriteLine(output);
+            return sol;
+        }
+    }
+    static int Calculate(int a, int b, int m)
+    {
+        int result = 0;
+
+        string output = $"\nТ.к. НОД({a},{m}) = 1, то исп формулу:";
+        output += "\nx_0 = a^(φ(m)-1) * b (mod m)";
+        output += $"\nx_0 = {a}^(φ({m})-1) * {b} (mod {m})";
+
+        int deg = EulerPhi(m) - 1;
+        output += $" = [φ({m}) - 1 = {deg + 1} - 1 = {deg}] = {a}^{deg} * {b} (mod {m})";
+
+        if (a > m)
+        {
+            output += $" ≡ [{a} ≡";
+            a = Mod(a, m);
+            output += $" {a} (mod {m})]";
+            output += $" ≡ {a}^{deg} * {b} (mod {m})";
+        }
+
+        output += $" ≡ [{a}^{deg} =";
+
+        a = (int)(Math.Pow(a, deg));
+
+        output += $" {a} ≡";
+
+        a = Mod(a, m);
+
+        output += $" {a} (mod {m})] ≡ {a} * {b} (mod {m})";
+
+        result = Mod(a * b, m);
+
+        output += $" = {a * b} (mod {m}) = {result} (mod {m})";
+
+        Console.WriteLine(output);
+        return result;
+
+    }
 }
