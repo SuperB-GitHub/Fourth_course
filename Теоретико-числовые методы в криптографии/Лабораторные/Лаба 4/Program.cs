@@ -19,30 +19,40 @@
             int[] bi = new int[count];
             int[] mi = new int[count];
             int M_mul = 1;
+            bool ct = true;
+            int i = 0;
 
-            for (int _ = 0; _ < count; _++)
+            while (i < count && ct)
             {
-                Console.WriteLine($"\nЗапись {_ + 1} сравнения:\n");
+                Console.WriteLine($"\nЗапись {i + 1} сравнения:\n");
                 InputCompare(out int a, out int b, out int m);
-                if (a != 1)
+
+                ct = SolForLab3(ref a, ref b, ref m);
+
+                if (a != 1 && ct)
                 {
-                    //int sol = Solutions(ref a, ref b, ref m);
-                    //if (sol == -1)
-                    //{
-                    //    contin = OutputEnd();
-                    //}
                     CalcLab3(ref a, ref b, ref m);
                 }
-                if (b > m)
+
+                if (b > m || b < 0 && ct)
                 {
                     b = Mod(b, m);
                 }
-                ai[_] = a; bi[_] = b ; mi[_] = m;
-                M_mul *= m;
-                Console.WriteLine($"\nПолучившиеся сравнение: {a}x ≡ {b} (mod {m})");
+
+                if (ct)
+                {
+                    ai[i] = a; bi[i] = b; mi[i] = m;
+                    M_mul *= m;
+                    Console.WriteLine($"\nПолучившиеся сравнение: {a}x ≡ {b} (mod {m})");
+                }
+                i++;
             }
-            PrintSys(bi, mi);
-            CalcLab4(ai, bi, mi, M_mul, count);
+
+            if (ct)
+            {
+                PrintSys(bi, mi);
+                CalcLab4(ai, bi, mi, M_mul, count);
+            }
 
             contin = OutputEnd();
         }
@@ -104,6 +114,35 @@
     }
 
     //Функции алгоритмов
+    static bool SolForLab3(ref int a, ref int b, ref int m)
+    {
+        string output = "\nТ.к.";
+        int sol = NOD(a, m);
+
+        output += $" НОД({a},{m}) = {sol}";
+
+        if (sol == 1)
+        {
+            output += $", то уравнение имеет решение.";
+            Console.WriteLine(output);
+            return true;
+        }
+        else if (sol > 1 && b % sol != 0)
+        {
+            output += $" и {b} не делится на {sol}, то уравнение не имеет решения.";
+            Console.WriteLine(output);
+            return false;
+        }
+        else
+        {
+            output += $" и {b} делится на {sol}, то сравнение разрешено и имеет {sol} решений:";
+            output += $"\n{a}x ≡ {b} (mod {m}) | :{sol}";
+            a = a / sol; b = b / sol; m = m / sol;
+            output += $"\n{a}x ≡ {b} (mod {m})";
+            Console.WriteLine(output);
+            return true;
+        }
+    }
     static void CalcLab3(ref int a, ref int b, ref int m)
     {
         int result = 0;
@@ -234,27 +273,4 @@
         return result;
     }
 
-    static int Solutions(ref int a, ref int b, ref int m)
-    {
-        string output = "\nТ.к.";
-        int sol = NOD(a, m);
-
-        output += $" НОД({a},{m}) = {sol}";
-
-        if (b % sol != 0)
-        {
-            output += $" и {b} не делится на {sol}, то уравнение не имеет решения.";
-            Console.WriteLine(output);
-            return -1;
-        }
-        else
-        {
-            output += $" и {b} делится на {sol}, то сравнение разрешено и имеет {sol} решений:";
-            output += $"\n{a}x ≡ {b} (mod {m}) | :{sol}";
-            a = a / sol; b = b / sol; m = m / sol;
-            output += $"\n{a}x ≡ {b} (mod {m})";
-            Console.WriteLine(output);
-            return sol;
-        }
-    }
 }
