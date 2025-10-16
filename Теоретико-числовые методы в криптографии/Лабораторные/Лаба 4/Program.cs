@@ -26,7 +26,16 @@
                 InputCompare(out int a, out int b, out int m);
                 if (a != 1)
                 {
+                    //int sol = Solutions(ref a, ref b, ref m);
+                    //if (sol == -1)
+                    //{
+                    //    contin = OutputEnd();
+                    //}
                     CalcLab3(ref a, ref b, ref m);
+                }
+                if (b > m)
+                {
+                    b = Mod(b, m);
                 }
                 ai[_] = a; bi[_] = b ; mi[_] = m;
                 M_mul *= m;
@@ -95,47 +104,6 @@
     }
 
     //Функции алгоритмов
-    static void CalcLab4(int[] ai, int[] bi, int[] mi, int M, int count)
-    {
-        Console.WriteLine("\nРешение:");
-        if (CrossSimple(mi))
-        {
-            Console.WriteLine($"Т.к. {PrintMs(mi)} - попарно взаимно просты, то решение существует.\n");
-            int x0 = 0;
-            string x_0 = "x0 = ";
-            for (int i = 0; i < count; i++)
-            {
-                int m = mi[i];
-                int Mi = M / m;
-                int Ni = Mi;
-                Console.WriteLine($"M{i + 1} = {Ni}");
-                Console.Write($"{i + 1})N{i + 1} = M{i}^(-1) (mod {m}) = {Ni}^(-1) (mod {m}) = ");
-                Console.Write($"[Т.к. НОД({Ni},{m}) = {NOD(Ni, m)}, то {Ni}^(-1) ∃: a^(-1) (mod m) = a^(φ(m)-1) (mod m)] = ");
-                Console.Write($"{Ni}^(φ({m})-1) (mod {m}) = ");
-                int deg = EulerPhi(m) - 1;
-                Console.Write($"{Ni}^{deg} (mod {m}) = ");
-                Ni = Mod(Ni, m);
-                Console.Write($"{Ni}^{deg} (mod {m}) = ");
-                Ni = LightPow(Ni, deg, m);
-                Console.Write($"{Ni} (mod {m})\n");
-                Console.WriteLine();
-                x0 += bi[i] * Ni * Mi;
-                x_0 += $"({bi[i]} * {Ni} * {Mi}) + ";
-            }
-            x_0 = x_0.Substring(0, x_0.Length - 3);
-            Console.Write($"{x_0} (mod {M}) = {x0} (mod {M}) = ");
-            x0 = Mod(x0, M);
-            Console.WriteLine($"{x0} (mod {M})\n");
-
-            PrintCheck(x0, bi, mi);
-        }
-        else
-        {
-            Console.WriteLine($"Т.к. {PrintMs(mi)} - попарно взаимно не просты, то решение не существует.");
-        }
-
-
-    }
     static void CalcLab3(ref int a, ref int b, ref int m)
     {
         int result = 0;
@@ -172,7 +140,48 @@
         Console.WriteLine(output);
         a = 1; b = result;
     }
+    static void CalcLab4(int[] ai, int[] bi, int[] mi, int M, int count)
+    {
+        Console.WriteLine("\nРешение:");
+        if (CrossSimple(mi))
+        {
+            Console.WriteLine($"Т.к. {PrintMs(mi)} - попарно взаимно просты, то решение существует.\n");
+            int x0 = 0;
+            string x_0 = "x0 = ";
+            for (int i = 0; i < count; i++)
+            {
+                int m = mi[i];
+                int Mi = M / m;
+                int Ni = Mi;
+                Console.WriteLine($"M{i + 1} = {Ni}");
+                Console.Write($"{i + 1})N{i + 1} = M{i + 1}^(-1) (mod {m}) = {Ni}^(-1) (mod {m}) = ");
+                Console.Write($"[Т.к. НОД({Ni},{m}) = {NOD(Ni, m)}, то {Ni}^(-1) ∃: a^(-1) (mod m) = a^(φ(m)-1) (mod m)] = ");
+                Console.Write($"{Ni}^(φ({m})-1) (mod {m}) = ");
+                int deg = EulerPhi(m) - 1;
+                Console.Write($"{Ni}^{deg} (mod {m}) = ");
+                Ni = Mod(Ni, m);
+                Console.Write($"{Ni}^{deg} (mod {m}) = ");
+                Ni = LightPow(Ni, deg, m);
+                Console.Write($"{Ni} (mod {m})\n");
+                Console.WriteLine();
+                x0 += bi[i] * Ni * Mi;
+                x_0 += $"({bi[i]} * {Ni} * {Mi}) + ";
+            }
+            x_0 = x_0.Substring(0, x_0.Length - 3);
+            Console.Write($"{x_0} (mod {M}) = {x0} (mod {M}) = ");
+            x0 = Mod(x0, M);
+            Console.WriteLine($"{x0} (mod {M})\n");
 
+            PrintCheck(x0, bi, mi);
+        }
+        else
+        {
+            Console.WriteLine($"Т.к. {PrintMs(mi)} - попарно взаимно не просты, то решение не существует.");
+        }
+
+
+    }
+    
     //Функции вспомогательные
     static int NOD(int a, int b)
     {
@@ -223,5 +232,29 @@
             result = Mod(result * num, m);
         }
         return result;
+    }
+
+    static int Solutions(ref int a, ref int b, ref int m)
+    {
+        string output = "\nТ.к.";
+        int sol = NOD(a, m);
+
+        output += $" НОД({a},{m}) = {sol}";
+
+        if (b % sol != 0)
+        {
+            output += $" и {b} не делится на {sol}, то уравнение не имеет решения.";
+            Console.WriteLine(output);
+            return -1;
+        }
+        else
+        {
+            output += $" и {b} делится на {sol}, то сравнение разрешено и имеет {sol} решений:";
+            output += $"\n{a}x ≡ {b} (mod {m}) | :{sol}";
+            a = a / sol; b = b / sol; m = m / sol;
+            output += $"\n{a}x ≡ {b} (mod {m})";
+            Console.WriteLine(output);
+            return sol;
+        }
     }
 }
