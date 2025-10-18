@@ -27,11 +27,10 @@
                 Console.WriteLine($"\nЗапись {i + 1} сравнения:\n");
                 InputCompare(out int a, out int b, out int m);
 
-                ct = SolForLab3(ref a, ref b, ref m);
-
                 if (a != 1 && ct)
                 {
-                    CalcLab3(ref a, ref b, ref m);
+                    ct = SolForLab3(ref a, ref b, ref m);
+                    if(ct && b>m) CalcLab3(ref a, ref b, ref m);
                 }
 
                 if (b > m || b < 0 && ct)
@@ -43,7 +42,7 @@
                 {
                     ai[i] = a; bi[i] = b; mi[i] = m;
                     M_mul *= m;
-                    Console.WriteLine($"\nПолучившиеся сравнение: {a}x ≡ {b} (mod {m})");
+                    Console.WriteLine($"\nПолучившиеся сравнение: x ≡ {b} (mod {m})");
                 }
                 i++;
             }
