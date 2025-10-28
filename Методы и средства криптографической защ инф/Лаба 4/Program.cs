@@ -371,7 +371,7 @@ class Program
 
         if (bigramm.Length == 1)
         {
-            bigramm += "Ъ";
+            bigramm += ".";
             bigramms.Add(bigramm);
             bigramm = "";
         }
