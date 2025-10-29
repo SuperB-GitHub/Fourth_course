@@ -13,82 +13,134 @@
             if (IsPrime(m))
             {
                 Console.WriteLine($"Т.к. {m} - простое, то вычисляю символ Лежандра:");
-                Legendre(a, m);
+                int answer = Legendre(a, m);
+                switch (answer)
+                {
+                    case 0:
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, то a ≡ 0(mod p)");
+                        break;
+                    case 1:
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, следовательно {a} - квадратичный не вычет по mod {m}, т.е. сравнение 2ой степени разрешимо");
+                        break;
+                    case -1:
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, следовательно {a} - квадратичный вычет по mod {m}, т.е. сравнение 2ой степени не разрешимо");
+                        break;
+                }
             }
             else
             {
                 Console.WriteLine($"Т.к. {m} - составное, то вычисляю символ Якоби:");
+                Jacobi(a, m);
             }
             contin = OutputEnd();
         }
     }
 
-    static void Legendre(int a, int p)
+    static int Legendre(int a, int p)
     {
+        if (Mod(a,p) == 0)
+        {
+            return 0;
+        }
+
         Console.Write($"\n({a}/{p}) = ");
         int b = 0;
+        int p_b = 0;
         string negSign = "";
-        int answer = 0;
+        int answer = 1;
 
         while (a != 0)
         {
+            //Свойство 1
             if (a > p && a / p > 0 && IsPrime(p))
             {
-                Console.Write($"(1) [{a}+{a / p}*{p}] = ");
+                Console.Write($"(1) [{a - p * (a / p)} + {a / p} * {p}] = ");
                 a = a - p * (a / p);
-                Console.Write($"{negSign}({a}/{p}) = ");
+                Console.Write($"\n{negSign}({a}/{p}) = ");
             }
-            else if (SecondPropert(a) != -1 && IsPrime(p))
+            //Свойство 2
+            if (SecondPropert(a) != -1 && IsPrime(p))
             {
                 b = SecondPropert(a);
-                Console.Write($"(2) [{a / b * b}*{b}^2] = ");
+                Console.Write($"(2) [{a / (b * b)} * {b}^2] = ");
                 a = a / (b * b);
-                Console.Write($"{negSign}({a}/{p}) = ");
+                Console.Write($"\n{negSign}({a}/{p}) = ");
                 b = 0;
             }
-            else if (a == 2 && IsPrime(p))
+            //Свойство 3
+            if (!IsPrime(a) && ThirdPropert(a) != -1)
             {
-                Console.Write($"(6) [{p} ≡ ");
-                int temp = Mod(p, 8);
-                answer = 1;
-                a = 0;
-                if (temp == 3)
-                {
-                    AddNegSign(ref negSign, "-");
-                }
-                Console.Write($"{temp}(mod 8)] = ");
-            }//nan
-            else if (IsPrime(a))
-            {
-                Console.Write($"(7) (-1)^[{a}-1/2 * {p}-1/2] * ({p}/{a}) = ");
-                AddNegSign(ref negSign, (((a - 1) / 2) * ((p - 1) / 2)) % 2 == 0 ? "" : "-");
-                int temp = a; a = p; p = temp;
-                Console.WriteLine($"{negSign}({a}/{p}) = ");
+                int temp = ThirdPropert(a);
+                b = a / temp;
+                a = temp;
+                p_b = p;
+                Console.Write($"(3) [{a} * {b}] = ({a}/{p}) * ({b}/{p}) = \n\n({a}/{p}) = ");
             }
-            else if (a == 1 || a == -1 && IsPrime(p))
+            //Свойство 4 - концовое
+            if (a == 1 || a == -1 && IsPrime(p))
             {
                 Console.Write($"(4) [{p} ≡ ");
                 int temp = Mod(p, 4);
-                answer = 1;
+                answer *= 1;
                 a = 0;
                 if (temp == 3)
                 {
                     AddNegSign(ref negSign, "-");
                 }
-                Console.Write($"{temp}(mod 4)] = ");
-            }//nan
-            else if (!IsPrime(a) && ThirdPropert(a) != -1)
-            {
-                
-                b = ThirdPropert(a);
-                a = a / b;
-                Console.Write($"(3) [{a} * {b}] = ({a}/{p}) * ({b}/{p})");
+                Console.Write($"{temp}(mod 4)] = {negSign}{answer}");
             }
-            else if (a==0)
+            //Свойство 6 - концовое
+            if (a == 2 && IsPrime(p))
+            {
+                Console.Write($"(6) [{p} ≡ ");
+                int temp = Mod(p, 8);
+                answer *= 1;
+                a = 0;
+                if (temp == 3)
+                {
+                    AddNegSign(ref negSign, "-");
+                }
+                Console.Write($"{temp}(mod 8)] = {negSign}{answer}");
+            }
+            //Свойство 7
+            if (IsPrime(a))
+            {
+                Console.Write($"(7) (-1)^[{p}-1/2 * {a}-1/2] * ({p}/{a}) = ");
+                int deg = ((a - 1) / 2) * ((p - 1) / 2);
+                Console.Write($"(-1)^{deg} * ({p}/{a}) = ");
+                AddNegSign(ref negSign, deg % 2 == 0 ? "" : "-");
+                int temp = a; a = p; p = temp;
+                Console.Write($"\n{negSign}({a}/{p}) = ");
+            }
+            if (a == 0 && b>0)
             {
                 a = b;
+                b = 0;
+                p = p_b;
+                Console.Write($"\n\n({a}/{p}) = ");
             }
         }
+        return negSign.Contains("-") ? -1 : 1;
+    }
+    static int Jacobi(int a, int m)
+    {
+        HashSet<int> ms = new HashSet<int>();
+        Console.Write($"\n({a}/{m}) = [{m} = "); 
+        int _ = 2;
+        while (!IsPrime(m))
+        {
+            
+            if (m % _ == 0 && IsPrime(_))
+            {
+                ms.Add(_);
+                m /= _;
+                Console.Write($"{_} * ");
+            }
+            _++;
+        }
+        ms.Add(m);
+        Console.Write($"{m}] =");
+        return ms.Count;
     }
 
     //Функции ввода/вывода
@@ -172,7 +224,7 @@
     }
     static void AddNegSign(ref string negSign, string newSign)
     {
-        negSign = newSign.Contains(negSign) ? "" : "-";
+        negSign = negSign.Contains(newSign) ? "" : "-";
     }
     static int ThirdPropert(int a)
     {
