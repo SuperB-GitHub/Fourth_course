@@ -20,7 +20,7 @@
                         Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, то a ≡ 0(mod p)");
                         break;
                     case 1:
-                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, следовательно {a} - квадратичный не вычет по mod {m}, т.е. сравнение 2ой степени разрешимо");
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, следовательно {a} - квадратичный невычет по mod {m}, т.е. сравнение 2ой степени разрешимо");
                         break;
                     case -1:
                         Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, следовательно {a} - квадратичный вычет по mod {m}, т.е. сравнение 2ой степени не разрешимо");
@@ -30,12 +30,25 @@
             else
             {
                 Console.WriteLine($"Т.к. {m} - составное, то вычисляю символ Якоби:");
-                Jacobi(a, m);
+                int answer = Jacobi(a, m);
+                switch (answer)
+                {
+                    case 0:
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, то НОД({a}, {m}) != 1");
+                        break;
+                    case 1:
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, то вовсе не означает, что данное сравнение разрешимо");
+                        break;
+                    case -1:
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, следовательно {a} - квадратичный вычет по mod {m}, т.е. сравнение 2ой степени не разрешимо");
+                        break;
+                }
             }
             contin = OutputEnd();
         }
     }
 
+    //Функции алгоритмов
     static int Legendre(int a, int p)
     {
         if (Mod(a,p) == 0)
@@ -124,23 +137,61 @@
     }
     static int Jacobi(int a, int m)
     {
-        HashSet<int> ms = new HashSet<int>();
-        Console.Write($"\n({a}/{m}) = [{m} = "); 
-        int _ = 2;
-        while (!IsPrime(m))
+        if (NOD(a,m) != 1)
         {
-            
-            if (m % _ == 0 && IsPrime(_))
-            {
-                ms.Add(_);
-                m /= _;
-                Console.Write($"{_} * ");
-            }
-            _++;
+            return 0;
         }
-        ms.Add(m);
-        Console.Write($"{m}] =");
-        return ms.Count;
+        else
+        {
+            HashSet<int> ms = new HashSet<int>();
+            Console.Write($"\n({a}/{m}) = [{m} = ");
+            int _ = 2;
+            while (!IsPrime(m))
+            {
+
+                if (m % _ == 0 && IsPrime(_))
+                {
+                    ms.Add(_);
+                    m /= _;
+                    Console.Write($"{_} * ");
+                }
+                _++;
+            }
+            ms.Add(m);
+            Console.Write($"{m}]\n");
+            int result = 1;
+
+            for (int i = 0; i < ms.Count; i++)
+            {
+                Console.Write($"\n{i + 1})");
+                result *= Legendre(a, ms.ElementAt(i));
+                Console.WriteLine();
+            }
+            return result;
+        }
+    }
+    static int SecondPropert(int a)
+    {
+        for (int i = 2; i <= (int)Math.Sqrt(a); i++)
+        {
+            int powed = (int)Math.Pow(i, 2);
+            if (a % powed == 0 && a >= powed)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    static int ThirdPropert(int a)
+    {
+        for (int i = 2; i <= (int)Math.Sqrt(a); i++)
+        {
+            if (a % i == 0)
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
     //Функции ввода/вывода
@@ -185,15 +236,6 @@
     {
         return (a % m + m) % m;
     }
-    static int LightPow(int num, int deg, int m)
-    {
-        int result = num;
-        for (int i = 0; i < deg - 1; i++)
-        {
-            result = Mod(result * num, m);
-        }
-        return result;
-    }
     static bool IsPrime(int number)
     {
         if (number <= 1) return false;
@@ -210,31 +252,8 @@
 
         return true;
     }
-    static int SecondPropert(int a)
-    {
-        for (int i = 2; i <= (int)Math.Sqrt(a); i++)
-        {
-            int powed = (int)Math.Pow(i, 2);
-            if (a % powed == 0 && a >= powed)
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
     static void AddNegSign(ref string negSign, string newSign)
     {
         negSign = negSign.Contains(newSign) ? "" : "-";
-    }
-    static int ThirdPropert(int a)
-    {
-        for (int i = 2; i <= (int)Math.Sqrt(a); i++)
-        {
-            if (a % i == 0)
-            {
-                return i;
-            }
-        }
-        return -1;
     }
 }
