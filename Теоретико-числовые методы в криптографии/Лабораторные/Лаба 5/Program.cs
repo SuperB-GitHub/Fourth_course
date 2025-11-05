@@ -34,7 +34,7 @@
                 switch (answer)
                 {
                     case 0:
-                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, то НОД({a}, {m}) != 1");
+                        Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, т.е. НОД({a}, {m}) != 1, a НОД({a}, {m}) = {NOD(a,m)}");
                         break;
                     case 1:
                         Console.WriteLine($"\n\nТ.к. ({a}/{m}) = {answer}, то вовсе не означает, что данное сравнение разрешимо");
@@ -93,10 +93,10 @@
             if (a == 1 || a == -1 && IsPrime(p))
             {
                 Console.Write($"(4) [{p} ≡ ");
-                int temp = Mod(p, 4);
+                int temp = ChooseMod(p, 4);
                 answer *= 1;
                 a = 0;
-                if (temp == 3)
+                if (temp == 3 || temp == -3)
                 {
                     AddNegSign(ref negSign, "-");
                 }
@@ -106,10 +106,10 @@
             if (a == 2 && IsPrime(p))
             {
                 Console.Write($"(6) [{p} ≡ ");
-                int temp = Mod(p, 8);
+                int temp = ChooseMod(p, 8);
                 answer *= 1;
                 a = 0;
-                if (temp == 3)
+                if (temp == 3 || temp == -3)
                 {
                     AddNegSign(ref negSign, "-");
                 }
@@ -130,7 +130,7 @@
                 a = b;
                 b = 0;
                 p = p_b;
-                Console.Write($"\n\n({a}/{p}) = ");
+                Console.Write($"\n\n{negSign}({a}/{p}) = ");
             }
         }
         return negSign.Contains("-") ? -1 : 1;
@@ -143,7 +143,7 @@
         }
         else
         {
-            HashSet<int> ms = new HashSet<int>();
+            List<int> ms = new List<int>();
             Console.Write($"\n({a}/{m}) = [{m} = ");
             int _ = 2;
             while (!IsPrime(m))
@@ -236,6 +236,11 @@
     {
         return (a % m + m) % m;
     }
+    static int ChooseMod(int a, int m)
+    {
+        int mod = Mod(a, m);
+        return mod == 1 || mod == 3 ? mod : mod - m;
+    }
     static bool IsPrime(int number)
     {
         if (number <= 1) return false;
@@ -254,6 +259,6 @@
     }
     static void AddNegSign(ref string negSign, string newSign)
     {
-        negSign = negSign.Contains(newSign) ? "" : "-";
+        negSign = negSign.Equals(newSign) ? "" : "-";
     }
 }
