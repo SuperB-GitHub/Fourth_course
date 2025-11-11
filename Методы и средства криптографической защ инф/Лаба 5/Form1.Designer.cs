@@ -40,16 +40,23 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.RB_Sumb = new System.Windows.Forms.RadioButton();
             this.BTN_Encrypt = new System.Windows.Forms.Button();
-            this.RB_Num = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.BTN_Decrypt = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.RTB_Decrypted = new System.Windows.Forms.RichTextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.RTB_InputEnc = new System.Windows.Forms.RichTextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.DGV_CipherTable1 = new System.Windows.Forms.DataGridView();
+            this.RB_Num = new System.Windows.Forms.RadioButton();
+            this.OFD = new System.Windows.Forms.OpenFileDialog();
+            this.BTN_OpenOT = new System.Windows.Forms.Button();
+            this.BTN_SaveOT = new System.Windows.Forms.Button();
+            this.SFD = new System.Windows.Forms.SaveFileDialog();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.BTN_Decrypt = new System.Windows.Forms.Button();
+            this.BTN_OpenInc = new System.Windows.Forms.Button();
+            this.BTN_SaveEnc = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -64,6 +71,7 @@
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_CipherTable1)).BeginInit();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -178,13 +186,17 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76F));
+            this.tableLayoutPanel2.ColumnCount = 5;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
-            this.tableLayoutPanel2.Controls.Add(this.RB_Sumb, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.BTN_SaveOT, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.BTN_OpenOT, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.BTN_Encrypt, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.RB_Num, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.RB_Sumb, 4, 0);
+            this.tableLayoutPanel2.Controls.Add(this.RB_Num, 3, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 362);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -213,24 +225,11 @@
             this.BTN_Encrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.BTN_Encrypt.Location = new System.Drawing.Point(3, 3);
             this.BTN_Encrypt.Name = "BTN_Encrypt";
-            this.BTN_Encrypt.Size = new System.Drawing.Size(726, 40);
+            this.BTN_Encrypt.Size = new System.Drawing.Size(360, 40);
             this.BTN_Encrypt.TabIndex = 5;
             this.BTN_Encrypt.Text = "Зашифровать сообщение";
             this.BTN_Encrypt.UseVisualStyleBackColor = false;
             this.BTN_Encrypt.Click += new System.EventHandler(this.BTN_Encrypt_Click);
-            // 
-            // RB_Num
-            // 
-            this.RB_Num.AutoSize = true;
-            this.RB_Num.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RB_Num.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RB_Num.Location = new System.Drawing.Point(735, 3);
-            this.RB_Num.Name = "RB_Num";
-            this.RB_Num.Size = new System.Drawing.Size(109, 40);
-            this.RB_Num.TabIndex = 6;
-            this.RB_Num.TabStop = true;
-            this.RB_Num.Text = "Цифры";
-            this.RB_Num.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -247,10 +246,10 @@
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.BTN_Decrypt, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.groupBox4, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.groupBox5, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.groupBox6, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -261,19 +260,6 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(970, 529);
             this.tableLayoutPanel3.TabIndex = 3;
-            // 
-            // BTN_Decrypt
-            // 
-            this.BTN_Decrypt.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            this.BTN_Decrypt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BTN_Decrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.BTN_Decrypt.Location = new System.Drawing.Point(3, 362);
-            this.BTN_Decrypt.Name = "BTN_Decrypt";
-            this.BTN_Decrypt.Size = new System.Drawing.Size(964, 46);
-            this.BTN_Decrypt.TabIndex = 6;
-            this.BTN_Decrypt.Text = "Расшифровать сообщение";
-            this.BTN_Decrypt.UseVisualStyleBackColor = false;
-            this.BTN_Decrypt.Click += new System.EventHandler(this.BTN_Decrypt_Click);
             // 
             // groupBox4
             // 
@@ -344,6 +330,105 @@
             this.DGV_CipherTable1.Size = new System.Drawing.Size(958, 209);
             this.DGV_CipherTable1.TabIndex = 0;
             // 
+            // RB_Num
+            // 
+            this.RB_Num.AutoSize = true;
+            this.RB_Num.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RB_Num.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RB_Num.Location = new System.Drawing.Point(735, 3);
+            this.RB_Num.Name = "RB_Num";
+            this.RB_Num.Size = new System.Drawing.Size(109, 40);
+            this.RB_Num.TabIndex = 6;
+            this.RB_Num.TabStop = true;
+            this.RB_Num.Text = "Цифры";
+            this.RB_Num.UseVisualStyleBackColor = true;
+            // 
+            // OFD
+            // 
+            this.OFD.FileName = "openFileDialog1";
+            // 
+            // BTN_OpenOT
+            // 
+            this.BTN_OpenOT.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.BTN_OpenOT.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_OpenOT.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_OpenOT.Location = new System.Drawing.Point(369, 3);
+            this.BTN_OpenOT.Name = "BTN_OpenOT";
+            this.BTN_OpenOT.Size = new System.Drawing.Size(177, 40);
+            this.BTN_OpenOT.TabIndex = 8;
+            this.BTN_OpenOT.Text = "Открыть";
+            this.BTN_OpenOT.UseVisualStyleBackColor = false;
+            this.BTN_OpenOT.Click += new System.EventHandler(this.BTN_OpenOT_Click);
+            // 
+            // BTN_SaveOT
+            // 
+            this.BTN_SaveOT.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.BTN_SaveOT.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_SaveOT.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_SaveOT.Location = new System.Drawing.Point(552, 3);
+            this.BTN_SaveOT.Name = "BTN_SaveOT";
+            this.BTN_SaveOT.Size = new System.Drawing.Size(177, 40);
+            this.BTN_SaveOT.TabIndex = 9;
+            this.BTN_SaveOT.Text = "Сохранить";
+            this.BTN_SaveOT.UseVisualStyleBackColor = false;
+            this.BTN_SaveOT.Click += new System.EventHandler(this.BTN_SaveOT_Click);
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.Controls.Add(this.BTN_SaveEnc, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.BTN_OpenInc, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.BTN_Decrypt, 0, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 362);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(964, 46);
+            this.tableLayoutPanel4.TabIndex = 6;
+            // 
+            // BTN_Decrypt
+            // 
+            this.BTN_Decrypt.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.BTN_Decrypt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_Decrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_Decrypt.Location = new System.Drawing.Point(3, 3);
+            this.BTN_Decrypt.Name = "BTN_Decrypt";
+            this.BTN_Decrypt.Size = new System.Drawing.Size(476, 40);
+            this.BTN_Decrypt.TabIndex = 7;
+            this.BTN_Decrypt.Text = "Расшифровать сообщение";
+            this.BTN_Decrypt.UseVisualStyleBackColor = false;
+            this.BTN_Decrypt.Click += new System.EventHandler(this.BTN_Decrypt_Click);
+            // 
+            // BTN_OpenInc
+            // 
+            this.BTN_OpenInc.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.BTN_OpenInc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_OpenInc.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_OpenInc.Location = new System.Drawing.Point(485, 3);
+            this.BTN_OpenInc.Name = "BTN_OpenInc";
+            this.BTN_OpenInc.Size = new System.Drawing.Size(235, 40);
+            this.BTN_OpenInc.TabIndex = 8;
+            this.BTN_OpenInc.Text = "Открыть";
+            this.BTN_OpenInc.UseVisualStyleBackColor = false;
+            this.BTN_OpenInc.Click += new System.EventHandler(this.BTN_OpenInc_Click);
+            // 
+            // BTN_SaveEnc
+            // 
+            this.BTN_SaveEnc.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.BTN_SaveEnc.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_SaveEnc.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_SaveEnc.Location = new System.Drawing.Point(726, 3);
+            this.BTN_SaveEnc.Name = "BTN_SaveEnc";
+            this.BTN_SaveEnc.Size = new System.Drawing.Size(235, 40);
+            this.BTN_SaveEnc.TabIndex = 9;
+            this.BTN_SaveEnc.Text = "Сохранить";
+            this.BTN_SaveEnc.UseVisualStyleBackColor = false;
+            this.BTN_SaveEnc.Click += new System.EventHandler(this.BTN_SaveEnc_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -368,6 +453,7 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_CipherTable1)).EndInit();
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -385,17 +471,24 @@
         private System.Windows.Forms.RichTextBox RTB_InputOT;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Button BTN_Encrypt;
-        private System.Windows.Forms.RadioButton RB_Num;
         private System.Windows.Forms.RadioButton RB_Sumb;
         private System.Windows.Forms.DataGridView DGV_CipherTable;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Button BTN_Decrypt;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.RichTextBox RTB_Decrypted;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RichTextBox RTB_InputEnc;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.DataGridView DGV_CipherTable1;
+        private System.Windows.Forms.Button BTN_SaveOT;
+        private System.Windows.Forms.Button BTN_OpenOT;
+        private System.Windows.Forms.RadioButton RB_Num;
+        private System.Windows.Forms.OpenFileDialog OFD;
+        private System.Windows.Forms.SaveFileDialog SFD;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.Button BTN_SaveEnc;
+        private System.Windows.Forms.Button BTN_OpenInc;
+        private System.Windows.Forms.Button BTN_Decrypt;
     }
 }
 

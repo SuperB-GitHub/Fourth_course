@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Лаба_5
 {
@@ -51,6 +52,7 @@ namespace Лаба_5
         {
             InitializeComponent();
             RB_Num.Checked = true;
+            ConfigureFileDialogs();
             FillCipherTable(DGV_CipherTable);
             FillCipherTable(DGV_CipherTable1);
         }
@@ -97,6 +99,84 @@ namespace Лаба_5
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при расшифровании:\n{ex.Message}",
+                                "Ошибка",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+        }
+        private void BTN_OpenOT_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (OFD.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = OFD.FileName;
+                    string content = File.ReadAllText(filePath, Encoding.UTF8);
+                    RTB_InputOT.Text = content;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии файла:\n{ex.Message}",
+                                "Ошибка",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+        }
+        private void BTN_OpenInc_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (OFD.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = OFD.FileName;
+                    string content = File.ReadAllText(filePath, Encoding.UTF8);
+                    RTB_InputEnc.Text = content;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при открытии файла:\n{ex.Message}",
+                                "Ошибка",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+        }
+        private void BTN_SaveOT_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (SFD.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = SFD.FileName;
+                    File.WriteAllText(filePath, RTB_Crypted.Text, Encoding.UTF8);
+                    MessageBox.Show("Файл успешно сохранен!", "Успех",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении файла:\n{ex.Message}",
+                                "Ошибка",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+        }
+        private void BTN_SaveEnc_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (SFD.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = SFD.FileName;
+                    File.WriteAllText(filePath, RTB_Decrypted.Text, Encoding.UTF8);
+                    MessageBox.Show("Файл успешно сохранен!", "Успех",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении файла:\n{ex.Message}",
                                 "Ошибка",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
@@ -167,7 +247,7 @@ namespace Лаба_5
             return null;
         }
 
-        //Работа с DataGridView
+        //Конфигурации
         private void FillCipherTable(DataGridView table)
         {
             // Настраиваем столбцы
@@ -210,6 +290,18 @@ namespace Лаба_5
                 count++;
             }
             return sb.ToString();
+        }
+        private void ConfigureFileDialogs()
+        {
+            OFD.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            OFD.FilterIndex = 1;
+            OFD.RestoreDirectory = true;
+            OFD.Title = "Открыть текстовый файл";
+
+            SFD.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            SFD.FilterIndex = 1;
+            SFD.RestoreDirectory = true;
+            SFD.Title = "Сохранить текстовый файл";
         }
     }
 }
