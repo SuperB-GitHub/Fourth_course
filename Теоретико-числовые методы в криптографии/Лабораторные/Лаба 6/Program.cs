@@ -165,7 +165,7 @@
         }
         else if (Mod(p, 8) == 5)
         {
-            Console.WriteLine($"\n2) {p} ≡/ 3 (mod 8); {p} ≡ 5 (mod 8), то вычисляем а^((p - 1) / 4) (mod p)");
+            Console.WriteLine($"\n2) {p} ≠ 3 (mod 8); {p} ≡ 5 (mod 8), то вычисляем а^((p - 1) / 4) (mod p)");
             int cond = LightPow(a, (p - 1) / 4, p);
             cond = cond == 1 ? cond : cond - p;
 
@@ -200,7 +200,72 @@
         }
         else
         {
-            
+            Console.WriteLine($"\n2) {p} ≠ 3 (mod 8); {p} ≡ 5 (mod 8)");
+            Console.WriteLine($"\n3) Выберем N такое, что (N/p) = -1:");
+            int n = 2;
+            for (n = 2; n < p / 8; n++)
+            {
+                if (IsPrime(n))
+                {
+                    int cond = LightPow(n, (p - 1) / 2, p) == p - 1 ? -1 : 1;
+                    if (cond == -1)
+                    {
+                        Console.WriteLine($"N = {n} => ({n}/{p}) = {cond} - подходит");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"N = {n} => ({n}/{p}) = {cond} - не подходит");
+                    }
+                }
+            }
+
+            Console.WriteLine($"\n4) Представим: p = 2^k * h + 1");
+            double k = 0;
+            int h = 1;
+            for (h = 1; h < p; h = h+2)
+            {
+                k = Math.Log2((p - 1) / h);
+                if (k % 1 == 0)
+                {
+                    
+                    break;
+                }
+            }
+            Console.WriteLine($"{p} = 2^{k} * {h} + 1");
+
+            Console.WriteLine($"\n5) Положить:");
+            int a1 = LightPow(a, (h + 1) / 2, p);
+            Console.WriteLine($"a1 = a^(h + 1)/2 (mod p) = {a}^{(h + 1) / 2} (mod {p}) = {a1} (mod {p})");
+            int a2 = LightPow(a, EulerPhi(p) - 1, p);
+            Console.WriteLine($"a2 = a^(-1) (mod p) = {a}^(-1) (mod {p}) = [НОД({p},{a}) = {NOD(p, a)} => {a}^(-1) сущ-ет => т.Эйлера: a2 = {a2} (mod {p})");
+            int n1 = LightPow(n, h, p);
+            Console.WriteLine($"N1 = N^h (mod p) = {n}^{h} (mod {p}) = {n1} (mod {p})");
+            int n2 = 1; int j = 0;
+            Console.WriteLine($"N2 = 1; j = 0");
+
+            Console.WriteLine($"\n6) Для i = 0,1,...,k-2 выполняю:");
+            for (int i = 0; i <= k-2; i++)
+            {
+                Console.WriteLine($"\nПри i = {i}:");
+                int b = Mod(a1 * n2, p);
+                Console.WriteLine($"b = a1 * N2 (mod p) = {a1} * {n2} (mod {p}) = {b} (mod {p})");
+                int c = Mod(a2 * b * b, p);
+                Console.WriteLine($"c = a2 * b^2 (mod p) = {a2} * {b * b} (mod {p}) = {c} (mod {p})");
+                int d = LightPow(c, (int)Math.Pow(2, k - 2 - i), p) == p - 1 ? -1 : 1;
+                Console.WriteLine($"d = c^2^k-2-i (mod p) = {c}^2^{k-2-i} (mod {p}) = {d} (mod {p})");
+                j = d == 1 ? 0 : 1;
+                Console.WriteLine($"Т.к. d = {d} (mod {p}), то j = {j}");
+                Console.Write($"N2 = N2 * N1^(2^i * j) (mod p) = {n2} * {n1}^(2^{i} * {j}) (mod {p}) = ");
+                n2 = Mod(n2 * LightPow(n1, (int)Math.Pow(2, i) * j, p), p);
+                Console.WriteLine($"{n2} (mod {p})");
+            }
+
+            int x = Mod(a1 * n2, p);
+            Console.WriteLine($"\nРезультат: x ≡ ± a1 * N2 (mod p) ≡ ± {a1} * {n2} (mod {p}) ≡ ± {x} (mod {p})");
+            Console.WriteLine($"x1 ≡ {x} (mod {p})");
+            Console.WriteLine($"x2 ≡ {p - x} (mod {p})");
+            Check(x, a, p);
         }
     }
     static void Check(int x, int a, int p)
@@ -274,15 +339,36 @@
     }
     static int LightPow(int num, int deg, int m)
     {
-        int result = num;
-        for (int i = 0; i < deg - 1; i++)
+        if(deg == 0)
         {
-            result = Mod(result * num, m);
+            return 1;
         }
-        return result;
+        else
+        {
+            int result = num;
+            for (int i = 0; i < deg - 1; i++)
+            {
+                result = Mod(result * num, m);
+            }
+            return result;
+        }
+        
     }
     static void AddNegSign(ref string negSign, string newSign)
     {
         negSign = negSign.Equals(newSign) ? "" : "-";
+    }
+    static int EulerPhi(int n)
+    {
+        if (n <= 0) return 0;
+        if (n == 1) return 1;
+
+        int result = 0;
+        for (int i = 1; i <= n; i++)
+        {
+            if (NOD(i, n) == 1)
+                result++;
+        }
+        return result;
     }
 }
