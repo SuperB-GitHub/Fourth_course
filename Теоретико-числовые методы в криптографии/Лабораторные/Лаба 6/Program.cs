@@ -228,11 +228,10 @@
                 k = Math.Log2((p - 1) / h);
                 if (k % 1 == 0)
                 {
-                    
                     break;
                 }
             }
-            Console.WriteLine($"{p} = 2^{k} * {h} + 1");
+            Console.WriteLine($"{p} = 2^{k} * {h} + 1, т.е. k = {k}, h = {h}");
 
             Console.WriteLine($"\n5) Положить:");
             int a1 = LightPow(a, (h + 1) / 2, p);
@@ -272,6 +271,7 @@
     {
         Console.WriteLine($"\nПроверка:");
         Console.WriteLine($"{x}^2 = {x * x} ≡ {a} (mod {p}) ({LightPow(x, 2, p) == a})");
+        Console.WriteLine($"{p - x}^2 = {(p - x) * (p - x)} ≡ {a} (mod {p}) ({LightPow(p - x, 2, p) == a})");
     }
 
     //Функции ввода/вывода
