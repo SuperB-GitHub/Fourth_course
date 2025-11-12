@@ -72,7 +72,7 @@ namespace Лаба_5
                 bool useNumbers = RB_Num.Checked;
                 string encrypted = Encrypt(input, useNumbers);
                 RTB_Crypted.Text = encrypted;
-                RTB_InputEnc.Text = encrypted;
+                //RTB_InputEnc.Text = encrypted;
             }
             catch (Exception ex)
             {
