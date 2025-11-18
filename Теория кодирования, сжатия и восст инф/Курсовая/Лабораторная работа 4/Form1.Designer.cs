@@ -367,9 +367,9 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label7.Location = new System.Drawing.Point(990, 9);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(141, 31);
+            this.label7.Size = new System.Drawing.Size(189, 31);
             this.label7.TabIndex = 6;
-            this.label7.Text = "k = n - m =";
+            this.label7.Text = "k(nи) = n - m =";
             // 
             // L_m
             // 
@@ -387,9 +387,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label5.Location = new System.Drawing.Point(772, 9);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(167, 31);
+            this.label5.Size = new System.Drawing.Size(214, 31);
             this.label5.TabIndex = 4;
-            this.label5.Text = "m = deg(g) =";
+            this.label5.Text = "m(nk) = deg(g) =";
             // 
             // label2
             // 
