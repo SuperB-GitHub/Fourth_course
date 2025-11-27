@@ -32,11 +32,16 @@ class Program
             {
                 Console.Clear();
                 Console.WriteLine($"Найти рациональное число, которое обращается в непрерывную дробь\n");
+                InputSecond(out int a, out List<int> qi);
 
+                contin = OutputEnd();
             }
             else if (key.Key == ConsoleKey.D3)
             {
                 Console.Clear();
+
+
+                contin = OutputEnd();
 
             }
             else
@@ -72,18 +77,18 @@ class Program
         }
 
         Console.Write($"Введите значения коэффициентов через пробел: ");
+        while ()
+        {
+
+        }
+
         string input = Console.ReadLine();
         qi = input.Split(' ')
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Select(int.Parse)
             .ToList();
 
-        while (!int.TryParse(Console.ReadLine(), out b))
-        {
-            Console.Write("Некорректный ввод. Введите целое число: ");
-
-        }
-        Console.WriteLine($"\nПолученная дробь: {a}/{b}");
+        Console.WriteLine($"\nПолученная дробь: [{a}; {string.Join(", ", qi)}]");
     }
     static bool OutputEnd()
     {
