@@ -94,8 +94,10 @@ namespace Курсовая_работа
                 stepByStepLog.AppendLine($"\n[Блок {block + 1}/{totalBlocks}]");
                 stepByStepLog.AppendLine($"Кодовое слово:   {receivedBinary}");
 
+                //string synf = GetPolynomialRemainder(receivedBinary, g);
                 string syndrome = DivideBinaryString(receivedBinary, g, true);
-                stepByStepLog.AppendLine($"Синдром:         {syndrome}");
+
+                stepByStepLog.AppendLine($"Синдром:           {syndrome}");
 
 
                 string correctedWord = receivedBinary;
@@ -344,6 +346,41 @@ namespace Курсовая_работа
 
             return s;
         }
+        //public static string GetPolynomialRemainder(string codeword, string g)
+        //{
+        //    codeword = codeword.Replace(" ", "").Trim();
+        //    g = g.Replace(" ", "").Trim();
 
+        //    if (string.IsNullOrEmpty(codeword)) return new string('0', g.Length - 1);
+        //    if (string.IsNullOrEmpty(g) || g == "0")
+        //        throw new ArgumentException("Генераторный полином не может быть пустым или нулевым");
+
+        //    char[] bits = codeword.ToCharArray();
+        //    int genLen = g.Length;
+
+        //    // Основной цикл деления (как в школьном столбиком, но с XOR)
+        //    for (int i = 0; i <= bits.Length - genLen; i++)
+        //    {
+        //        if (bits[i] == '1') // Если старший бит = 1 — "вычитаем" (XOR) генератор
+        //        {
+        //            for (int j = 0; j < genLen; j++)
+        //            {
+        //                bits[i + j] = (bits[i + j] == g[j]) ? '0' : '1';
+        //            }
+        //        }
+        //    }
+
+        //    // Остаток — последние (genLen - 1) бит
+        //    int remainderStart = bits.Length - (genLen - 1);
+        //    string remainder = new string(bits, remainderStart, genLen - 1);
+
+        //    // Приводим к нужной длине (на случай, если codeword короче ожидаемого — маловероятно)
+        //    if (remainder.Length < genLen - 1)
+        //        remainder = remainder.PadLeft(genLen - 1, '0');
+        //    else if (remainder.Length > genLen - 1)
+        //        remainder = remainder.Substring(remainder.Length - (genLen - 1));
+
+        //    return remainder;
+        //}
     }
 }
