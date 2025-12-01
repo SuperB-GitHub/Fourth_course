@@ -24,6 +24,7 @@ namespace Курсовая_работа
         public int m = 0;
         public int n = 0;
         public int k = 0;
+        public int s = 0;
         public int add_zero = 0;
 
         // Управление кнопками
@@ -78,7 +79,7 @@ namespace Курсовая_работа
             string fullBinSeq = RTB_CodedText.Text;
             RTB_DecodedText.Clear();
 
-            var syndromeTable = GenerateSyndromeTable(g, n);
+            //var syndromeTable = GenerateSyndromeTable(g, n);
 
             StringBuilder decodedResult = new StringBuilder();
             StringBuilder stepByStepLog = new StringBuilder();
@@ -92,29 +93,45 @@ namespace Курсовая_работа
             {
                 string receivedBinary = fullBinSeq.Substring(block * n, n);
                 stepByStepLog.AppendLine($"\n[Блок {block + 1}/{totalBlocks}]");
-                stepByStepLog.AppendLine($"Кодовое слово:   {receivedBinary}");
+                stepByStepLog.AppendLine($"Кодовое слово: {receivedBinary}");
 
                 //string synf = GetPolynomialRemainder(receivedBinary, g);
                 string syndrome = DivideBinaryString(receivedBinary, g, true);
+                int w = syndrome.Count(x => x == '1');
+                int count = 1;
+                string temp = receivedBinary;
 
-                stepByStepLog.AppendLine($"Синдром:           {syndrome}");
+                while (w > s)
+                {
+                    stepByStepLog.AppendLine($"       {count} Синдром: {new string(' ',k*2)}{syndrome}, но W({w}) > S({s})\n");
+                    temp = temp.Substring(1) + temp.Substring(0,1);
+                    stepByStepLog.AppendLine($"Кодовое слово: {temp}");
+                    syndrome = DivideBinaryString(temp, g, true);
+                    w = syndrome.Count(x => x == '1');
+                    count++;
+                }
 
+                receivedBinary = temp;
+                stepByStepLog.AppendLine($"       {count} Синдром: {new string(' ', k * 2)}{syndrome} и W({w}) <= S({s})");
 
                 string correctedWord = receivedBinary;
                 if (syndrome != new string('0', m))
                 {
-                    if (syndromeTable.TryGetValue(syndrome, out int errorPos))
+                    char[] wordChars = correctedWord.ToCharArray();
+                    char[] syndChars = syndrome.ToCharArray();
+
+                    for (int i = syndChars.Length; i != 0; i--)
                     {
-                        char[] wordChars = correctedWord.ToCharArray();
-                        wordChars[errorPos] = (wordChars[errorPos] == '0') ? '1' : '0';
-                        correctedWord = new string(wordChars);
-                        stepByStepLog.AppendLine($"Исправлен бит:   {errorPos + 1}");
-                        stepByStepLog.AppendLine($"Исправленное:    {correctedWord}");
+                        wordChars[i + k - 1] = (wordChars[i + k - 1] == syndChars[i - 1]) ? '0' : '1';
+                        if (syndChars[i - 1] == '1') 
+                        {
+                            stepByStepLog.AppendLine($"Исправлен бит: {(i + k - 1 + count)%n}");
+                        }
                     }
-                    else
-                    {
-                        stepByStepLog.AppendLine("Ошибка: Неизвестный синдром!");
-                    }
+                    correctedWord = new string(wordChars);
+                    int lenWord = correctedWord.Length;
+                    correctedWord = correctedWord.Substring(lenWord - count + 1, count - 1) + correctedWord.Substring(0, lenWord - count + 1);
+                    stepByStepLog.AppendLine($"Исправленное: {correctedWord}");
                 }
                 else
                 {
@@ -125,7 +142,6 @@ namespace Курсовая_работа
                 stepByStepLog.AppendLine(new string('-', 30));
 
                 decodedResult.Append(infoWord);
-                RTB_DecodedText.Text = stepByStepLog.ToString();
             }
 
             stepByStepLog.AppendLine("\n=== РЕЗУЛЬТАТ ===");
@@ -181,7 +197,7 @@ namespace Курсовая_работа
             }
 
             // === РАСЧЁТ s — количество исправляемых ошибок ===
-            int s = CalculateCorrectableErrorsCount(g);
+            s = CalculateCorrectableErrorsCount(g) + 1;
             L_s.Text = s == 0 ? "0" : s.ToString();
 
         }
@@ -313,7 +329,7 @@ namespace Курсовая_работа
 
             return table;
         }
-        private int CalculateCorrectableErrorsCount(string g) // Функция подсчёта кол-ва испр ошибок
+        private int CalculateCorrectableErrorsCount(string g) // Функция подсчёта кол-ва испр ошибок (не рабоч)
         {
             if (string.IsNullOrWhiteSpace(g))
                 return 0;
@@ -346,41 +362,5 @@ namespace Курсовая_работа
 
             return s;
         }
-        //public static string GetPolynomialRemainder(string codeword, string g)
-        //{
-        //    codeword = codeword.Replace(" ", "").Trim();
-        //    g = g.Replace(" ", "").Trim();
-
-        //    if (string.IsNullOrEmpty(codeword)) return new string('0', g.Length - 1);
-        //    if (string.IsNullOrEmpty(g) || g == "0")
-        //        throw new ArgumentException("Генераторный полином не может быть пустым или нулевым");
-
-        //    char[] bits = codeword.ToCharArray();
-        //    int genLen = g.Length;
-
-        //    // Основной цикл деления (как в школьном столбиком, но с XOR)
-        //    for (int i = 0; i <= bits.Length - genLen; i++)
-        //    {
-        //        if (bits[i] == '1') // Если старший бит = 1 — "вычитаем" (XOR) генератор
-        //        {
-        //            for (int j = 0; j < genLen; j++)
-        //            {
-        //                bits[i + j] = (bits[i + j] == g[j]) ? '0' : '1';
-        //            }
-        //        }
-        //    }
-
-        //    // Остаток — последние (genLen - 1) бит
-        //    int remainderStart = bits.Length - (genLen - 1);
-        //    string remainder = new string(bits, remainderStart, genLen - 1);
-
-        //    // Приводим к нужной длине (на случай, если codeword короче ожидаемого — маловероятно)
-        //    if (remainder.Length < genLen - 1)
-        //        remainder = remainder.PadLeft(genLen - 1, '0');
-        //    else if (remainder.Length > genLen - 1)
-        //        remainder = remainder.Substring(remainder.Length - (genLen - 1));
-
-        //    return remainder;
-        //}
     }
 }
