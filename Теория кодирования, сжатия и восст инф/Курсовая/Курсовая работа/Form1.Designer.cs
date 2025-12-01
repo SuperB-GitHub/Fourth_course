@@ -28,11 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -47,7 +44,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.B_Code = new System.Windows.Forms.Button();
-            this.B_CountParam = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.RTB_CodeText = new System.Windows.Forms.RichTextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -68,9 +64,6 @@
             this.RTB_DecodedText = new System.Windows.Forms.RichTextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.RTB_CodedText = new System.Windows.Forms.RichTextBox();
-            this.DGW_Table_ES = new System.Windows.Forms.DataGridView();
-            this.e = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.S = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.L_k2 = new System.Windows.Forms.Label();
             this.L_m2 = new System.Windows.Forms.Label();
             this.L_n2 = new System.Windows.Forms.Label();
@@ -80,6 +73,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.OFD = new System.Windows.Forms.OpenFileDialog();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.RTB_DecodeProcess = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -93,7 +88,7 @@
             this.tabPage3.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DGW_Table_ES)).BeginInit();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -228,7 +223,7 @@
             // 
             this.L_s.AutoSize = true;
             this.L_s.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.L_s.Location = new System.Drawing.Point(730, 9);
+            this.L_s.Location = new System.Drawing.Point(727, 9);
             this.L_s.Name = "L_s";
             this.L_s.Size = new System.Drawing.Size(29, 31);
             this.L_s.TabIndex = 21;
@@ -246,11 +241,9 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.B_Code, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.B_CountParam, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.B_Code, 0, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(451, 60);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
@@ -263,26 +256,13 @@
             this.B_Code.BackColor = System.Drawing.Color.LightSeaGreen;
             this.B_Code.Dock = System.Windows.Forms.DockStyle.Fill;
             this.B_Code.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.B_Code.Location = new System.Drawing.Point(407, 3);
+            this.B_Code.Location = new System.Drawing.Point(3, 3);
             this.B_Code.Name = "B_Code";
-            this.B_Code.Size = new System.Drawing.Size(398, 59);
+            this.B_Code.Size = new System.Drawing.Size(802, 59);
             this.B_Code.TabIndex = 18;
             this.B_Code.Text = "Закодировать";
             this.B_Code.UseVisualStyleBackColor = false;
             this.B_Code.Click += new System.EventHandler(this.B_Code_Click);
-            // 
-            // B_CountParam
-            // 
-            this.B_CountParam.BackColor = System.Drawing.Color.LightSeaGreen;
-            this.B_CountParam.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.B_CountParam.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.B_CountParam.Location = new System.Drawing.Point(3, 3);
-            this.B_CountParam.Name = "B_CountParam";
-            this.B_CountParam.Size = new System.Drawing.Size(398, 59);
-            this.B_CountParam.TabIndex = 17;
-            this.B_CountParam.Text = "Просчитать параметры";
-            this.B_CountParam.UseVisualStyleBackColor = false;
-            this.B_CountParam.Click += new System.EventHandler(this.B_CountParam_Click);
             // 
             // groupBox4
             // 
@@ -341,24 +321,24 @@
             this.DGW_Matrix_1.AllowUserToResizeColumns = false;
             this.DGW_Matrix_1.AllowUserToResizeRows = false;
             this.DGW_Matrix_1.BackgroundColor = System.Drawing.Color.Aquamarine;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGW_Matrix_1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGW_Matrix_1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.DGW_Matrix_1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGW_Matrix_1.ColumnHeadersVisible = false;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGW_Matrix_1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGW_Matrix_1.DefaultCellStyle = dataGridViewCellStyle6;
             this.DGW_Matrix_1.Location = new System.Drawing.Point(63, 57);
             this.DGW_Matrix_1.Name = "DGW_Matrix_1";
             this.DGW_Matrix_1.RowHeadersVisible = false;
@@ -379,7 +359,7 @@
             // 
             this.L_k.AutoSize = true;
             this.L_k.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.L_k.Location = new System.Drawing.Point(1227, 9);
+            this.L_k.Location = new System.Drawing.Point(1221, 9);
             this.L_k.Name = "L_k";
             this.L_k.Size = new System.Drawing.Size(29, 31);
             this.L_k.TabIndex = 7;
@@ -391,15 +371,15 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label7.Location = new System.Drawing.Point(1037, 9);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(189, 31);
+            this.label7.Size = new System.Drawing.Size(178, 31);
             this.label7.TabIndex = 6;
-            this.label7.Text = "k(nи) = n - m =";
+            this.label7.Text = "k(nᵢ) = n - m =";
             // 
             // L_m
             // 
             this.L_m.AutoSize = true;
             this.L_m.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.L_m.Location = new System.Drawing.Point(983, 9);
+            this.L_m.Location = new System.Drawing.Point(987, 9);
             this.L_m.Name = "L_m";
             this.L_m.Size = new System.Drawing.Size(29, 31);
             this.L_m.TabIndex = 5;
@@ -411,9 +391,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label5.Location = new System.Drawing.Point(772, 9);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(214, 31);
+            this.label5.Size = new System.Drawing.Size(209, 31);
             this.label5.TabIndex = 4;
-            this.label5.Text = "m(nk) = deg(g) =";
+            this.label5.Text = "m(nₖ) = deg(g) =";
             // 
             // label2
             // 
@@ -448,10 +428,10 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.MediumTurquoise;
+            this.tabPage3.Controls.Add(this.groupBox7);
             this.tabPage3.Controls.Add(this.B_Decode);
             this.tabPage3.Controls.Add(this.groupBox6);
             this.tabPage3.Controls.Add(this.groupBox5);
-            this.tabPage3.Controls.Add(this.DGW_Table_ES);
             this.tabPage3.Controls.Add(this.L_k2);
             this.tabPage3.Controls.Add(this.L_m2);
             this.tabPage3.Controls.Add(this.L_n2);
@@ -485,7 +465,7 @@
             this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox6.Location = new System.Drawing.Point(12, 434);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(1244, 393);
+            this.groupBox6.Size = new System.Drawing.Size(683, 393);
             this.groupBox6.TabIndex = 22;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Декодированный текст";
@@ -495,7 +475,7 @@
             this.RTB_DecodedText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RTB_DecodedText.Location = new System.Drawing.Point(3, 27);
             this.RTB_DecodedText.Name = "RTB_DecodedText";
-            this.RTB_DecodedText.Size = new System.Drawing.Size(1238, 363);
+            this.RTB_DecodedText.Size = new System.Drawing.Size(677, 363);
             this.RTB_DecodedText.TabIndex = 1;
             this.RTB_DecodedText.Text = "";
             // 
@@ -518,49 +498,6 @@
             this.RTB_CodedText.Size = new System.Drawing.Size(677, 260);
             this.RTB_CodedText.TabIndex = 0;
             this.RTB_CodedText.Text = "";
-            // 
-            // DGW_Table_ES
-            // 
-            this.DGW_Table_ES.AllowUserToAddRows = false;
-            this.DGW_Table_ES.AllowUserToDeleteRows = false;
-            this.DGW_Table_ES.AllowUserToResizeColumns = false;
-            this.DGW_Table_ES.AllowUserToResizeRows = false;
-            this.DGW_Table_ES.BackgroundColor = System.Drawing.Color.Aquamarine;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGW_Table_ES.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.DGW_Table_ES.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGW_Table_ES.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.e,
-            this.S});
-            this.DGW_Table_ES.Location = new System.Drawing.Point(701, 64);
-            this.DGW_Table_ES.Name = "DGW_Table_ES";
-            this.DGW_Table_ES.RowHeadersVisible = false;
-            this.DGW_Table_ES.Size = new System.Drawing.Size(555, 363);
-            this.DGW_Table_ES.TabIndex = 19;
-            // 
-            // e
-            // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.e.DefaultCellStyle = dataGridViewCellStyle4;
-            this.e.HeaderText = "e";
-            this.e.Name = "e";
-            this.e.Width = 300;
-            // 
-            // S
-            // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.S.DefaultCellStyle = dataGridViewCellStyle5;
-            this.S.HeaderText = "S = x * S(x) mod g(x)";
-            this.S.Name = "S";
-            this.S.Width = 250;
             // 
             // L_k2
             // 
@@ -647,6 +584,26 @@
             this.OFD.FileName = "OpenFileDialog";
             this.OFD.Filter = "Только такие| *.txt";
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.RTB_DecodeProcess);
+            this.groupBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.groupBox7.Location = new System.Drawing.Point(712, 64);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(556, 760);
+            this.groupBox7.TabIndex = 21;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Расчёт декодирования";
+            // 
+            // RTB_DecodeProcess
+            // 
+            this.RTB_DecodeProcess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_DecodeProcess.Location = new System.Drawing.Point(3, 27);
+            this.RTB_DecodeProcess.Name = "RTB_DecodeProcess";
+            this.RTB_DecodeProcess.Size = new System.Drawing.Size(550, 730);
+            this.RTB_DecodeProcess.TabIndex = 0;
+            this.RTB_DecodeProcess.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -655,7 +612,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Модель помехоустойчивого канала с БЧХ-кодом";
+            this.Text = "Модель помехоустойчивого канала на основе БЧХ-кодов";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -671,7 +628,7 @@
             this.tabPage3.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DGW_Table_ES)).EndInit();
+            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -700,7 +657,6 @@
         private System.Windows.Forms.DataGridView DGW_Matrix_1;
         private System.Windows.Forms.OpenFileDialog OFD;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button B_CountParam;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Button B_Code;
         private System.Windows.Forms.GroupBox groupBox4;
@@ -715,9 +671,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.DataGridView DGW_Table_ES;
-        private System.Windows.Forms.DataGridViewTextBoxColumn e;
-        private System.Windows.Forms.DataGridViewTextBoxColumn S;
         private System.Windows.Forms.Button B_Decode;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.RichTextBox RTB_DecodedText;
@@ -725,6 +678,8 @@
         private System.Windows.Forms.RichTextBox RTB_CodedText;
         private System.Windows.Forms.Label L_s;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.RichTextBox RTB_DecodeProcess;
     }
 }
 

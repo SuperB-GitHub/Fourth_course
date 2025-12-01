@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанных со сборкой.
-[assembly: AssemblyTitle("Лабораторная работа 4")]
+[assembly: AssemblyTitle("Модель помехоустойчивого канала на основе БЧХ-кодов")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Лабораторная работа 4")]
+[assembly: AssemblyCompany("ДГТУ")]
+[assembly: AssemblyProduct("Модель помехоустойчивого канала на основе БЧХ-кодов")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Курсовая_работа
@@ -39,63 +39,114 @@ namespace Курсовая_работа
                 RTB_Common.Text = text;
             }
         }
-        private void B_CountParam_Click(object sender, EventArgs e)
-        {
-            if (n != 0 && m != 0 && m == g.Length - 1)
-            {
-                DGW_Matrix_1.Rows.Clear();
-                DGW_Matrix_1.Columns.Clear();
-                createMatrix(k, n, DGW_Matrix_1);
-                G = BuildGeneratorMatrix(g, n, k, m);
-            }
-
-            add_zero = (k - (binText.Length % k)) % k; // Высчитывание доп нулей
-            string workText = binText + new string('0', add_zero); // Добавление доп нулей
-            RTB_InfText.Text = workText;
-        }
         private void B_Code_Click(object sender, EventArgs e)
         {
-            RTB_CodeText.Clear();
-            string binaryText = RTB_InfText.Text;
-            int blockCount = binaryText.Length / k;
-
-
-            for (int i = 0; i < blockCount; i++)
+            try
             {
-                string binaryChunk = binaryText.Substring(i * k, k);
-                int[] infWord = binaryChunk.Select(c => c - '0').ToArray();
-                RTB_CodeText.Text += MultiplyInfoWordWithMatrix(G, infWord);
+                RTB_CodeText.Clear();
+
+                // Проверка параметров кодирования
+                if (string.IsNullOrEmpty(g) || g.Length < 2)
+                {
+                    MessageBox.Show("Введите порождающий полином g(x) (например, 1101)",
+                        "Ошибка параметров", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (n <= 0)
+                {
+                    MessageBox.Show("Введите длину кода n > 0",
+                        "Ошибка параметров", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (m >= n)
+                {
+                    MessageBox.Show($"Степень полинома m={m} должна быть меньше длины кода n={n}",
+                        "Ошибка параметров", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (k <= 0)
+                {
+                    MessageBox.Show("Рассчитанное k <= 0. Проверьте параметры n и g(x)",
+                        "Ошибка параметров", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(binText))
+                {
+                    MessageBox.Show("Нет данных для кодирования. Откройте файл или введите текст",
+                        "Нет данных", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+
+                if (n != 0 && m != 0 && m == g.Length - 1)
+                {
+                    DGW_Matrix_1.Rows.Clear();
+                    DGW_Matrix_1.Columns.Clear();
+                    createMatrix(k, n, DGW_Matrix_1);
+                    G = BuildGeneratorMatrix(g, n, k, m);
+                }
+
+                add_zero = (k - (binText.Length % k)) % k;
+                string workText = binText + new string('0', add_zero);
+                RTB_InfText.Text = workText;
+
+                string binaryText = RTB_InfText.Text;
+                int blockCount = binaryText.Length / k;
+
+                // Оптимизация 1: Используем StringBuilder для накопления текста
+                var codeTextBuilder = new StringBuilder(blockCount * n);
+
+                // Оптимизация 2: Параллельная обработка блоков
+                var results = new string[blockCount];
+
+                Parallel.For(0, blockCount, i =>
+                {
+                    string binaryChunk = binaryText.Substring(i * k, k);
+                    int[] infWord = binaryChunk.Select(c => c - '0').ToArray();
+                    results[i] = MultiplyInfoWordWithMatrix(G, infWord);
+                });
+
+                // Собираем результаты в правильном порядке
+                for (int i = 0; i < blockCount; i++)
+                {
+                    codeTextBuilder.Append(results[i]);
+                }
+
+                RTB_CodeText.Text = codeTextBuilder.ToString();
+
+                L_g.Text = g;
+                L_n2.Text = n.ToString();
+                L_m2.Text = m.ToString();
+                L_k2.Text = k.ToString();
+                RTB_CodedText.Text = RTB_CodeText.Text;
             }
-
-            L_g.Text = g;
-            L_n2.Text = n.ToString();
-            L_m2.Text = m.ToString();
-            L_k2.Text = k.ToString();
-            RTB_CodedText.Text = RTB_CodeText.Text;
-
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при кодировании:\n{ex.Message}",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void B_Decode_Click(object sender, EventArgs e)
         {
             string fullBinSeq = RTB_CodedText.Text;
-            RTB_DecodedText.Clear();
-
-            //var syndromeTable = GenerateSyndromeTable(g, n);
+            RTB_DecodedText.Clear(); RTB_DecodeProcess.Clear();
 
             StringBuilder decodedResult = new StringBuilder();
-            StringBuilder stepByStepLog = new StringBuilder();
 
             int totalBlocks = fullBinSeq.Length / n;
 
-            stepByStepLog.AppendLine("=== НАЧАЛО ДЕКОДИРОВАНИЯ ===");
-            stepByStepLog.AppendLine($"Общее количество блоков: {totalBlocks}\n");
+            RTB_DecodeProcess.Text += $"Общее количество блоков: {totalBlocks}\n";
 
             for (int block = 0; block < totalBlocks; block++)
             {
                 string receivedBinary = fullBinSeq.Substring(block * n, n);
-                stepByStepLog.AppendLine($"\n[Блок {block + 1}/{totalBlocks}]");
-                stepByStepLog.AppendLine($"Кодовое слово: {receivedBinary}");
+                RTB_DecodeProcess.Text += $"\n[Блок {block + 1}/{totalBlocks}]\n";
+                RTB_DecodeProcess.Text += $"Кодовое слово: {receivedBinary}\n";
 
-                //string synf = GetPolynomialRemainder(receivedBinary, g);
                 string syndrome = DivideBinaryString(receivedBinary, g, true);
                 int w = syndrome.Count(x => x == '1');
                 int count = 1;
@@ -103,16 +154,16 @@ namespace Курсовая_работа
 
                 while (w > s)
                 {
-                    stepByStepLog.AppendLine($"       {count} Синдром: {new string(' ',k*2)}{syndrome}, но W({w}) > S({s})\n");
+                    RTB_DecodeProcess.Text += $"       {count} Синдром: {new string(' ', k * 2)}{syndrome}, но W({w}) > S({s})\n\n";
                     temp = temp.Substring(1) + temp.Substring(0,1);
-                    stepByStepLog.AppendLine($"Кодовое слово: {temp}");
+                    RTB_DecodeProcess.Text += $"Кодовое слово: {temp}\n";
                     syndrome = DivideBinaryString(temp, g, true);
                     w = syndrome.Count(x => x == '1');
                     count++;
                 }
 
                 receivedBinary = temp;
-                stepByStepLog.AppendLine($"       {count} Синдром: {new string(' ', k * 2)}{syndrome} и W({w}) <= S({s})");
+                RTB_DecodeProcess.Text += $"       {count} Синдром: {new string(' ', k * 2)}{syndrome} и W({w}) <= S({s})\n";
 
                 string correctedWord = receivedBinary;
                 if (syndrome != new string('0', m))
@@ -125,39 +176,35 @@ namespace Курсовая_работа
                         wordChars[i + k - 1] = (wordChars[i + k - 1] == syndChars[i - 1]) ? '0' : '1';
                         if (syndChars[i - 1] == '1') 
                         {
-                            stepByStepLog.AppendLine($"Исправлен бит: {(i + k - 1 + count)%n}");
+                            RTB_DecodeProcess.Text += $"Исправлен бит: {(i + k - 1 + count) % n}\n";
                         }
                     }
                     correctedWord = new string(wordChars);
                     int lenWord = correctedWord.Length;
                     correctedWord = correctedWord.Substring(lenWord - count + 1, count - 1) + correctedWord.Substring(0, lenWord - count + 1);
-                    stepByStepLog.AppendLine($"Исправленное: {correctedWord}");
+                    RTB_DecodeProcess.Text += $"Исправленное: {correctedWord}\n";
                 }
                 else
                 {
-                    stepByStepLog.AppendLine("Ошибок не обнаружено");
+                    RTB_DecodeProcess.Text += "Ошибок не обнаружено\n";
                 }
                 string infoWord = DivideBinaryString(correctedWord, g, false);
-                stepByStepLog.AppendLine($"Инф. слово:      {infoWord}");
-                stepByStepLog.AppendLine(new string('-', 30));
+                RTB_DecodeProcess.Text += $"Инф. слово:      {infoWord}\n";
+                RTB_DecodeProcess.Text += new string('-', 30) + "\n";
 
                 decodedResult.Append(infoWord);
             }
 
-            stepByStepLog.AppendLine("\n=== РЕЗУЛЬТАТ ===");
-            stepByStepLog.AppendLine($"Полное сообщение: {decodedResult}\n");
-            RTB_DecodedText.Text = stepByStepLog.ToString();
+            RTB_DecodedText.Text += $"Полное сообщение: {decodedResult}\n\n";
             decodedResult.Length -= add_zero;
 
-            byte[] final_decode = new byte[decodedResult.Length * 10]; // Массив для хранения байтов
+            byte[] final_decode = new byte[decodedResult.Length * 10];
             for (int i = 0; i < decodedResult.Length; i += 8)
             {
-                string substring = decodedResult.ToString().Substring(i, 8); // Каждые 8 элементов
-                final_decode[i / 8] = Convert.ToByte(substring, 2); // Преобразование в байтовое значение и запись
+                string substring = decodedResult.ToString().Substring(i, 8);
+                final_decode[i / 8] = Convert.ToByte(substring, 2);
             }
             RTB_DecodedText.Text += $"Расшифрованное сообщение: {Encoding.UTF8.GetString(final_decode)}";
-
-
         }
 
         // Управление событиями
@@ -174,7 +221,14 @@ namespace Курсовая_работа
         {
             g = RTB_g.Text.Trim();
 
-            // Определяем степень полинома m (позиция старшей единицы)
+            if (!g.All(c => c == '0' || c == '1'))
+            {
+                MessageBox.Show("Полином должен содержать только '0' и '1'",
+                    "Ошибка ввода", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                g = "";
+                return;
+            }
+
             for (int i = g.Length - 1; i >= 0; i--)
             {
                 if (g[i] == '1')
@@ -185,7 +239,6 @@ namespace Курсовая_работа
             }
             L_m.Text = m.ToString();
 
-            // Пересчитываем k, если n уже введён
             if (n > 0 && n > m)
             {
                 k = n - m;
@@ -196,8 +249,7 @@ namespace Курсовая_работа
                 L_k.Text = "?";
             }
 
-            // === РАСЧЁТ s — количество исправляемых ошибок ===
-            s = CalculateCorrectableErrorsCount(g) + 1;
+            s = GetBchT(g,n);
             L_s.Text = s == 0 ? "0" : s.ToString();
 
         }
@@ -210,7 +262,10 @@ namespace Курсовая_работа
                 L_k.Text = k.ToString();
             }
             else { L_k.Text = "?"; }
-            
+
+            s = GetBchT(g, n);
+            L_s.Text = s == 0 ? "0" : s.ToString();
+
         }
 
         // Работа алгоритмов
@@ -306,61 +361,43 @@ namespace Курсовая_работа
 
             return synd ? new string(data, data.Length - m, m) : new string(ans);
         }
-        private Dictionary<string, int> GenerateSyndromeTable(string g, int n) // Функция создания синдромов
+        public static int GetBchT(string g, int n) // Функция нахождения s
         {
-            DGW_Table_ES.Rows.Clear();
-            var table = new Dictionary<string, int>();
-            int syndromeLength = g.Length - 1;
-
-            for (int errorPos = 0; errorPos < n; errorPos++)
+            // Словарь: (n, k) -> t
+            var bchTable = new Dictionary<(int n, int k), int>
             {
-                int[] errorVector = new int[n];
-                errorVector[errorPos] = 1;
-                string errorBinary = string.Join("", errorVector);
+                // n = 7
+                {(7, 4), 1},
+                {(7, 3), 2}, 
 
-                string syndrome = DivideBinaryString(errorBinary, g,true);
+                // n = 15
+                {(15, 11), 1}, 
+                {(15, 7),  2}, 
+                {(15, 5),  3}, 
 
-                if (!table.ContainsKey(syndrome))
-                {
-                    table.Add(syndrome, errorPos);
-                    DGW_Table_ES.Rows.Add("x^"+errorPos.ToString(), syndrome);
-                }
-            }
+                // n = 31
+                {(31, 26), 1},
+                {(31, 21), 2},
+                {(31, 16), 3},
+                {(31, 11), 5},
+                {(31, 6),  7}
+            };
 
-            return table;
-        }
-        private int CalculateCorrectableErrorsCount(string g) // Функция подсчёта кол-ва испр ошибок (не рабоч)
-        {
-            if (string.IsNullOrWhiteSpace(g))
+            g = g.Trim();
+            if (string.IsNullOrEmpty(g) || !g.All(c => c == '0' || c == '1'))
                 return 0;
 
-            g = g.Replace(" ", "").Trim();
-            if (g.Length == 0)
-                return 0;
+            int degree = g.Length - 1;
+            if (degree <= 0) return 0;
 
-            int maxConsecutiveOnes = 0;
-            int current = 0;
+            int firstOne = g.IndexOf('1');
+            if (firstOne == -1) return 0;
+            degree = g.Length - firstOne - 1;
 
-            foreach (char c in g)
-            {
-                if (c == '1')
-                {
-                    current++;
-                    if (current > maxConsecutiveOnes)
-                        maxConsecutiveOnes = current;
-                }
-                else
-                {
-                    current = 0;
-                }
-            }
+            int k = n - degree;
+            var key = (n, k);
 
-            int s = (maxConsecutiveOnes - 1) / 2;
-
-            if (maxConsecutiveOnes >= 2)
-                s = Math.Max(1, s);
-
-            return s;
+            return bchTable.TryGetValue(key, out int t) ? t : -1;
         }
     }
 }
