@@ -24,7 +24,7 @@ class Program
                 InputFirst(out int a, out int b);
 
                 Console.WriteLine($"\nИспользуя алгоритм Евклида:");
-                EuclidAlg(ref a, ref b);
+                EuclidAlg(a, b);
 
                 contin = OutputEnd();
             }
@@ -33,6 +33,9 @@ class Program
                 Console.Clear();
                 Console.WriteLine($"Найти рациональное число, которое обращается в непрерывную дробь\n");
                 InputSecond(out int a, out List<int> qi);
+
+                Console.WriteLine($"\nПо закону составления подходящих дробей");
+                LawSuitableFractions(a, qi);
 
                 contin = OutputEnd();
             }
@@ -122,27 +125,6 @@ class Program
         if (key.Key != ConsoleKey.Enter) { return false; }
         return true;
     }
-    //public static void PrintFraction(List<int> qi)
-    //{
-    //    string pm = " + ";
-    //    int lenpm = pm.Length;
-
-    //    string first = $"{new string(' ', qi[0].ToString().Length)}{new string(' ', lenpm)}1";
-    //    Console.WriteLine("\n" + first);
-
-    //    for (int i = 1; i < qi.Count; i++)
-    //    {
-    //        if (i == qi.Count - 1)
-    //        {
-    //            Console.WriteLine($"{new string(' ', (i - 1) * (first.Length - 1))}{qi[i - 1]}{pm}{new string('-', qi[i].ToString().Length)}");
-    //            Console.WriteLine($"{new string(' ', (i) * (first.Length - 1))}{qi[i]}");
-    //        }
-    //        else
-    //        {
-    //            Console.WriteLine($"{new string(' ', (i - 1) * (first.Length - 1))}{qi[i - 1]}{pm}{new string('-', qi[i].ToString().Length)}{new string(' ', lenpm)}1");
-    //        }
-    //    }
-    //}
     public static void PrintFraction(List<int> qi)
     {
         if (qi == null || qi.Count == 0) return;
@@ -150,18 +132,14 @@ class Program
         string pm = " + ";
         int lenpm = pm.Length;
 
-        // Строим структуру дроби в памяти для расчета позиций
         List<string> lines = new List<string>();
 
-        // Первая строка
         lines.Add($"{new string(' ', qi[0].ToString().Length)}{new string(' ', lenpm)}1");
 
-        // Последующие строки
         for (int i = 1; i < qi.Count; i++)
         {
             int currentIndent = 0;
 
-            // Рассчитываем отступ на основе предыдущих коэффициентов
             for (int j = 0; j < i - 1; j++)
             {
                 currentIndent += qi[j].ToString().Length + lenpm;
@@ -169,7 +147,6 @@ class Program
 
             if (i == qi.Count - 1)
             {
-                // Последний элемент - числитель и знаменатель
                 string numLine = $"{new string(' ', currentIndent)}{qi[i - 1]}{pm}{new string('-', qi[i].ToString().Length)}";
                 string denomLine = $"{new string(' ', currentIndent + qi[i - 1].ToString().Length + lenpm)}{qi[i]}";
 
@@ -178,13 +155,10 @@ class Program
             }
             else
             {
-                // Промежуточный элемент
                 string line = $"{new string(' ', currentIndent)}{qi[i - 1]}{pm}{new string('-', qi[i].ToString().Length)}{new string(' ', lenpm)}1";
                 lines.Add(line);
             }
         }
-
-        // Выводим все строки
         Console.WriteLine();
         foreach (string line in lines)
         {
@@ -193,7 +167,7 @@ class Program
     }
 
     // Работа алгоритмов
-    static void EuclidAlg(ref int a, ref int b)
+    static void EuclidAlg(int a, int b)
     {
         List<int> ai = new List<int> { a };
         List<int> bi = new List<int> { b };
@@ -233,5 +207,28 @@ class Program
                 Console.Write($"1/{qi[_]}, ");
             }
         }
+    }
+    static void LawSuitableFractions(int a, List<int> qi)
+    {
+        Console.Write($"Так как [{a}; {string.Join(", ", qi)}], то a0 = {a}");
+        for (int k = 0; k < qi.Count; k++)
+        {
+            Console.Write($", b{k + 1} = 1, a{k + 1} = {qi[k]}");
+        }
+
+        Console.WriteLine($"\nТакже P-1 = 1, Q-1 = 0, P0 = a0 = {a}, Q0 = 1");
+        List<int> pk = new List<int> { 1, a };
+        List<int> qk = new List<int> { 0, 1 };
+
+        Console.WriteLine($"Остальные значения K = 1,...,{qi.Count} считаем по формулам: 𝑃𝑘 = 𝑎𝑘 ⋅ 𝑃𝑘−1 + 𝑏𝑘 ⋅ 𝑃𝑘−2; 𝑄𝑘 = 𝑎𝑘 ⋅ 𝑄𝑘−1 + 𝑏𝑘 ⋅ 𝑄𝑘−2\n");
+        for (int k = 0; k < qi.Count; k++)
+        {
+            pk.Add(qi[k] * pk[k + 1] + pk[k]);
+            Console.WriteLine($"P{k + 1} = a{k + 1} * P{k} + b{k + 1} * P{k - 1} = {qi[k]} * {pk[k + 1]} + 1 * {pk[k]} = {pk[k + 2]}");
+            qk.Add(qi[k] * qk[k + 1] + qk[k]);
+            Console.WriteLine($"Q{k + 1} = a{k + 1} * Q{k} + b{k + 1} * Q{k - 1} = {qi[k]} * {qk[k + 1]} + 1 * {qk[k]} = {qk[k + 2]}\n");
+        }
+
+        Console.WriteLine($"\nОтвет:\n \t [{a}; {string.Join(", ", qi)}] = {pk.Last()}/{qk.Last()}");
     }
 }
