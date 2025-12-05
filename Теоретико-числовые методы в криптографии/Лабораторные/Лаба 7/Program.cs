@@ -5,7 +5,7 @@ class Program
 {
     static void Main()
     {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
         bool contin = true;
         while (contin)
         {
@@ -34,7 +34,10 @@ class Program
                 Console.WriteLine($"Найти рациональное число, которое обращается в непрерывную дробь\n");
                 InputSecond(out int a, out List<int> qi);
 
-                Console.WriteLine($"\nПо закону составления подходящих дробей");
+                Console.WriteLine($"\n1) Просто сложение и умножение дробей");
+                MultiplicAndAdd(a, qi);
+
+                Console.WriteLine($"\n2) По закону составления подходящих дробей");
                 LawSuitableFractions(a, qi);
 
                 contin = OutputEnd();
@@ -220,7 +223,7 @@ class Program
         List<int> pk = new List<int> { 1, a };
         List<int> qk = new List<int> { 0, 1 };
 
-        Console.WriteLine($"Остальные значения K = 1,...,{qi.Count} считаем по формулам: 𝑃𝑘 = 𝑎𝑘 ⋅ 𝑃𝑘−1 + 𝑏𝑘 ⋅ 𝑃𝑘−2; 𝑄𝑘 = 𝑎𝑘 ⋅ 𝑄𝑘−1 + 𝑏𝑘 ⋅ 𝑄𝑘−2\n");
+        Console.WriteLine($"Остальные значения K = 1,...,{qi.Count} считаем по формулам: Pk = ak * Pk−1 + bk * Pk−2; Qk = ak * Qk−1 + bk * Qk−2\n");
         for (int k = 0; k < qi.Count; k++)
         {
             pk.Add(qi[k] * pk[k + 1] + pk[k]);
@@ -230,5 +233,20 @@ class Program
         }
 
         Console.WriteLine($"\nОтвет:\n \t [{a}; {string.Join(", ", qi)}] = {pk.Last()}/{qk.Last()}");
+    }
+    static void MultiplicAndAdd(int a, List<int> qi)
+    {
+        PrintFraction(new List<int> { a }.Concat(qi).ToList());
+        Console.Write($"[{a}; {string.Join(", ", qi)}] = ");
+        int x = 1; int y = qi.Last();
+
+        for (int i = qi.Count() - 2; i >= 0; i--) 
+        {
+            x = x + qi[i] * y;
+            int temp = x; x = y; y = temp;
+            Console.Write($"{x}/{y} = ");
+        }
+        x = x + a * y;
+        Console.Write($"{x}/{y}\n");
     }
 }
