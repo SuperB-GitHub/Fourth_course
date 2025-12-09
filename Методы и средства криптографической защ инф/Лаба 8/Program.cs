@@ -26,17 +26,12 @@ class Program
             }
             else if (key.Key == ConsoleKey.D2)
             {
-                //Console.Clear();
-                //Console.WriteLine($"Найти рациональное число, которое обращается в непрерывную дробь\n");
-                //InputSecond(out int a, out List<int> qi);
+                Console.Clear();
+                Console.WriteLine($"Найти рациональное число, которое обращается в непрерывную дробь\n");
+                InputSecond(out List<int> bi, out string reg);
+                Scramble(bi, reg);
 
-                //Console.WriteLine($"\n1) Просто сложение и умножение дробей");
-                //MultiplicAndAdd(a, qi);
-
-                //Console.WriteLine($"\n2) По закону составления подходящих дробей");
-                //LawSuitableFractions(a, qi);
-
-                //contin = OutputEnd();
+                contin = OutputEnd();
             }
             else
             {
@@ -72,7 +67,7 @@ class Program
         }
         Console.WriteLine($"\nПолученное значение: {reg}");
     }
-    static void InputSecond(out List<int> xi, out string reg)
+    static void InputSecond(out List<int> bi, out string reg)
     {
         Console.Write($"Введите инициализируемое значение: ");
         reg = Console.ReadLine()!;
@@ -83,20 +78,20 @@ class Program
         }
         Console.WriteLine($"\nПолученное значение: {reg}");
 
-        Console.Write($"Введите значения степени полинома через пробел: ");
-        string inputxi = Console.ReadLine()!;
-        while (string.IsNullOrWhiteSpace(inputxi))
+        Console.Write($"Введите значения степени примера через пробел: ");
+        string input_bi = Console.ReadLine()!;
+        while (string.IsNullOrWhiteSpace(input_bi))
         {
             Console.Write("Некорректный ввод. Введите целые числа: ");
-            inputxi = Console.ReadLine()!;
+            input_bi = Console.ReadLine()!;
         }
 
-        xi = inputxi.Split(' ')
+        bi = input_bi.Split(' ')
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Select(int.Parse)
             .ToList();
 
-        Console.WriteLine($"\nПолученный полином: x^{string.Join(" + x^", xi)}");
+        Console.WriteLine($"\nПолученный полином: bi = ai ^ b(i-{string.Join(") ^ b(i-", bi)})");
     }
     static bool OutputEnd()
     {
@@ -139,5 +134,41 @@ class Program
             xor ^= Convert.ToInt32(reg[n].ToString());
         }
         return xor;
+    }
+    static void Scramble(List<int> bi, string reg)
+    {
+        Console.WriteLine($"\nai | {reg}");
+        string b = reg[0].ToString();
+        string c = b[0].ToString();
+
+        for (int i = 1; i < reg.Length; i++)
+        {
+            int newb = Convert.ToInt32(reg[i].ToString());
+            foreach (int num in bi)
+            {
+                try
+                {
+                    newb ^= Convert.ToInt32(b[i - num].ToString());
+                }
+                catch { continue; }
+            }
+            b += newb.ToString();
+        }
+        Console.WriteLine($"bi | {b}");
+
+        for (int i = 1; i < reg.Length; i++)
+        {
+            int newc = Convert.ToInt32(b[i].ToString());
+            foreach (int num in bi)
+            {
+                try
+                {
+                    newc ^= Convert.ToInt32(b[i - num].ToString());
+                }
+                catch { continue; }
+            }
+            c += newc.ToString();
+        }
+        Console.WriteLine($"ci | {c}");
     }
 }
