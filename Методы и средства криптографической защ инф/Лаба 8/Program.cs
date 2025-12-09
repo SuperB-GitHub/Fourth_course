@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq.Expressions;
+using System.Text;
 
 class Program
 {
@@ -27,7 +28,7 @@ class Program
             else if (key.Key == ConsoleKey.D2)
             {
                 Console.Clear();
-                Console.WriteLine($"Найти рациональное число, которое обращается в непрерывную дробь\n");
+                Console.WriteLine($"Скремблирование");
                 InputSecond(out List<int> bi, out string reg);
                 Scramble(bi, reg);
 
@@ -44,11 +45,11 @@ class Program
     static void InputFirst(out List<int> xi, out string reg)
     {
         Console.Write($"Введите значения степени полинома через пробел: ");
-        string inputxi = Console.ReadLine()!;
+        string inputxi = Console.ReadLine()!.Trim();
         while (string.IsNullOrWhiteSpace(inputxi))
         {
             Console.Write("Некорректный ввод. Введите целые числа: ");
-            inputxi = Console.ReadLine()!;
+            inputxi = Console.ReadLine()!.Trim();
         }
 
         xi = inputxi.Split(' ')
@@ -59,31 +60,29 @@ class Program
         Console.WriteLine($"\nПолученный полином: x^{string.Join(" + x^", xi)}");
 
         Console.Write($"Введите инициализируемое значение: ");
-        reg = Console.ReadLine()!;
+        reg = Console.ReadLine()!.Trim();
         while (string.IsNullOrWhiteSpace(reg) || reg.Length != xi.First())
         {
             Console.Write($"Некорректный ввод. Введите {xi.First()}-битную последовательность: ");
-            reg = Console.ReadLine()!;
+            reg = Console.ReadLine()!.Trim();
         }
-        Console.WriteLine($"\nПолученное значение: {reg}");
     }
     static void InputSecond(out List<int> bi, out string reg)
     {
-        Console.Write($"Введите инициализируемое значение: ");
-        reg = Console.ReadLine()!;
+        Console.Write($"\nВведите инициализируемое значение: ");
+        reg = Console.ReadLine()!.Trim();
         while (string.IsNullOrWhiteSpace(reg))
         {
             Console.Write($"Некорректный ввод. Введите последовательность: ");
-            reg = Console.ReadLine()!;
+            reg = Console.ReadLine()!.Trim();
         }
-        Console.WriteLine($"\nПолученное значение: {reg}");
 
         Console.Write($"Введите значения степени примера через пробел: ");
-        string input_bi = Console.ReadLine()!;
+        string input_bi = Console.ReadLine()!.Trim();
         while (string.IsNullOrWhiteSpace(input_bi))
         {
             Console.Write("Некорректный ввод. Введите целые числа: ");
-            input_bi = Console.ReadLine()!;
+            input_bi = Console.ReadLine()!.Trim();
         }
 
         bi = input_bi.Split(' ')
@@ -91,7 +90,7 @@ class Program
             .Select(int.Parse)
             .ToList();
 
-        Console.WriteLine($"\nПолученный полином: bi = ai ^ b(i-{string.Join(") ^ b(i-", bi)})");
+        Console.WriteLine($"Полученный полином: bi = ai ^ b(i-{string.Join(") ^ b(i-", bi)})");
     }
     static bool OutputEnd()
     {
@@ -137,38 +136,74 @@ class Program
     }
     static void Scramble(List<int> bi, string reg)
     {
-        Console.WriteLine($"\nai | {reg}");
         string b = reg[0].ToString();
         string c = b[0].ToString();
+
+        Console.WriteLine("\nВычисление bi:");
+        Console.WriteLine("┌─────┬───────┬─────────────┬─────┐");
+        Console.WriteLine("│ i   │ ai    │ Вычисление  │ bi  │");
+        Console.WriteLine("├─────┼───────┼─────────────┼─────┤");
+        Console.WriteLine($"│ 0   │ {b[0],-5} │ {reg[0],-11} │ {b[0],-3} │");
+
 
         for (int i = 1; i < reg.Length; i++)
         {
             int newb = Convert.ToInt32(reg[i].ToString());
+            string expression = $"{reg[i]}";
+
             foreach (int num in bi)
             {
                 try
                 {
-                    newb ^= Convert.ToInt32(b[i - num].ToString());
+                    int xorValue = Convert.ToInt32(b[i - num].ToString());
+                    newb ^= xorValue;
+                    expression += $"^b{i - num}";
                 }
                 catch { continue; }
             }
+
             b += newb.ToString();
+            Console.WriteLine($"│ {i,-3} │ {reg[i],-5} │ {expression,-11} │ {newb,-3} │");
         }
-        Console.WriteLine($"bi | {b}");
+
+        Console.WriteLine("└─────┴───────┴─────────────┴─────┘");
+
+        Console.WriteLine("\nВычисление ci:");
+        Console.WriteLine("┌─────┬───────┬─────────────┬─────┐");
+        Console.WriteLine("│ i   │ bi    │ Вычисление  │ ci  │");
+        Console.WriteLine("├─────┼───────┼─────────────┼─────┤");
+        Console.WriteLine($"│ 0   │ {c[0],-5} │ {b[0],-11} │ {c[0],-3} │");
 
         for (int i = 1; i < reg.Length; i++)
         {
             int newc = Convert.ToInt32(b[i].ToString());
+            string expression = $"{b[i]}";
+
             foreach (int num in bi)
             {
                 try
                 {
-                    newc ^= Convert.ToInt32(b[i - num].ToString());
+                    int xorValue = Convert.ToInt32(b[i - num].ToString());
+                    newc ^= xorValue;
+                    expression += $"^b{i - num}";
                 }
                 catch { continue; }
             }
+
             c += newc.ToString();
+            Console.WriteLine($"│ {i,-3} │ {b[i],-5} │ {expression,-11} │ {newc,-3} │");
         }
-        Console.WriteLine($"ci | {c}");
+        Console.WriteLine("└─────┴───────┴─────────────┴─────┘");
+
+        Console.WriteLine($"┌─────────────────────────────────┐");
+        Console.WriteLine($"│           Результат             │");
+        Console.WriteLine($"├────┬────────────────────────────┤");
+        Console.WriteLine($"│ ai │ {reg,-26} │");
+        Console.WriteLine($"├────┼────────────────────────────┤");
+        Console.WriteLine($"│ bi │ {b,-26} │");
+        Console.WriteLine($"├────┼────────────────────────────┤");
+        Console.WriteLine($"│ bi │ {c,-26} │");
+        Console.WriteLine($"└────┴────────────────────────────┘");
     }
+
 }
