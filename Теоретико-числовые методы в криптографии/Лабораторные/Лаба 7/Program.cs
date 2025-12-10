@@ -46,7 +46,35 @@ class Program
             {
                 Console.Clear();
                 Console.WriteLine($"Решить сравнение первой степени с помощью непрерывных дробей\n");
-                InputThird(out int a, out int b, out int p);
+                InputThird(out int a, out int b, out int m);
+                int nod = Solutions(ref a, ref b, ref m);
+
+                Console.WriteLine($"\nПерепишем сравнение в виде диофантова уравнения: {a}x - {m}y = {b}\n");
+                Console.WriteLine($"Разложим в непрерывную дробь:");
+                List<int> qi = EuclidAlg(a, m);
+                int first = qi.First();
+                qi.Remove(first);
+
+                Console.WriteLine($"\n\nВычислим все подходящие дроби:");
+                (int k, int p, int q) = LawSuitableFractions(first, qi);
+
+                Console.WriteLine($"\nТак как k = {k}, Qk-1 = {q}, НОД = {nod}, то");
+                m = m * nod;
+                List<int> x = new List<int> { Mod((int)Math.Pow(-1, k - 1) * b * q, m) };
+                Console.WriteLine($"x = (-1)^k-1 * b/НОД * Qk-1 (mod m) = (-1)^{k - 1} * {b} * {q} (mod {m}) ≡ {x.First()} (mod {m})");
+
+                if (nod > 1)
+                {
+                    Console.WriteLine($"\nТак как НОД = {nod}, то сравнение имеет 3 решения:");
+                    Console.WriteLine($"x0 ≡ {x.First()}");
+                    for (int i = 1; i < nod; i++)
+                    {
+                        x.Add(Mod(x.First() + i * (m / nod), m));
+                        Console.WriteLine($"x{i} = x0 + {i} * m/НОД (mod m) = {x.First()} + {i} * ({m}/{nod}) (mod {m}) ≡ {x[i]} (mod {m})");
+                    }
+                }
+
+                Check(x, a, b, m);
 
                 contin = OutputEnd();
 
@@ -99,7 +127,7 @@ class Program
 
         Console.WriteLine($"\nПолученная дробь: [{a}; {string.Join(", ", qi)}]");
     }
-    static void InputThird(out int a, out int b, out int p)
+    static void InputThird(out int a, out int b, out int m)
     {
         Console.Write($"Введите значение для а: ");
         while (!int.TryParse(Console.ReadLine(), out a))
@@ -113,13 +141,13 @@ class Program
             Console.Write("Некорректный ввод. Введите целое число: ");
         }
 
-        Console.Write($"Введите значение для p: ");
-        while (!int.TryParse(Console.ReadLine(), out p))
+        Console.Write($"Введите значение для m: ");
+        while (!int.TryParse(Console.ReadLine(), out m))
         {
-            Console.Write("Некорректный ввод. Введите простое целое число: ");
+            Console.Write("Некорректный ввод. Введите целое число: ");
 
         }
-        Console.WriteLine($"\nПолученное выражение: {a}x ≡ {b}(mod {p})");
+        Console.WriteLine($"\nПолученное выражение: {a}x ≡ {b}(mod {m})");
     }
     static bool OutputEnd()
     {
@@ -170,7 +198,7 @@ class Program
     }
 
     // Работа алгоритмов
-    static void EuclidAlg(int a, int b)
+    static List<int> EuclidAlg(int a, int b)
     {
         List<int> ai = new List<int> { a };
         List<int> bi = new List<int> { b };
@@ -203,15 +231,16 @@ class Program
         {
             if (_ == qi.Count - 1)
             {
-                Console.Write($"1/{qi[_]}]");
+                Console.Write($"{qi[_]}]");
             }
             else
             {
-                Console.Write($"1/{qi[_]}, ");
+                Console.Write($"{qi[_]}, ");
             }
         }
+        return qi;
     }
-    static void LawSuitableFractions(int a, List<int> qi)
+    static (int, int, int) LawSuitableFractions(int a, List<int> qi)
     {
         Console.Write($"Так как [{a}; {string.Join(", ", qi)}], то a0 = {a}");
         for (int k = 0; k < qi.Count; k++)
@@ -233,6 +262,8 @@ class Program
         }
 
         Console.WriteLine($"\nОтвет:\n \t [{a}; {string.Join(", ", qi)}] = {pk.Last()}/{qk.Last()}");
+        int kn = qi.Count;
+        return (kn, pk[kn], qk[kn]);
     }
     static void MultiplicAndAdd(int a, List<int> qi)
     {
@@ -248,5 +279,54 @@ class Program
         }
         x = x + a * y;
         Console.Write($"{x}/{y}\n");
+    }
+    static int Solutions(ref int a, ref int b, ref int m)
+    {
+        string output = "\nТ.к.";
+        int sol = NOD(a, m);
+
+        output += $" НОД({a},{m}) = {sol}";
+
+        if (b % sol != 0)
+        {
+            output += $" и {b} не делится на {sol}, то уравнение не имеет решения.";
+            Console.WriteLine(output);
+            return -1;
+        }
+        else
+        {
+            output += $" и {b} делится на {sol}, то сравнение разрешено и имеет {sol} решений:";
+            output += $"\n{a}x ≡ {b} (mod {m}) | :{sol}";
+            a = a / sol; b = b / sol; m = m / sol;
+            output += $"\n{a}x ≡ {b} (mod {m})";
+            Console.WriteLine(output);
+            return sol;
+        }
+    }
+    static int NOD(int a, int b)
+    {
+        a = Math.Abs(a);
+        b = Math.Abs(b);
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+    static int Mod(int a, int m)
+    {
+        return (a % m + m) % m;
+    }
+    static void Check(List<int> x, int a, int b, int m)
+    {
+        a = a * x.Count(); b = b * x.Count();
+        Console.WriteLine($"\nПроверка:");
+        for (int i = 0; i < x.Count; i++)
+        {
+            int temp = Mod(a * x[i], m);
+            Console.WriteLine($"При x{i} ≡ {x[i]}(mod {m}) = {a} * {x[i]} = {a * x[i]}(mod {m}) ≡ {temp}(mod {m}) - {temp == b} ");
+        }
     }
 }
