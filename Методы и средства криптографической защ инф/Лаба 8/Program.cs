@@ -202,7 +202,7 @@ class Program
         Console.WriteLine($"├────┼────────────────────────────┤");
         Console.WriteLine($"│ bi │ {b,-26} │");
         Console.WriteLine($"├────┼────────────────────────────┤");
-        Console.WriteLine($"│ bi │ {c,-26} │");
+        Console.WriteLine($"│ сi │ {c,-26} │");
         Console.WriteLine($"└────┴────────────────────────────┘");
     }
 
