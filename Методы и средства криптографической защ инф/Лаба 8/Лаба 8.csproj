@@ -5,6 +5,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Лаба_8</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
+	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
