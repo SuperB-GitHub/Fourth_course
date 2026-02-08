@@ -28,21 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
             this.buttonGenerateRoundKeys = new System.Windows.Forms.Button();
             this.dataGridViewRoundKeys = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxBinaryKey = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -51,6 +43,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.labelDecimalTitle = new System.Windows.Forms.Label();
+            this.labelBinaryTitle = new System.Windows.Forms.Label();
+            this.dataGridViewSBlocksDecimal = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -58,20 +53,10 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label16 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBoxProcess = new System.Windows.Forms.TextBox();
-            this.textBoxCipherText = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonEncrypt = new System.Windows.Forms.Button();
-            this.comboBoxMode = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.textBoxEncryptionKey = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.textBoxPlainText = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -90,14 +75,16 @@
             this.textBoxCipherInput = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxCipherText = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoundKeys)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSBlocksDecimal)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSBlocks)).BeginInit();
             this.tabPage3.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -144,7 +131,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Gray;
-            this.label5.Location = new System.Drawing.Point(300, 579);
+            this.label5.Location = new System.Drawing.Point(548, 267);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(485, 19);
             this.label5.TabIndex = 9;
@@ -156,86 +143,27 @@
             this.buttonGenerateRoundKeys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonGenerateRoundKeys.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonGenerateRoundKeys.ForeColor = System.Drawing.Color.White;
-            this.buttonGenerateRoundKeys.Location = new System.Drawing.Point(20, 570);
+            this.buttonGenerateRoundKeys.Location = new System.Drawing.Point(552, 289);
             this.buttonGenerateRoundKeys.Name = "buttonGenerateRoundKeys";
-            this.buttonGenerateRoundKeys.Size = new System.Drawing.Size(250, 35);
+            this.buttonGenerateRoundKeys.Size = new System.Drawing.Size(500, 35);
             this.buttonGenerateRoundKeys.TabIndex = 8;
             this.buttonGenerateRoundKeys.Text = "Сформировать ключи раундов";
             this.buttonGenerateRoundKeys.UseVisualStyleBackColor = false;
+            this.buttonGenerateRoundKeys.Click += new System.EventHandler(this.ButtonGenerateRoundKeys_Click);
             // 
             // dataGridViewRoundKeys
             // 
+            this.dataGridViewRoundKeys.AllowUserToAddRows = false;
+            this.dataGridViewRoundKeys.AllowUserToDeleteRows = false;
+            this.dataGridViewRoundKeys.AllowUserToResizeColumns = false;
+            this.dataGridViewRoundKeys.AllowUserToResizeRows = false;
             this.dataGridViewRoundKeys.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRoundKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRoundKeys.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.Column5,
-            this.Column6,
-            this.Column7,
-            this.Column8,
-            this.Column9});
             this.dataGridViewRoundKeys.Location = new System.Drawing.Point(20, 360);
             this.dataGridViewRoundKeys.Name = "dataGridViewRoundKeys";
             this.dataGridViewRoundKeys.RowHeadersVisible = false;
-            this.dataGridViewRoundKeys.Size = new System.Drawing.Size(1140, 200);
+            this.dataGridViewRoundKeys.Size = new System.Drawing.Size(1140, 248);
             this.dataGridViewRoundKeys.TabIndex = 7;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Раунд";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 70;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Ключ 1";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 120;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Ключ 2";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 120;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Ключ 3";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 120;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "Ключ 4";
-            this.Column5.Name = "Column5";
-            this.Column5.Width = 120;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "Ключ 5";
-            this.Column6.Name = "Column6";
-            this.Column6.Width = 120;
-            // 
-            // Column7
-            // 
-            this.Column7.HeaderText = "Ключ 6";
-            this.Column7.Name = "Column7";
-            this.Column7.Width = 120;
-            // 
-            // Column8
-            // 
-            this.Column8.HeaderText = "Ключ 7";
-            this.Column8.Name = "Column8";
-            this.Column8.Width = 120;
-            // 
-            // Column9
-            // 
-            this.Column9.HeaderText = "Ключ 8";
-            this.Column9.Name = "Column9";
-            this.Column9.Width = 120;
             // 
             // label4
             // 
@@ -250,17 +178,17 @@
             // 
             this.textBoxBinaryKey.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBoxBinaryKey.Font = new System.Drawing.Font("Consolas", 9F);
-            this.textBoxBinaryKey.Location = new System.Drawing.Point(20, 230);
+            this.textBoxBinaryKey.Location = new System.Drawing.Point(552, 100);
             this.textBoxBinaryKey.Multiline = true;
             this.textBoxBinaryKey.Name = "textBoxBinaryKey";
             this.textBoxBinaryKey.ReadOnly = true;
-            this.textBoxBinaryKey.Size = new System.Drawing.Size(500, 80);
+            this.textBoxBinaryKey.Size = new System.Drawing.Size(500, 159);
             this.textBoxBinaryKey.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 200);
+            this.label3.Location = new System.Drawing.Point(552, 70);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(280, 19);
             this.label3.TabIndex = 4;
@@ -272,20 +200,22 @@
             this.buttonConvertToBinary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConvertToBinary.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonConvertToBinary.ForeColor = System.Drawing.Color.White;
-            this.buttonConvertToBinary.Location = new System.Drawing.Point(540, 100);
+            this.buttonConvertToBinary.Location = new System.Drawing.Point(20, 289);
             this.buttonConvertToBinary.Name = "buttonConvertToBinary";
-            this.buttonConvertToBinary.Size = new System.Drawing.Size(200, 35);
+            this.buttonConvertToBinary.Size = new System.Drawing.Size(500, 35);
             this.buttonConvertToBinary.TabIndex = 3;
             this.buttonConvertToBinary.Text = "Преобразовать в двоичный вид";
             this.buttonConvertToBinary.UseVisualStyleBackColor = false;
+            this.buttonConvertToBinary.Click += new System.EventHandler(this.ButtonConvertToBinary_Click);
             // 
             // textBoxKeyInput
             // 
+            this.textBoxKeyInput.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBoxKeyInput.Font = new System.Drawing.Font("Consolas", 10F);
             this.textBoxKeyInput.Location = new System.Drawing.Point(20, 100);
             this.textBoxKeyInput.Multiline = true;
             this.textBoxKeyInput.Name = "textBoxKeyInput";
-            this.textBoxKeyInput.Size = new System.Drawing.Size(500, 80);
+            this.textBoxKeyInput.Size = new System.Drawing.Size(500, 159);
             this.textBoxKeyInput.TabIndex = 2;
             // 
             // label2
@@ -310,6 +240,9 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.White;
+            this.tabPage2.Controls.Add(this.labelDecimalTitle);
+            this.tabPage2.Controls.Add(this.labelBinaryTitle);
+            this.tabPage2.Controls.Add(this.dataGridViewSBlocksDecimal);
             this.tabPage2.Controls.Add(this.panel1);
             this.tabPage2.Controls.Add(this.dataGridViewSBlocks);
             this.tabPage2.Controls.Add(this.label7);
@@ -321,13 +254,47 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Таблица перестановок";
             // 
+            // labelDecimalTitle
+            // 
+            this.labelDecimalTitle.AutoSize = true;
+            this.labelDecimalTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelDecimalTitle.Location = new System.Drawing.Point(584, 75);
+            this.labelDecimalTitle.Name = "labelDecimalTitle";
+            this.labelDecimalTitle.Size = new System.Drawing.Size(281, 19);
+            this.labelDecimalTitle.TabIndex = 6;
+            this.labelDecimalTitle.Text = "S-блоки в десятичном представлении:";
+            // 
+            // labelBinaryTitle
+            // 
+            this.labelBinaryTitle.AutoSize = true;
+            this.labelBinaryTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelBinaryTitle.Location = new System.Drawing.Point(20, 75);
+            this.labelBinaryTitle.Name = "labelBinaryTitle";
+            this.labelBinaryTitle.Size = new System.Drawing.Size(269, 19);
+            this.labelBinaryTitle.TabIndex = 5;
+            this.labelBinaryTitle.Text = "S-блоки в двоичном представлении:";
+            // 
+            // dataGridViewSBlocksDecimal
+            // 
+            this.dataGridViewSBlocksDecimal.AllowUserToAddRows = false;
+            this.dataGridViewSBlocksDecimal.AllowUserToDeleteRows = false;
+            this.dataGridViewSBlocksDecimal.AllowUserToResizeColumns = false;
+            this.dataGridViewSBlocksDecimal.AllowUserToResizeRows = false;
+            this.dataGridViewSBlocksDecimal.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewSBlocksDecimal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewSBlocksDecimal.Location = new System.Drawing.Point(588, 100);
+            this.dataGridViewSBlocksDecimal.Name = "dataGridViewSBlocksDecimal";
+            this.dataGridViewSBlocksDecimal.RowHeadersVisible = false;
+            this.dataGridViewSBlocksDecimal.Size = new System.Drawing.Size(572, 437);
+            this.dataGridViewSBlocksDecimal.TabIndex = 4;
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.AliceBlue;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.label8);
-            this.panel1.Location = new System.Drawing.Point(20, 534);
+            this.panel1.Location = new System.Drawing.Point(20, 543);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1140, 80);
             this.panel1.TabIndex = 3;
@@ -353,12 +320,16 @@
             // 
             // dataGridViewSBlocks
             // 
+            this.dataGridViewSBlocks.AllowUserToAddRows = false;
+            this.dataGridViewSBlocks.AllowUserToDeleteRows = false;
+            this.dataGridViewSBlocks.AllowUserToResizeColumns = false;
+            this.dataGridViewSBlocks.AllowUserToResizeRows = false;
             this.dataGridViewSBlocks.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewSBlocks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewSBlocks.Location = new System.Drawing.Point(20, 67);
+            this.dataGridViewSBlocks.Location = new System.Drawing.Point(20, 100);
             this.dataGridViewSBlocks.Name = "dataGridViewSBlocks";
             this.dataGridViewSBlocks.RowHeadersVisible = false;
-            this.dataGridViewSBlocks.Size = new System.Drawing.Size(1140, 450);
+            this.dataGridViewSBlocks.Size = new System.Drawing.Size(542, 437);
             this.dataGridViewSBlocks.TabIndex = 2;
             // 
             // label7
@@ -383,7 +354,6 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.White;
-            this.tabPage3.Controls.Add(this.panel2);
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Controls.Add(this.label10);
@@ -393,89 +363,28 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Зашифрование";
             // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.AliceBlue;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.label16);
-            this.panel2.Location = new System.Drawing.Point(20, 555);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1140, 57);
-            this.panel2.TabIndex = 3;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 10);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(640, 38);
-            this.label16.TabIndex = 0;
-            this.label16.Text = "ГОСТ 28147-89 использует 32 раунда шифрования с различными ключами для каждого ра" +
-    "унда.\r\nКаждый раунд включает операцию сложения с ключом, замену по S-блокам и ци" +
-    "клический сдвиг.";
-            // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.textBoxProcess);
             this.groupBox2.Controls.Add(this.textBoxCipherText);
-            this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.groupBox2.Location = new System.Drawing.Point(590, 48);
+            this.groupBox2.Location = new System.Drawing.Point(20, 232);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(570, 500);
+            this.groupBox2.Size = new System.Drawing.Size(1133, 391);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Результат шифрования";
             // 
-            // textBoxProcess
-            // 
-            this.textBoxProcess.BackColor = System.Drawing.Color.White;
-            this.textBoxProcess.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxProcess.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxProcess.Location = new System.Drawing.Point(20, 240);
-            this.textBoxProcess.Multiline = true;
-            this.textBoxProcess.Name = "textBoxProcess";
-            this.textBoxProcess.ReadOnly = true;
-            this.textBoxProcess.Size = new System.Drawing.Size(520, 241);
-            this.textBoxProcess.TabIndex = 3;
-            this.textBoxProcess.Text = resources.GetString("textBoxProcess.Text");
-            // 
-            // textBoxCipherText
-            // 
-            this.textBoxCipherText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxCipherText.Font = new System.Drawing.Font("Consolas", 9F);
-            this.textBoxCipherText.Location = new System.Drawing.Point(20, 70);
-            this.textBoxCipherText.Multiline = true;
-            this.textBoxCipherText.Name = "textBoxCipherText";
-            this.textBoxCipherText.ReadOnly = true;
-            this.textBoxCipherText.Size = new System.Drawing.Size(520, 150);
-            this.textBoxCipherText.TabIndex = 1;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(20, 40);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(233, 19);
-            this.label14.TabIndex = 0;
-            this.label14.Text = "Зашифрованный текст (двоичный):";
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.buttonEncrypt);
-            this.groupBox1.Controls.Add(this.comboBoxMode);
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.textBoxEncryptionKey);
-            this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.textBoxPlainText);
-            this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.groupBox1.Location = new System.Drawing.Point(20, 48);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(550, 500);
+            this.groupBox1.Size = new System.Drawing.Size(1133, 178);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Входные данные";
+            this.groupBox1.Text = "Исходный текст";
             // 
             // buttonEncrypt
             // 
@@ -483,74 +392,23 @@
             this.buttonEncrypt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonEncrypt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonEncrypt.ForeColor = System.Drawing.Color.White;
-            this.buttonEncrypt.Location = new System.Drawing.Point(20, 400);
+            this.buttonEncrypt.Location = new System.Drawing.Point(476, 130);
             this.buttonEncrypt.Name = "buttonEncrypt";
             this.buttonEncrypt.Size = new System.Drawing.Size(200, 40);
             this.buttonEncrypt.TabIndex = 6;
             this.buttonEncrypt.Text = "Зашифровать";
             this.buttonEncrypt.UseVisualStyleBackColor = false;
-            // 
-            // comboBoxMode
-            // 
-            this.comboBoxMode.FormattingEnabled = true;
-            this.comboBoxMode.Items.AddRange(new object[] {
-            "Простая замена (ECB)",
-            "Гаммирование (CTR)",
-            "Гаммирование с обратной связью (CFB)",
-            "Выработка имитовставки (MAC)"});
-            this.comboBoxMode.Location = new System.Drawing.Point(20, 350);
-            this.comboBoxMode.Name = "comboBoxMode";
-            this.comboBoxMode.Size = new System.Drawing.Size(300, 25);
-            this.comboBoxMode.TabIndex = 5;
-            this.comboBoxMode.Visible = false;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(20, 320);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(141, 19);
-            this.label13.TabIndex = 4;
-            this.label13.Text = "Режим шифрования:";
-            this.label13.Visible = false;
-            // 
-            // textBoxEncryptionKey
-            // 
-            this.textBoxEncryptionKey.Font = new System.Drawing.Font("Consolas", 10F);
-            this.textBoxEncryptionKey.Location = new System.Drawing.Point(20, 220);
-            this.textBoxEncryptionKey.Multiline = true;
-            this.textBoxEncryptionKey.Name = "textBoxEncryptionKey";
-            this.textBoxEncryptionKey.Size = new System.Drawing.Size(500, 80);
-            this.textBoxEncryptionKey.TabIndex = 3;
-            this.textBoxEncryptionKey.Text = "Секретный ключ шифрования";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(20, 190);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(132, 19);
-            this.label12.TabIndex = 2;
-            this.label12.Text = "Ключ шифрования:";
+            this.buttonEncrypt.Click += new System.EventHandler(this.ButtonEncrypt_Click);
             // 
             // textBoxPlainText
             // 
-            this.textBoxPlainText.Font = new System.Drawing.Font("Consolas", 10F);
-            this.textBoxPlainText.Location = new System.Drawing.Point(20, 70);
+            this.textBoxPlainText.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxPlainText.Location = new System.Drawing.Point(6, 24);
             this.textBoxPlainText.Multiline = true;
             this.textBoxPlainText.Name = "textBoxPlainText";
-            this.textBoxPlainText.Size = new System.Drawing.Size(500, 100);
+            this.textBoxPlainText.Size = new System.Drawing.Size(1121, 100);
             this.textBoxPlainText.TabIndex = 1;
             this.textBoxPlainText.Text = "Пример текста для шифрования";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(20, 40);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(112, 19);
-            this.label11.TabIndex = 0;
-            this.label11.Text = "Исходный текст:";
             // 
             // label10
             // 
@@ -700,6 +558,7 @@
             this.buttonDecrypt.TabIndex = 4;
             this.buttonDecrypt.Text = "Расшифровать";
             this.buttonDecrypt.UseVisualStyleBackColor = false;
+            this.buttonDecrypt.Click += new System.EventHandler(this.ButtonDecrypt_Click);
             // 
             // textBoxDecryptionKey
             // 
@@ -751,13 +610,24 @@
             this.label17.TabIndex = 0;
             this.label17.Text = "Расшифрование по ГОСТ 28147-89";
             // 
+            // textBoxCipherText
+            // 
+            this.textBoxCipherText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBoxCipherText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCipherText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCipherText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxCipherText.Location = new System.Drawing.Point(3, 21);
+            this.textBoxCipherText.Name = "textBoxCipherText";
+            this.textBoxCipherText.Size = new System.Drawing.Size(1127, 367);
+            this.textBoxCipherText.TabIndex = 0;
+            this.textBoxCipherText.Text = "";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 661);
             this.Controls.Add(this.tabControl1);
-            this.MaximumSize = new System.Drawing.Size(1200, 700);
             this.MinimumSize = new System.Drawing.Size(1200, 700);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -768,15 +638,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoundKeys)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSBlocksDecimal)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSBlocks)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
@@ -814,20 +682,10 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.DataGridView dataGridViewSBlocks;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBoxProcess;
-        private System.Windows.Forms.TextBox textBoxCipherText;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button buttonEncrypt;
-        private System.Windows.Forms.ComboBox comboBoxMode;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox textBoxEncryptionKey;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox textBoxPlainText;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label24;
@@ -845,14 +703,10 @@
         private System.Windows.Forms.TextBox textBoxCipherInput;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridView dataGridViewSBlocksDecimal;
+        private System.Windows.Forms.Label labelBinaryTitle;
+        private System.Windows.Forms.Label labelDecimalTitle;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.RichTextBox textBoxCipherText;
     }
 }

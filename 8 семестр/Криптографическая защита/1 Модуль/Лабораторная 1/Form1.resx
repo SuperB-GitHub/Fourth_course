@@ -121,15 +121,10 @@
     <value>Каждый S-блок представляет собой таблицу замены 4-битного входного значения (0-15) на 4-битное выходное значение.
 В ГОСТ 28147-89 используются 8 различных S-блоков для повышения криптостойкости алгоритма.</value>
   </data>
-  <data name="textBoxProcess.Text" xml:space="preserve">
-    <value>Процесс шифрования:
-1. Разбиение на блоки по 64 бита
-2. Начальная перестановка
-3. 32 раунда преобразования:
-   - Сложение с ключом раунда
-   - Замена по S-блокам
-   - Циклический сдвиг
-4. Конечная перестановка
-5. Объединение блоков</value>
-  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>34</value>
+  </metadata>
 </root>
