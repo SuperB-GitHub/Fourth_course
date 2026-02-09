@@ -1,4 +1,7 @@
-﻿namespace Лабораторная_1
+﻿using System;
+using System.Windows.Forms;
+
+namespace Лабораторная_1
 {
     partial class MainForm
     {
@@ -38,9 +41,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxBinaryKey = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.buttonConvertToBinary = new System.Windows.Forms.Button();
-            this.textBoxKeyInput = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.labelDecimalTitle = new System.Windows.Forms.Label();
@@ -54,6 +54,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxCipherText = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonEncrypt = new System.Windows.Forms.Button();
             this.textBoxPlainText = new System.Windows.Forms.TextBox();
@@ -76,7 +77,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxCipherText = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoundKeys)).BeginInit();
@@ -116,9 +116,6 @@
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.textBoxBinaryKey);
             this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.buttonConvertToBinary);
-            this.tabPage1.Controls.Add(this.textBoxKeyInput);
-            this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Location = new System.Drawing.Point(4, 26);
             this.tabPage1.Name = "tabPage1";
@@ -131,7 +128,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Gray;
-            this.label5.Location = new System.Drawing.Point(548, 267);
+            this.label5.Location = new System.Drawing.Point(549, 86);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(485, 19);
             this.label5.TabIndex = 9;
@@ -143,11 +140,11 @@
             this.buttonGenerateRoundKeys.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonGenerateRoundKeys.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.buttonGenerateRoundKeys.ForeColor = System.Drawing.Color.White;
-            this.buttonGenerateRoundKeys.Location = new System.Drawing.Point(552, 289);
+            this.buttonGenerateRoundKeys.Location = new System.Drawing.Point(553, 108);
             this.buttonGenerateRoundKeys.Name = "buttonGenerateRoundKeys";
             this.buttonGenerateRoundKeys.Size = new System.Drawing.Size(500, 35);
             this.buttonGenerateRoundKeys.TabIndex = 8;
-            this.buttonGenerateRoundKeys.Text = "Сформировать ключи раундов";
+            this.buttonGenerateRoundKeys.Text = "Сгенерировать ключ и сформировать ключи раундов";
             this.buttonGenerateRoundKeys.UseVisualStyleBackColor = false;
             this.buttonGenerateRoundKeys.Click += new System.EventHandler(this.ButtonGenerateRoundKeys_Click);
             // 
@@ -159,16 +156,16 @@
             this.dataGridViewRoundKeys.AllowUserToResizeRows = false;
             this.dataGridViewRoundKeys.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRoundKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRoundKeys.Location = new System.Drawing.Point(20, 360);
+            this.dataGridViewRoundKeys.Location = new System.Drawing.Point(20, 282);
             this.dataGridViewRoundKeys.Name = "dataGridViewRoundKeys";
             this.dataGridViewRoundKeys.RowHeadersVisible = false;
-            this.dataGridViewRoundKeys.Size = new System.Drawing.Size(1140, 248);
+            this.dataGridViewRoundKeys.Size = new System.Drawing.Size(1140, 326);
             this.dataGridViewRoundKeys.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(20, 330);
+            this.label4.Location = new System.Drawing.Point(16, 260);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(255, 19);
             this.label4.TabIndex = 6;
@@ -178,7 +175,7 @@
             // 
             this.textBoxBinaryKey.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBoxBinaryKey.Font = new System.Drawing.Font("Consolas", 9F);
-            this.textBoxBinaryKey.Location = new System.Drawing.Point(552, 100);
+            this.textBoxBinaryKey.Location = new System.Drawing.Point(24, 86);
             this.textBoxBinaryKey.Multiline = true;
             this.textBoxBinaryKey.Name = "textBoxBinaryKey";
             this.textBoxBinaryKey.ReadOnly = true;
@@ -188,44 +185,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(552, 70);
+            this.label3.Location = new System.Drawing.Point(24, 56);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(280, 19);
             this.label3.TabIndex = 4;
             this.label3.Text = "Двоичное представление ключа (256 бит):";
-            // 
-            // buttonConvertToBinary
-            // 
-            this.buttonConvertToBinary.BackColor = System.Drawing.Color.SteelBlue;
-            this.buttonConvertToBinary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonConvertToBinary.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.buttonConvertToBinary.ForeColor = System.Drawing.Color.White;
-            this.buttonConvertToBinary.Location = new System.Drawing.Point(20, 289);
-            this.buttonConvertToBinary.Name = "buttonConvertToBinary";
-            this.buttonConvertToBinary.Size = new System.Drawing.Size(500, 35);
-            this.buttonConvertToBinary.TabIndex = 3;
-            this.buttonConvertToBinary.Text = "Преобразовать в двоичный вид";
-            this.buttonConvertToBinary.UseVisualStyleBackColor = false;
-            this.buttonConvertToBinary.Click += new System.EventHandler(this.ButtonConvertToBinary_Click);
-            // 
-            // textBoxKeyInput
-            // 
-            this.textBoxKeyInput.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxKeyInput.Font = new System.Drawing.Font("Consolas", 10F);
-            this.textBoxKeyInput.Location = new System.Drawing.Point(20, 100);
-            this.textBoxKeyInput.Multiline = true;
-            this.textBoxKeyInput.Name = "textBoxKeyInput";
-            this.textBoxKeyInput.Size = new System.Drawing.Size(500, 159);
-            this.textBoxKeyInput.TabIndex = 2;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 70);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(166, 19);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Введите ключевой текст:";
             // 
             // label1
             // 
@@ -373,6 +337,18 @@
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Результат шифрования";
+            // 
+            // textBoxCipherText
+            // 
+            this.textBoxCipherText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBoxCipherText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCipherText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCipherText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxCipherText.Location = new System.Drawing.Point(3, 21);
+            this.textBoxCipherText.Name = "textBoxCipherText";
+            this.textBoxCipherText.Size = new System.Drawing.Size(1127, 367);
+            this.textBoxCipherText.TabIndex = 0;
+            this.textBoxCipherText.Text = "";
             // 
             // groupBox1
             // 
@@ -610,18 +586,6 @@
             this.label17.TabIndex = 0;
             this.label17.Text = "Расшифрование по ГОСТ 28147-89";
             // 
-            // textBoxCipherText
-            // 
-            this.textBoxCipherText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxCipherText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxCipherText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxCipherText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxCipherText.Location = new System.Drawing.Point(3, 21);
-            this.textBoxCipherText.Name = "textBoxCipherText";
-            this.textBoxCipherText.Size = new System.Drawing.Size(1127, 367);
-            this.textBoxCipherText.TabIndex = 0;
-            this.textBoxCipherText.Text = "";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -673,9 +637,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxBinaryKey;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button buttonConvertToBinary;
-        private System.Windows.Forms.TextBox textBoxKeyInput;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label9;

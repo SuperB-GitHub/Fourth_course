@@ -29,7 +29,7 @@ namespace Лабораторная_1
                 "4. Конечная перестановка\r\n5. Объединение блоков");
 
         }
-
+        // Инициализация таблиц
         private void InitializeRoundKeysGrid()
         {
             dataGridViewRoundKeys.Rows.Clear();
@@ -51,7 +51,7 @@ namespace Лабораторная_1
                     "", "", "", "", "", "", "", ""
                 );
             }
-        } // Генерация таблицы ключей
+        }
 
         private void InitializeSBlocksGrid() 
         {
@@ -133,154 +133,49 @@ namespace Лабораторная_1
                 }
                 dataGridViewSBlocksDecimal.Rows.Add(row);
             }
-        } // Генерация S-блоков
+        }
 
-        private void ButtonConvertToBinary_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(textBoxKeyInput.Text))
-            {
-                MessageBox.Show("Введите текст для преобразования", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            Encoding win1251 = Encoding.GetEncoding(1251);
-
-            string inputText = textBoxKeyInput.Text;
-            byte[] bytes = win1251.GetBytes(inputText);
-
-            if (bytes.Length < 32)
-            {
-                MessageBox.Show($"Длина ключа: {bytes.Length} - остальное дополнено нулями", "Предупреждение",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Array.Resize(ref bytes, 32);
-            }
-            else if (bytes.Length > 32)
-            {
-                MessageBox.Show($"Длина ключа: {bytes.Length} - взяты первые 32 байта", "Предупреждение",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Array.Resize(ref bytes, 32);
-            }
-
-            StringBuilder binaryText = new StringBuilder();
-            int bitCounter = 0;
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                string binaryByte = Convert.ToString(bytes[i], 2).PadLeft(8, '0');
-
-                for (int j = 0; j < 8; j++)
-                {
-                    binaryText.Append(binaryByte[j]);
-                    bitCounter++;
-
-                    if (bitCounter % 4 == 0 && bitCounter < 256)
-                    {
-                        binaryText.Append(' ');
-                    }
-
-                    if (bitCounter % 32 == 0 && bitCounter < 256)
-                    {
-                        binaryText.AppendLine();
-                    }
-                }
-            }
-
-            for (int i = 0; i < 8; i++)
-            {
-                keyParts[i] = 0;
-                for (int j = 0; j < 4; j++)
-                {
-                    keyParts[i] = (keyParts[i] << 8) | bytes[i * 4 + j];
-                }
-            }
-
-            textBoxBinaryKey.Text = binaryText.ToString();
-
-            MessageBox.Show("Текст успешно преобразован в двоичный вид", "Информация", 
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        } // Генерация бинарной строки
-
+        // Обработчики событий
         private void ButtonGenerateRoundKeys_Click(object sender, EventArgs e)
         {
-            if (keyParts[0] == 0 && keyParts[1] == 0)
+            Random random = new Random();
+            byte[] keyBytes = new byte[32];
+            random.NextBytes(keyBytes);
+
+            // Заполняем 8 подключей
+            for (int i = 0; i < 8; i++)
             {
-                MessageBox.Show("Сначала преобразуйте текст в двоичный вид!", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                keyParts[i] = BytesToUInt32(keyBytes, i * 4);
             }
 
-            dataGridViewRoundKeys.Rows.Clear();
-
+            // Генерируем 32 раундовых ключа
             for (int i = 0; i < 32; i++)
             {
-                uint roundKey = 0;
-                int keyIndex = 0;
-
-                if (i < 24)
-                {
-                    keyIndex = i % 8;
-                }
-                else
-                {
-                    keyIndex = 7 - (i - 24);
-                }
-
-                roundKey = keyParts[keyIndex];
-                roundKeys[i] = roundKey;
-
-                string formattedKey = Convert.ToString((long)roundKey, 2).PadLeft(32, '0');
-                formattedKey = FormatBinaryWithSpaces(formattedKey);
-
-                object[] rowValues = new object[9];
-                rowValues[0] = (i + 1).ToString();
-
-                for (int j = 0; j < 8; j++)
-                {
-                    if (j == keyIndex)
-                    {
-                        rowValues[j + 1] = formattedKey;
-                    }
-                    else
-                    {
-                        rowValues[j + 1] = "";
-                    }
-                }
-
-                dataGridViewRoundKeys.Rows.Add(rowValues);
+                int keyIndex = (i < 24) ? i % 8 : 7 - (i - 24);
+                roundKeys[i] = keyParts[keyIndex];
             }
 
-            for (int i = 0; i < 32; i++)
+            // Отображаем 256-битный ключ
+            StringBuilder binaryKeyDisplay = new StringBuilder();
+            for (int i = 0; i < keyBytes.Length; i++)
             {
-                for (int j = 1; j <= 8; j++)
-                {
-                    if (!string.IsNullOrEmpty(dataGridViewRoundKeys.Rows[i].Cells[j].Value?.ToString()))
-                    {
-                        dataGridViewRoundKeys.Rows[i].Cells[j].Style.BackColor = Color.LightGreen;
-                    }
-                }
+                string binaryByte = Convert.ToString(keyBytes[i], 2).PadLeft(8, '0');
+                binaryKeyDisplay.Append(binaryByte);
+
+                if ((i + 1) % 4 == 0 && i != keyBytes.Length - 1)
+                    binaryKeyDisplay.AppendLine();
+                else if (i != keyBytes.Length - 1)
+                    binaryKeyDisplay.Append(" ");
             }
 
-            MessageBox.Show("Ключи раундов успешно сгенерированы по алгоритму ГОСТ!\n" +
-                           "Раунды 1-24: K1..K8, K1..K8, K1..K8\n" +
-                           "Раунды 25-32: K8..K1 (обратный порядок)",
-                           "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        } // Разбиение ключей
+            textBoxBinaryKey.Text = binaryKeyDisplay.ToString();
 
-        private string FormatBinaryWithSpaces(string binary)
-        {
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < binary.Length; i++)
-            {
-                result.Append(binary[i]);
-                if ((i + 1) % 4 == 0 && i != binary.Length - 1)
-                {
-                    result.Append(' ');
-                }
-            }
-            return result.ToString();
-        } // Вспомогательная функция для форматирования двоичной строки
+            // Обновляем DataGridView с раундовыми ключами
+            UpdateRoundKeysGridView();
+
+            MessageBox.Show("256-битный ключ и раундовые ключи успешно сгенерированы!",
+                           "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
         private void ButtonEncrypt_Click(object sender, EventArgs e)
         {
@@ -298,141 +193,211 @@ namespace Лабораторная_1
                 return;
             }
 
-            // Начинаем шифрование
-            StringBuilder processLog = new StringBuilder();
-            processLog.AppendLine("=== ШИФРОВАНИЕ ГОСТ 28147-89 ===\n");
-
-            // 1. Преобразуем текст в байты
-            string plainText = textBoxPlainText.Text;
+            // Преобразуем текст в байты
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Encoding win1251 = Encoding.GetEncoding(1251);
-            byte[] inputBytes = win1251.GetBytes(plainText);
+            byte[] inputBytes = win1251.GetBytes(textBoxPlainText.Text);
 
-            StringBuilder binaryRepresentation = new StringBuilder();
-            foreach (byte b in inputBytes)
-            {
-                binaryRepresentation.Append(Convert.ToString(b, 2).PadLeft(8, '0') + " ");
-            }
-
-            processLog.AppendLine($"1. Исходный текст: \"{plainText}\"");
-            processLog.AppendLine($"   Двоичное представление (Windows-1251):");
-            processLog.AppendLine($"   {binaryRepresentation}");
-            processLog.AppendLine($"   Длина в байтах: {inputBytes.Length}");
-            processLog.AppendLine($"   Длина в битах: {inputBytes.Length * 8}");
-            processLog.AppendLine();
-
-            // 2. Дополняем до кратного 64 битам (8 байтам)
-            int originalLength = inputBytes.Length;
-            int paddedLength = ((originalLength + 7) / 8) * 8;
-            byte[] paddedBytes = new byte[paddedLength];
-            Array.Copy(inputBytes, paddedBytes, originalLength);
-
-            processLog.AppendLine($"2. Дополнение до кратного 64 битам:");
-            processLog.AppendLine($"   Было: {originalLength} байт");
-            processLog.AppendLine($"   Стало: {paddedLength} байт");
-            processLog.AppendLine($"   Всего блоков по 64 бита: {paddedLength / 8}");
-            processLog.AppendLine();
-
-            // 3. Шифруем каждый блок
-            List<byte[]> encryptedBlocks = new List<byte[]>();
-
-            for (int blockIndex = 0; blockIndex < paddedLength; blockIndex += 8)
-            {
-                processLog.AppendLine($"=== БЛОК {blockIndex / 8 + 1} ===");
-
-                // Берем 8 байт (64 бита) для текущего блока
-                byte[] block = new byte[8];
-                Array.Copy(paddedBytes, blockIndex, block, 0, 8);
-
-                // Преобразуем в два uint (32 бита каждый)
-                uint left = BytesToUInt32(block, 0);
-                uint right = BytesToUInt32(block, 4);
-
-                processLog.AppendLine($"   Исходный блок (64 бита):");
-                processLog.AppendLine($"   L0 = {ToBinaryString(left, 32)}");
-                processLog.AppendLine($"   R0 = {ToBinaryString(right, 32)}");
-                processLog.AppendLine();
-
-                // 32 раунда шифрования
-                for (int round = 0; round < 32; round++)
-                {
-                    processLog.AppendLine($"   --- Раунд {round + 1} ---");
-
-                    uint roundKey = roundKeys[round];
-                    processLog.AppendLine($"   K{round + 1} = {ToBinaryString(roundKey, 32)}");
-                    processLog.AppendLine($"   L{round} = {ToBinaryString(left, 32)}");
-                    processLog.AppendLine($"   R{round} = {ToBinaryString(right, 32)}");
-
-                    // Вычисляем функцию F
-                    uint fResult = F(right, roundKey, round + 1, processLog);
-
-                    // Основное преобразование
-                    uint newRight = left ^ fResult;
-                    left = right;
-                    right = newRight;
-
-                    processLog.AppendLine($"   L{round + 1} = R{round} = {ToBinaryString(left, 32)}");
-                    processLog.AppendLine($"   R{round + 1} = L{round} ⊕ F(R{round}, K{round + 1}) = {ToBinaryString(right, 32)}");
-                    processLog.AppendLine();
-                }
-
-                // После 32 раундов меняем местами (последний обмен не выполняется в ГОСТ)
-                uint temp = left;
-                left = right;
-                right = temp;
-
-                // Преобразуем обратно в байты
-                byte[] encryptedBlock = new byte[8];
-                byte[] leftBytes = UInt32ToBytes(left);
-                byte[] rightBytes = UInt32ToBytes(right);
-                Array.Copy(leftBytes, 0, encryptedBlock, 0, 4);
-                Array.Copy(rightBytes, 0, encryptedBlock, 4, 4);
-                encryptedBlocks.Add(encryptedBlock);
-
-                processLog.AppendLine($"   Результат шифрования блока:");
-                processLog.AppendLine($"   L32 = {ToBinaryString(left, 32)}");
-                processLog.AppendLine($"   R32 = {ToBinaryString(right, 32)}");
-                processLog.AppendLine($"   Шифроблок: {BitConverter.ToString(encryptedBlock).Replace("-", " ")}");
-                processLog.AppendLine();
-            }
-
-            // 4. Формируем итоговый результат
-            int totalLength = 0;
-            foreach (var block in encryptedBlocks)
-            {
-                totalLength += block.Length;
-            }
-            byte[] encryptedBytes = new byte[totalLength];
-            int offset = 0;
-            foreach (var block in encryptedBlocks)
-            {
-                Array.Copy(block, 0, encryptedBytes, offset, block.Length);
-                offset += block.Length;
-            }
-
-            // Преобразуем в двоичную строку для отображения
-            StringBuilder binaryResult = new StringBuilder();
-            foreach (byte b in encryptedBytes)
-            {
-                binaryResult.Append(Convert.ToString(b, 2).PadLeft(8, '0') + " ");
-                if (binaryResult.ToString().Split(' ').Length % 4 == 0)
-                    binaryResult.AppendLine();
-            }
+            // Выполняем шифрование
+            string processLog;
+            byte[] encryptedBytes = GOSTAlgorithm(inputBytes, true, out processLog);
 
             // Отображаем результат
-            textBoxCipherText.Text = processLog.ToString() +
-                "=== ИТОГОВЫЙ РЕЗУЛЬТАТ ===\n\n" +
-                $"Зашифрованный текст (двоичный):\n{binaryResult}\n" +
-                $"Зашифрованный текст (hex): {BitConverter.ToString(encryptedBytes).Replace("-", " ")}\n" +
-                $"Длина: {encryptedBytes.Length} байт ({encryptedBytes.Length * 8} бит)";
+            StringBuilder resultText = new StringBuilder();
+            resultText.AppendLine(processLog);
+            resultText.AppendLine("=== ИТОГОВЫЙ РЕЗУЛЬТАТ ===");
+            resultText.AppendLine();
+            resultText.AppendLine("Зашифрованный текст (двоичный):");
 
+            for (int i = 0; i < encryptedBytes.Length; i++)
+            {
+                resultText.Append(Convert.ToString(encryptedBytes[i], 2).PadLeft(8, '0'));
+                resultText.Append(" ");
+                if ((i + 1) % 4 == 0) resultText.AppendLine();
+            }
+
+            resultText.AppendLine();
+            resultText.AppendLine($"Зашифрованный текст (hex):");
+            resultText.AppendLine(BitConverter.ToString(encryptedBytes).Replace("-", " "));
+            resultText.AppendLine($"Длина: {encryptedBytes.Length} байт ({encryptedBytes.Length * 8} бит)");
+
+            textBoxCipherText.Text = resultText.ToString();
             MessageBox.Show("Текст успешно зашифрован!", "Информация",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void ButtonDecrypt_Click(object sender, EventArgs e)
+        {
+            // Реализация расшифрования будет позже
+            MessageBox.Show("Функция расшифрования в разработке", "Информация",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        // Основной алгоритм ГОСТ 28147-89
+        private byte[] GOSTAlgorithm(byte[] inputBytes, bool encrypt, out string processLog)
+        {
+            StringBuilder log = new StringBuilder();
+            log.AppendLine($"=== {(encrypt ? "ШИФРОВАНИЕ" : "РАСШИФРОВАНИЕ")} ГОСТ 28147-89 ===\n");
+
+            // 1. Преобразуем входные данные
+            log.AppendLine($"1. Входные данные:");
+            log.AppendLine($"   Длина в байтах: {inputBytes.Length}");
+            log.AppendLine($"   Длина в битах: {inputBytes.Length * 8}");
+            log.AppendLine($"   Двоичное представление:");
+
+            for (int i = 0; i < inputBytes.Length; i++)
+            {
+                log.Append(Convert.ToString(inputBytes[i], 2).PadLeft(8, '0') + " ");
+                if ((i + 1) % 4 == 0) log.AppendLine();
+            }
+            log.AppendLine();
+
+            // 2. Дополняем до кратного 64 битам
+            int paddedLength = ((inputBytes.Length + 7) / 8) * 8;
+            byte[] paddedBytes = new byte[paddedLength];
+            Array.Copy(inputBytes, paddedBytes, inputBytes.Length);
+
+            log.AppendLine($"2. Дополнение до кратного 64 битам:");
+            log.AppendLine($"   Было: {inputBytes.Length} байт");
+            log.AppendLine($"   Стало: {paddedLength} байт");
+            log.AppendLine($"   Блоков по 64 бита: {paddedLength / 8}");
+            log.AppendLine();
+
+            // 3. Обрабатываем каждый блок
+            List<byte[]> resultBlocks = new List<byte[]>();
+            int totalBlocks = paddedLength / 8;
+
+            for (int blockIndex = 0; blockIndex < paddedLength; blockIndex += 8)
+            {
+                log.AppendLine($"=== БЛОК {blockIndex / 8 + 1}/{totalBlocks} ===");
+
+                byte[] block = new byte[8];
+                Array.Copy(paddedBytes, blockIndex, block, 0, 8);
+
+                uint left = BytesToUInt32(block, 0);
+                uint right = BytesToUInt32(block, 4);
+
+                log.AppendLine($"   Исходный блок (64 бита):");
+                log.AppendLine($"   L0 = {FormatBinary32(left)}");
+                log.AppendLine($"   R0 = {FormatBinary32(right)}");
+                log.AppendLine();
+
+                // 32 раунда
+                if (encrypt)
+                {
+                    // Шифрование: раунды 0-31 в прямом порядке
+                    for (int round = 0; round < 32; round++)
+                    {
+                        ProcessRound(ref left, ref right, roundKeys[round], round + 1, encrypt, log);
+                    }
+                    // После 32 раундов меняем местами
+                    Swap(ref left, ref right);
+                }
+                else
+                {
+                    // Расшифрование: раунды 31-0 в обратном порядке
+                    Swap(ref left, ref right); // Начальный обмен для расшифрования
+                    for (int round = 31; round >= 0; round--)
+                    {
+                        ProcessRound(ref left, ref right, roundKeys[round], 32 - round, encrypt, log);
+                    }
+                }
+
+                // Сохраняем результат
+                byte[] resultBlock = new byte[8];
+                byte[] leftBytes = UInt32ToBytes(left);
+                byte[] rightBytes = UInt32ToBytes(right);
+                Array.Copy(leftBytes, 0, resultBlock, 0, 4);
+                Array.Copy(rightBytes, 0, resultBlock, 4, 4);
+                resultBlocks.Add(resultBlock);
+
+                log.AppendLine($"   Результат блока:");
+                log.AppendLine($"   L = {FormatBinary32(left)}");
+                log.AppendLine($"   R = {FormatBinary32(right)}");
+                log.AppendLine($"   Блок (hex): {BitConverter.ToString(resultBlock).Replace("-", " ")}");
+                log.AppendLine();
+            }
+
+            // 4. Формируем итоговый результат
+            byte[] resultBytes = new byte[resultBlocks.Count * 8];
+            for (int i = 0; i < resultBlocks.Count; i++)
+            {
+                Array.Copy(resultBlocks[i], 0, resultBytes, i * 8, 8);
+            }
+
+            processLog = log.ToString();
+            return resultBytes;
+        }
+
+        private uint F(uint value, uint key, int roundNumber, bool encrypt, StringBuilder log)
+        {
+            // 1. Сложение с ключом
+            ulong sum = (ulong)value + (ulong)key;
+            uint result = (uint)(sum % 0x100000000UL);
+
+            log.AppendLine($"   Шаг 1: (Value + Key) mod 2^32");
+            log.AppendLine($"     Value = {value} ({FormatBinary32(value)})");
+            log.AppendLine($"     Key = {key} ({FormatBinary32(key)})");
+            log.AppendLine($"     Result = {result} ({FormatBinary32(result)})");
+            log.AppendLine();
+
+            // 2. Разбиение на 4-битные группы
+            byte[] nibbles = new byte[8];
+            for (int i = 0; i < 8; i++)
+            {
+                nibbles[i] = (byte)((result >> (4 * (7 - i))) & 0x0F);
+            }
+
+            log.AppendLine($"   Шаг 2: Разбиение на 8 групп по 4 бита:");
+            for (int i = 0; i < 8; i++)
+            {
+                log.AppendLine($"     Группа {i + 1}: {Convert.ToString(nibbles[i], 2).PadLeft(4, '0')} = {nibbles[i]}");
+            }
+            log.AppendLine();
+
+            // 3. Замена по S-блокам
+            log.AppendLine($"   Шаг 3: Замена по S-блокам:");
+            uint sBoxResult = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                int sBoxIndex = encrypt ? (7 - i) : i; // Для шифрования обратный порядок
+                byte sBoxValue = sBoxes[sBoxIndex, nibbles[i]];
+                log.AppendLine($"     Группа {i + 1}: {nibbles[i]} → S{sBoxIndex + 1}[{nibbles[i]}] = {sBoxValue} ({Convert.ToString(sBoxValue, 2).PadLeft(4, '0')})");
+                sBoxResult = (sBoxResult << 4) | sBoxValue;
+            }
+            log.AppendLine($"     Результат замены: {FormatBinary32(sBoxResult)}");
+            log.AppendLine();
+
+            // 4. Циклический сдвиг на 11 бит
+            uint shifted = (sBoxResult << 11) | (sBoxResult >> (32 - 11));
+            log.AppendLine($"   Шаг 4: Циклический сдвиг влево на 11 бит:");
+            log.AppendLine($"     До сдвига: {FormatBinary32(sBoxResult)}");
+            log.AppendLine($"     После сдвига: {FormatBinary32(shifted)}");
+
+            return shifted;
+        }
+
+        private void ProcessRound(ref uint left, ref uint right, uint roundKey, int roundNumber, bool encrypt, StringBuilder log)
+        {
+            log.AppendLine($"   --- Раунд {roundNumber} ({(encrypt ? "шифрование" : "расшифрование")}) ---");
+            log.AppendLine($"   K{roundNumber} = {FormatBinary32(roundKey)}");
+            log.AppendLine($"   L = {FormatBinary32(left)}");
+            log.AppendLine($"   R = {FormatBinary32(right)}");
+
+            uint fResult = F(right, roundKey, roundNumber, encrypt, log);
+
+            uint newRight = left ^ fResult;
+            left = right;
+            right = newRight;
+
+            log.AppendLine($"   L' = R = {FormatBinary32(left)}");
+            log.AppendLine($"   R' = L ⊕ F(R, K) = {FormatBinary32(right)}");
+            log.AppendLine();
+        }
+
+        // Вспомогательные функции
         private uint BytesToUInt32(byte[] bytes, int startIndex)
         {
-            // Правильный порядок: первый байт - старшие биты
             return (uint)((bytes[startIndex] << 24) |
                           (bytes[startIndex + 1] << 16) |
                           (bytes[startIndex + 2] << 8) |
@@ -441,31 +406,18 @@ namespace Лабораторная_1
 
         private byte[] UInt32ToBytes(uint value)
         {
-            // Обратное преобразование
             return new byte[]
             {
-        (byte)(value >> 24),
-        (byte)(value >> 16),
-        (byte)(value >> 8),
-        (byte)value
+                (byte)(value >> 24),
+                (byte)(value >> 16),
+                (byte)(value >> 8),
+                (byte)value
             };
         }
 
-        private uint BinaryStringToUInt(string binaryString)
-        {
-            // Удаляем пробелы из строки
-            string cleanBinary = binaryString.Replace(" ", "");
-
-            // Преобразуем двоичную строку в uint
-            return Convert.ToUInt32(cleanBinary, 2);
-        }
-
-        // Или исправленная версия ToBinaryString для правильного отображения:
-        private string UIntToFormattedBinary(uint value)
+        private string FormatBinary32(uint value)
         {
             string binary = Convert.ToString(value, 2).PadLeft(32, '0');
-
-            // Форматируем с пробелами каждые 4 бита
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < 32; i++)
             {
@@ -473,89 +425,69 @@ namespace Лабораторная_1
                 if ((i + 1) % 4 == 0 && i < 31)
                     result.Append(' ');
             }
-
             return result.ToString();
         }
 
-        private uint F(uint right, uint key, int roundNumber, StringBuilder log)
+        private string FormatBinary64(ulong value)
         {
-            log.AppendLine($"   Шаг 1: (R + K) mod 2^32");
-            log.AppendLine($"     R = {right} ({UIntToFormattedBinary(right)})");
-            log.AppendLine($"     K = {key} ({UIntToFormattedBinary(key)})");
-
-            // 1. Сложение по модулю 2^32
-            ulong sum = (ulong)right + (ulong)key;
-            uint result = (uint)(sum % 0x100000000);
-
-            log.AppendLine($"     (R + K) = {sum}");
-            log.AppendLine($"     (R + K) mod 2^32 = {result} ({UIntToFormattedBinary(result)})");
-            log.AppendLine();
-
-            // 2. Разбиваем на 8 групп по 4 бита
-            log.AppendLine($"   Шаг 2: Разбиение на 8 групп по 4 бита:");
-            byte[] nibbles = new byte[8];
-            for (int i = 0; i < 8; i++)
-            {
-                nibbles[i] = (byte)((result >> (4 * (7 - i))) & 0x0F);
-                log.AppendLine($"     Группа {i + 1}: {Convert.ToString(nibbles[i], 2).PadLeft(4, '0')} = {nibbles[i]}");
-            }
-            log.AppendLine();
-
-            // 3. Замена по S-блокам (используем S-блоки в обратном порядке: S8..S1)
-            log.AppendLine($"   Шаг 3: Замена по S-блокам (используем S{8}..S{1}):");
-            uint sBoxResult = 0;
-            for (int i = 0; i < 8; i++)
-            {
-                int sBoxIndex = 7 - i; // Обратный порядок S-блоков
-                byte sBoxValue = sBoxes[sBoxIndex, nibbles[i]];
-                log.AppendLine($"     Группа {i + 1}: {nibbles[i]} → S{sBoxIndex + 1}[{nibbles[i]}] = {sBoxValue} ({Convert.ToString(sBoxValue, 2).PadLeft(4, '0')})");
-                sBoxResult = (sBoxResult << 4) | sBoxValue;
-            }
-            log.AppendLine($"     Результат замены: {ToBinaryString(sBoxResult, 32)}");
-            log.AppendLine();
-
-            // 4. Циклический сдвиг влево на 11 бит
-            log.AppendLine($"   Шаг 4: Циклический сдвиг влево на 11 бит:");
-            uint shifted = (sBoxResult << 11) | (sBoxResult >> (32 - 11));
-            log.AppendLine($"     До сдвига:  {ToBinaryString(sBoxResult, 32)}");
-            log.AppendLine($"     После сдвига: {ToBinaryString(shifted, 32)}");
-
-            return shifted;
-        } // ФУНКЦИЯ ПРЕОБРАЗОВАНИЯ F(R, K)
-        
-        private string ToBinaryString(uint value, int length)
-        {
-            string binary = Convert.ToString(value, 2).PadLeft(length, '0');
-            // Добавляем пробелы каждые 4 бита для читаемости
+            string binary = Convert.ToString((long)value, 2).PadLeft(64, '0');
             StringBuilder result = new StringBuilder();
-            for (int i = 0; i < binary.Length; i++)
+            for (int i = 0; i < 64; i++)
             {
                 result.Append(binary[i]);
-                if ((i + 1) % 4 == 0 && i != binary.Length - 1)
+                if ((i + 1) % 4 == 0 && i < 63)
                     result.Append(' ');
             }
             return result.ToString();
-        } // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-
-        private void ButtonDecrypt_Click(object sender, EventArgs e)
+        }
+        
+        private void UpdateRoundKeysGridView()
         {
-            if (string.IsNullOrEmpty(textBoxCipherInput.Text))
+            dataGridViewRoundKeys.Rows.Clear();
+
+            for (int i = 0; i < 32; i++)
             {
-                MessageBox.Show("Введите шифротекст", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                string formattedKey = FormatBinary32(roundKeys[i]);
+                int keyIndex = (i < 24) ? i % 8 : 7 - (i - 24);
+
+                object[] rowValues = new object[9];
+                rowValues[0] = (i + 1).ToString();
+
+                for (int j = 0; j < 8; j++)
+                {
+                    rowValues[j + 1] = (j == keyIndex) ? formattedKey : "";
+                }
+
+                dataGridViewRoundKeys.Rows.Add(rowValues);
             }
 
-            // Пример расшифрованного текста
-            textBoxDecryptedText.Text = "Пример текста для шифрования";
-            textBoxBinaryResult.Text = "01000101 01111000 01100001 01101101 01110000 01101100 01100101\r\n" +
-                                      "00100000 01110100 01100101 01111000 01110100 01100001 00100000\r\n" +
-                                      "01100110 01101111 01110010 00100000 01110011 01101000 01101001\r\n" +
-                                      "01100110 01110010 01101111 01110110 01100001 01101110 01101001\r\n" +
-                                      "01111001 01100001";
+            // Подсветка активных ключей
+            for (int i = 0; i < 32; i++)
+            {
+                for (int j = 1; j <= 8; j++)
+                {
+                    var cell = dataGridViewRoundKeys.Rows[i].Cells[j];
+                    if (!string.IsNullOrEmpty(cell.Value?.ToString()))
+                    {
+                        cell.Style.BackColor = Color.LightGreen;
+                        cell.Style.Font = new Font("Consolas", 9, FontStyle.Bold);
+                    }
+                    else
+                    {
+                        cell.Style.BackColor = Color.White;
+                        cell.Style.Font = new Font("Consolas", 9);
+                    }
+                }
+                dataGridViewRoundKeys.Rows[i].Cells[0].Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dataGridViewRoundKeys.Rows[i].Cells[0].Style.Font = new Font(dataGridViewRoundKeys.Font, FontStyle.Bold);
+            }
+        }
 
-            MessageBox.Show("Текст успешно расшифрован!", "Информация",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        private void Swap(ref uint a, ref uint b)
+        {
+            uint temp = a;
+            a = b;
+            b = temp;
         }
 
     }
