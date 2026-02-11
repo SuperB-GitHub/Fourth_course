@@ -1,44 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Лабораторные_работы
 {
     public partial class Form1 : Form
     {
-        // Поля для хранения последовательности и её периода
         private List<long> generatedSequence = new List<long>();
         private int sequencePeriod = 0;
 
         public Form1()
         {
             InitializeComponent();
-            // Установка обработчика изменения размера для корректного отображения
-            this.Resize += Form1_Resize;
         }
 
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            // Обновление размеров при изменении размера окна
-            if (tabControl1.SelectedTab == tabPage1)
-            {
-                groupBox2.Width = tabPage1.Width - 40;
-                groupBox2.Height = tabPage1.Height - groupBox2.Top - 20;
-                textBoxSequence.Width = groupBox2.Width - 20;
-                textBoxSequence.Height = groupBox2.Height - 40;
-            }
-        }
-
-        #region Методы для линейного конгруэнтного генератора
-
-        // Генерация последовательности
         private List<long> GenerateLCGSequence(long a, long b, long m, long x0, int count)
         {
             List<long> sequence = new List<long>();
@@ -53,7 +30,6 @@ namespace Лабораторные_работы
             return sequence;
         }
 
-        // Определение периода последовательности
         private int FindPeriod(List<long> sequence)
         {
             if (sequence == null || sequence.Count < 2)
@@ -73,7 +49,6 @@ namespace Лабораторные_работы
             return sequence.Count; // Если период не найден, возвращаем длину последовательности
         }
 
-        // Проверка условий для максимального периода
         private bool CheckMaxPeriodConditions(long a, long b, long m)
         {
             // Условия для максимального периода (m):
@@ -82,8 +57,12 @@ namespace Лабораторные_работы
             // 3. Если m делится на 4, то a-1 должно делиться на 4
 
             // 1. Проверка взаимной простоты b и m
-            if (GCD(b, m) != 1)
+            if (NOD(b, m) != 1)
+            {
+                CLB_MaxPeriod.SetItemChecked(0, false);
                 return false;
+            }
+            CLB_MaxPeriod.SetItemChecked(0, true);
 
             // 2. Проверка делимости a-1 на все простые делители m
             long aMinus1 = a - 1;
@@ -93,18 +72,25 @@ namespace Лабораторные_работы
             foreach (var factor in primeFactors)
             {
                 if (aMinus1 % factor != 0)
+                {
+                    CLB_MaxPeriod.SetItemChecked(1, false);
                     return false;
+                }
             }
+            CLB_MaxPeriod.SetItemChecked(1, true);
 
             // 3. Проверка для случая, когда m делится на 4
             if (m % 4 == 0 && aMinus1 % 4 != 0)
+            {
+                CLB_MaxPeriod.SetItemChecked(2, false);
                 return false;
+            }
+            CLB_MaxPeriod.SetItemChecked(2, true);
 
             return true;
         }
 
-        // Нахождение НОД (наибольший общий делитель)
-        private long GCD(long a, long b)
+        private long NOD(long a, long b)
         {
             while (b != 0)
             {
@@ -115,7 +101,6 @@ namespace Лабораторные_работы
             return a;
         }
 
-        // Получение простых делителей числа
         private List<long> GetPrimeFactors(long n)
         {
             List<long> factors = new List<long>();
@@ -139,35 +124,26 @@ namespace Лабораторные_работы
             return factors;
         }
 
-        // Преобразование последовательности в строку
         private string SequenceToString(List<long> sequence, int numbersPerLine = 10)
         {
             if (sequence == null || sequence.Count == 0)
                 return "";
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Всего сгенерировано чисел: {sequence.Count}");
-            sb.AppendLine($"Формула: x_{{n+1}} = ({textBoxA.Text} * x_n + {textBoxB.Text}) mod {textBoxM.Text}");
-            sb.AppendLine($"Начальное значение x₀ = {textBoxX0.Text}");
-            sb.AppendLine();
-            sb.AppendLine("Последовательность:");
-            sb.AppendLine();
 
             for (int i = 0; i < sequence.Count; i++)
             {
-                sb.Append($"{sequence[i],8}");
+                sb.Append($"{sequence[i],6}");
 
                 if ((i + 1) % numbersPerLine == 0 || i == sequence.Count - 1)
                 {
-                    sb.AppendLine();
 
                     // Добавляем номер строки
                     if ((i + 1) % numbersPerLine == 0)
                     {
                         int startLine = i - numbersPerLine + 2;
                         int endLine = i + 1;
-                        sb.AppendLine($"// {startLine}-{endLine}");
-                        sb.AppendLine();
+                        sb.AppendLine($"  // {startLine}-{endLine}");
                     }
                 }
                 else
@@ -179,16 +155,11 @@ namespace Лабораторные_работы
             return sb.ToString();
         }
 
-        #endregion
-
-        #region Обработчики событий
-
         // Обработчик кнопки "Сгенерировать"
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
             try
             {
-                // Проверка и получение параметров
                 if (!long.TryParse(textBoxA.Text, out long a))
                 {
                     MessageBox.Show("Неверное значение параметра a", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -215,62 +186,27 @@ namespace Лабораторные_работы
 
                 int count = (int)numericUpDownCount.Value;
 
-                // Генерация последовательности
                 generatedSequence = GenerateLCGSequence(a, b, m, x0, count);
 
-                // Определение периода
-                sequencePeriod = FindPeriod(generatedSequence);
+                sequencePeriod = FindPeriod(GenerateLCGSequence(a, b, m, x0, (int)m));
 
-                // Отображение последовательности
                 textBoxSequence.Text = SequenceToString(generatedSequence);
 
-                // Отображение периода
                 textBoxPeriod.Text = sequencePeriod.ToString();
 
-                // Проверка условий для максимального периода
                 bool hasMaxPeriod = CheckMaxPeriodConditions(a, b, m);
                 checkBoxMaxPeriod.Checked = hasMaxPeriod;
 
-                // Дополнительная информация
                 if (sequencePeriod == m)
                 {
                     checkBoxMaxPeriod.Checked = true;
                     textBoxPeriod.Text += " (максимальный)";
                 }
-                else if (sequencePeriod < count)
+                else
                 {
                     textBoxPeriod.Text += $" (обнаружен на {sequencePeriod}-м шаге)";
                 }
 
-                // Вывод информации о параметрах
-                string paramsInfo = $"\n\nПараметры генератора:\n";
-                paramsInfo += $"a = {a}, b = {b}, m = {m}, x₀ = {x0}\n";
-                paramsInfo += $"Теоретический максимальный период: {m}\n";
-                paramsInfo += $"Фактический период: {sequencePeriod}\n";
-                paramsInfo += $"Условия для максимального периода {(hasMaxPeriod ? "выполнены" : "не выполнены")}";
-
-                textBoxSequence.Text += paramsInfo;
-
-                // Вывод промежуточных вычислений для первых 5 значений
-                if (generatedSequence.Count >= 5)
-                {
-                    textBoxSequence.Text += "\n\nПромежуточные вычисления (первые 5 значений):\n";
-                    long current = x0;
-                    for (int i = 0; i < Math.Min(5, generatedSequence.Count); i++)
-                    {
-                        if (i > 0)
-                        {
-                            long prev = generatedSequence[i - 1];
-                            long calc = a * prev + b;
-                            textBoxSequence.Text += $"x_{i} = ({a} * {prev} + {b}) mod {m} = {calc} mod {m} = {current}\n";
-                        }
-                        else
-                        {
-                            textBoxSequence.Text += $"x_0 = {current}\n";
-                        }
-                        current = (a * current + b) % m;
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -311,13 +247,10 @@ namespace Лабораторные_работы
                         fileContent.AppendLine("Последовательность чисел:");
                         fileContent.AppendLine();
 
-                        // Сохраняем числа по 10 в строку
                         for (int i = 0; i < generatedSequence.Count; i++)
                         {
                             fileContent.Append($"{generatedSequence[i]}");
-                            if ((i + 1) % 10 == 0)
-                                fileContent.AppendLine();
-                            else if (i < generatedSequence.Count - 1)
+                            if (i < generatedSequence.Count - 1)
                                 fileContent.Append(", ");
                         }
 
@@ -365,44 +298,5 @@ namespace Лабораторные_работы
             }
         }
 
-        // Обработчик изменения параметров - сброс результатов
-        private void Parameters_TextChanged(object sender, EventArgs e)
-        {
-            // Если меняются параметры, очищаем результаты
-            if (textBoxSequence.Text.Length > 0 &&
-                (sender == textBoxA || sender == textBoxB || sender == textBoxM || sender == textBoxX0))
-            {
-                DialogResult result = MessageBox.Show(
-                    "Изменение параметров очистит текущие результаты. Продолжить?",
-                    "Подтверждение",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-
-                if (result == DialogResult.Yes)
-                {
-                    buttonClear_Click(sender, e);
-                }
-                else
-                {
-                    // Отменяем изменение текста
-                    if (sender == textBoxA) textBoxA.Undo();
-                    else if (sender == textBoxB) textBoxB.Undo();
-                    else if (sender == textBoxM) textBoxM.Undo();
-                    else if (sender == textBoxX0) textBoxX0.Undo();
-                }
-            }
-        }
-
-        #endregion
-
-        // Метод для инициализации обработчиков (вызывать в конструкторе после InitializeComponent)
-        private void InitializeEventHandlers()
-        {
-            // Подписываемся на события изменения текста в параметрах
-            textBoxA.TextChanged += Parameters_TextChanged;
-            textBoxB.TextChanged += Parameters_TextChanged;
-            textBoxM.TextChanged += Parameters_TextChanged;
-            textBoxX0.TextChanged += Parameters_TextChanged;
-        }
     }
 }
