@@ -19,14 +19,17 @@ namespace Лабораторная_1
             InitializeSBlocksGrid();
 
             toolTip1 = new ToolTip();
-            toolTip1.SetToolTip(buttonEncrypt, "Процесс шифрования:\r\n" +
+            string textToolTip = "Процесс шифрования:\r\n" +
                 "1. Разбиение на блоки по 64 бита\r\n" +
-                "2. Начальная перестановка\r\n" +
-                "3. 32 раунда преобразования:\r\n   " +
-                "- Сложение с ключом раунда\r\n   " +
+                "2. 32 раунда преобразования:\r\n   " +
+                "- Целочисленное сложение по модулю\r\n   " +
                 "- Замена по S-блокам\r\n   " +
-                "- Циклический сдвиг\r\n" +
-                "4. Конечная перестановка\r\n5. Объединение блоков");
+                "- Циклический сдвиг влево на 11 бит\r\n   " +
+                "- Сложение XOR\r\n   " +
+                "- Перестановка\r\n" +
+                "3. Объединение блоков";
+            toolTip1.SetToolTip(buttonEncrypt, textToolTip);
+            toolTip1.SetToolTip(buttonDecrypt, textToolTip);
         }
 
         // Инициализация таблиц
@@ -142,6 +145,13 @@ namespace Лабораторная_1
             byte[] keyBytes = new byte[32];
             random.NextBytes(keyBytes);
 
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //string phrase = "АЛИНА ПОШЛА В ЛЕС СОБИРАТЬ ГРИБЫ";
+            //Encoding win1251 = Encoding.GetEncoding(1251);
+            //byte[] phraseBytes = win1251.GetBytes(phrase);
+            //byte[] keyBytes = new byte[32];
+            //Array.Copy(phraseBytes, keyBytes, Math.Min(phraseBytes.Length, 32));
+
             // Заполняем 8 подключей
             for (int i = 0; i < 8; i++)
             {
@@ -193,16 +203,13 @@ namespace Лабораторная_1
                 return;
             }
 
-            // Преобразуем текст в байты
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Encoding win1251 = Encoding.GetEncoding(1251);
             byte[] inputBytes = win1251.GetBytes(textBoxPlainText.Text);
 
-            // Выполняем шифрование
             string processLog;
             byte[] encryptedBytes = GOSTAlgorithm(inputBytes, true, out processLog);
 
-            // Отображаем результат
             StringBuilder resultText = new StringBuilder();
             resultText.AppendLine(processLog);
             resultText.AppendLine("=== ИТОГОВЫЙ РЕЗУЛЬТАТ ===");
@@ -217,8 +224,6 @@ namespace Лабораторная_1
             }
 
             resultText.AppendLine();
-            resultText.AppendLine($"Зашифрованный текст (hex):");
-            resultText.AppendLine(BitConverter.ToString(encryptedBytes).Replace("-", " "));
             resultText.AppendLine($"Длина: {encryptedBytes.Length} байт ({encryptedBytes.Length * 8} бит)");
 
             textBoxCipherText.Text = resultText.ToString();
@@ -244,14 +249,11 @@ namespace Лабораторная_1
                     return;
                 }
 
-                // 1. Преобразуем двоичный текст из textBoxCipherInput в байты
                 string cipherText = textBoxCipherInput.Text.Trim();
 
-                // Убираем лишние пробелы и переносы
                 cipherText = cipherText.Replace("\r", "").Replace("\n", " ").Replace("  ", " ");
                 string[] binaryParts = cipherText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                // Преобразуем каждую 8-битную строку в байт
                 List<byte> cipherBytes = new List<byte>();
                 foreach (string part in binaryParts)
                 {
@@ -269,7 +271,6 @@ namespace Лабораторная_1
                     return;
                 }
 
-                // Дополняем до кратности 8 байтам если нужно
                 while (cipherBytes.Count % 8 != 0)
                 {
                     cipherBytes.Add(0);
@@ -277,15 +278,12 @@ namespace Лабораторная_1
 
                 byte[] inputBytes = cipherBytes.ToArray();
 
-                // 2. Вызываем общую функцию ГОСТ для РАСШИФРОВАНИЯ (encrypt = false)
                 string processLog;
                 byte[] decryptedBytes = GOSTAlgorithm(inputBytes, false, out processLog);
 
-                // 3. Преобразуем байты обратно в текст
                 Encoding win1251 = Encoding.GetEncoding(1251);
                 string decryptedText = win1251.GetString(decryptedBytes).TrimEnd('\0');
 
-                // 4. Формируем двоичное представление результата
                 StringBuilder binaryResult = new StringBuilder();
                 for (int i = 0; i < decryptedBytes.Length; i++)
                 {
@@ -294,11 +292,9 @@ namespace Лабораторная_1
                     if ((i + 1) % 4 == 0) binaryResult.AppendLine();
                 }
 
-                // 5. Заполняем все поля вывода
                 textBoxDecryptedText.Text = decryptedText;
                 RTB_ProcessDecode.Text = processLog;
 
-                // 6. Дополнительная информация в textBoxDecryptProcess
                 RTB_ProcessDecode.AppendText("\n=== ИТОГОВЫЙ РЕЗУЛЬТАТ РАСШИФРОВАНИЯ ===\n");
                 RTB_ProcessDecode.AppendText($"Расшифрованный текст: \"{decryptedText}\"\n");
                 RTB_ProcessDecode.AppendText($"Двоичное представление:\n{binaryResult}\n");
@@ -320,7 +316,6 @@ namespace Лабораторная_1
             StringBuilder log = new StringBuilder();
             log.AppendLine($"=== {(encrypt ? "ШИФРОВАНИЕ" : "РАСШИФРОВАНИЕ")} ГОСТ 28147-89 ===\n");
 
-            // 1. Преобразуем входные данные
             log.AppendLine($"1. Входные данные:");
             log.AppendLine($"   Длина в байтах: {inputBytes.Length}");
             log.AppendLine($"   Длина в битах: {inputBytes.Length * 8}");
@@ -333,7 +328,6 @@ namespace Лабораторная_1
             }
             log.AppendLine();
 
-            // 2. Дополняем до кратного 64 битам
             int paddedLength = ((inputBytes.Length + 7) / 8) * 8;
             byte[] paddedBytes = new byte[paddedLength];
             Array.Copy(inputBytes, paddedBytes, inputBytes.Length);
@@ -344,7 +338,6 @@ namespace Лабораторная_1
             log.AppendLine($"   Блоков по 64 бита: {paddedLength / 8}");
             log.AppendLine();
 
-            // 3. Обрабатываем каждый блок
             List<byte[]> resultBlocks = new List<byte[]>();
             int totalBlocks = paddedLength / 8;
 
@@ -363,30 +356,23 @@ namespace Лабораторная_1
                 log.AppendLine($"   R0 = {FormatBinary32(right)}");
                 log.AppendLine();
 
-                // 32 раунда
                 if (encrypt)
                 {
-                    // Шифрование: раунды 0-31 в прямом порядке
                     for (int round = 0; round < 32; round++)
                     {
                         ProcessRound(ref left, ref right, roundKeys[round], round + 1, encrypt, log);
                     }
-                    // После 32 раундов меняем местами
                     Swap(ref left, ref right);
                 }
                 else
                 {
-                    // Расшифрование: раунды 31-0 в обратном порядке, НО в обратном порядке подключей
-                    // Ключи используются в обратном порядке
                     for (int round = 31; round >= 0; round--)
                     {
                         ProcessRound(ref left, ref right, roundKeys[round], 32 - round, encrypt, log);
                     }
-                    // После всех раундов меняем местами
                     Swap(ref left, ref right);
                 }
 
-                // Сохраняем результат
                 byte[] resultBlock = new byte[8];
                 byte[] leftBytes = UInt32ToBytes(left);
                 byte[] rightBytes = UInt32ToBytes(right);
@@ -397,11 +383,9 @@ namespace Лабораторная_1
                 log.AppendLine($"   Результат блока:");
                 log.AppendLine($"   L = {FormatBinary32(left)}");
                 log.AppendLine($"   R = {FormatBinary32(right)}");
-                log.AppendLine($"   Блок (hex): {BitConverter.ToString(resultBlock).Replace("-", " ")}");
                 log.AppendLine();
             }
 
-            // 4. Формируем итоговый результат
             byte[] resultBytes = new byte[resultBlocks.Count * 8];
             for (int i = 0; i < resultBlocks.Count; i++)
             {
@@ -414,17 +398,17 @@ namespace Лабораторная_1
 
         private uint F(uint value, uint key, int roundNumber, bool encrypt, StringBuilder log)
         {
-            // 1. Сложение с ключом
             ulong sum = (ulong)value + (ulong)key;
             uint result = (uint)(sum % 0x100000000UL);
 
-            log.AppendLine($"   Шаг 1: (Value + Key) mod 2^32");
-            log.AppendLine($"     Value = {value} ({FormatBinary32(value)})");
-            log.AppendLine($"     Key = {key} ({FormatBinary32(key)})");
+            log.AppendLine();
+            log.AppendLine($"   Шаг 1: Целочисленное сложение по модулю");
+            log.AppendLine($"      Value = {value} ({FormatBinary32(value)})");
+            log.AppendLine($"         Key = {key} ({FormatBinary32(key)})");
+            log.AppendLine($"     (Value + Key) mod 2^32 = ");
             log.AppendLine($"     Result = {result} ({FormatBinary32(result)})");
             log.AppendLine();
 
-            // 2. Разбиение на 4-битные группы
             byte[] nibbles = new byte[8];
             for (int i = 0; i < 8; i++)
             {
@@ -438,20 +422,17 @@ namespace Лабораторная_1
             }
             log.AppendLine();
 
-            // 3. Замена по S-блокам - ВАЖНО: для дешифрования S-блоки используются в обратном порядке
             log.AppendLine($"   Шаг 3: Замена по S-блокам:");
             uint sBoxResult = 0;
             for (int i = 0; i < 8; i++)
             {
-                int sBoxIndex = encrypt ? (7 - i) : i; // Для шифрования обратный порядок
-                byte sBoxValue = sBoxes[sBoxIndex, nibbles[i]];
-                log.AppendLine($"     Группа {i + 1}: {nibbles[i]} → S{sBoxIndex + 1}[{nibbles[i]}] = {sBoxValue} ({Convert.ToString(sBoxValue, 2).PadLeft(4, '0')})");
+                byte sBoxValue = sBoxes[i, nibbles[i]];
+                log.AppendLine($"     Группа {i + 1}: {nibbles[i]} → S{8 - i}[{nibbles[i]}] = {sBoxValue} ({Convert.ToString(sBoxValue, 2).PadLeft(4, '0')})");
                 sBoxResult = (sBoxResult << 4) | sBoxValue;
             }
             log.AppendLine($"     Результат замены: {FormatBinary32(sBoxResult)}");
             log.AppendLine();
 
-            // 4. Циклический сдвиг на 11 бит
             uint shifted = (sBoxResult << 11) | (sBoxResult >> (32 - 11));
             log.AppendLine($"   Шаг 4: Циклический сдвиг влево на 11 бит:");
             log.AppendLine($"     До сдвига: {FormatBinary32(sBoxResult)}");
@@ -473,8 +454,10 @@ namespace Лабораторная_1
             left = right;
             right = newRight;
 
-            log.AppendLine($"   L' = R = {FormatBinary32(left)}");
-            log.AppendLine($"   R' = L ⊕ F(R, K) = {FormatBinary32(right)}");
+            log.AppendLine();
+            log.AppendLine($"   Шаг 5: Сложение XOR и перемещение:");
+            log.AppendLine($"     L' = R = {FormatBinary32(left)}");
+            log.AppendLine($"     R' = L ⊕ F(R, K) = {FormatBinary32(right)}");
             log.AppendLine();
         }
 

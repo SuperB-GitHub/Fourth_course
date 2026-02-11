@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace Лабораторная_1
 {
@@ -61,15 +60,15 @@ namespace Лабораторная_1
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.textBoxDecryptedText = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
+            this.RTB_ProcessDecode = new System.Windows.Forms.RichTextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonDecrypt = new System.Windows.Forms.Button();
+            this.textBoxDecryptedText = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.textBoxCipherInput = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.RTB_ProcessDecode = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoundKeys)).BeginInit();
@@ -376,7 +375,6 @@ namespace Лабораторная_1
             this.textBoxPlainText.Name = "textBoxPlainText";
             this.textBoxPlainText.Size = new System.Drawing.Size(1121, 100);
             this.textBoxPlainText.TabIndex = 1;
-            this.textBoxPlainText.Text = "Пример текста для шифрования";
             // 
             // label10
             // 
@@ -411,25 +409,15 @@ namespace Лабораторная_1
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Процесс расшифрования:";
             // 
-            // textBoxDecryptedText
+            // RTB_ProcessDecode
             // 
-            this.textBoxDecryptedText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxDecryptedText.Font = new System.Drawing.Font("Consolas", 10F);
-            this.textBoxDecryptedText.Location = new System.Drawing.Point(20, 370);
-            this.textBoxDecryptedText.Multiline = true;
-            this.textBoxDecryptedText.Name = "textBoxDecryptedText";
-            this.textBoxDecryptedText.ReadOnly = true;
-            this.textBoxDecryptedText.Size = new System.Drawing.Size(430, 150);
-            this.textBoxDecryptedText.TabIndex = 1;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(20, 340);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(162, 19);
-            this.label21.TabIndex = 0;
-            this.label21.Text = "Расшифрованный текст:";
+            this.RTB_ProcessDecode.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RTB_ProcessDecode.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RTB_ProcessDecode.Location = new System.Drawing.Point(16, 37);
+            this.RTB_ProcessDecode.Name = "RTB_ProcessDecode";
+            this.RTB_ProcessDecode.Size = new System.Drawing.Size(628, 483);
+            this.RTB_ProcessDecode.TabIndex = 0;
+            this.RTB_ProcessDecode.Text = "";
             // 
             // groupBox3
             // 
@@ -460,6 +448,26 @@ namespace Лабораторная_1
             this.buttonDecrypt.UseVisualStyleBackColor = false;
             this.buttonDecrypt.Click += new System.EventHandler(this.ButtonDecrypt_Click);
             // 
+            // textBoxDecryptedText
+            // 
+            this.textBoxDecryptedText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBoxDecryptedText.Font = new System.Drawing.Font("Consolas", 10F);
+            this.textBoxDecryptedText.Location = new System.Drawing.Point(20, 370);
+            this.textBoxDecryptedText.Multiline = true;
+            this.textBoxDecryptedText.Name = "textBoxDecryptedText";
+            this.textBoxDecryptedText.ReadOnly = true;
+            this.textBoxDecryptedText.Size = new System.Drawing.Size(430, 150);
+            this.textBoxDecryptedText.TabIndex = 1;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(20, 340);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(162, 19);
+            this.label21.TabIndex = 0;
+            this.label21.Text = "Расшифрованный текст:";
+            // 
             // textBoxCipherInput
             // 
             this.textBoxCipherInput.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -488,16 +496,6 @@ namespace Лабораторная_1
             this.label17.Size = new System.Drawing.Size(336, 25);
             this.label17.TabIndex = 0;
             this.label17.Text = "Расшифрование по ГОСТ 28147-89";
-            // 
-            // RTB_ProcessDecode
-            // 
-            this.RTB_ProcessDecode.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.RTB_ProcessDecode.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RTB_ProcessDecode.Location = new System.Drawing.Point(16, 37);
-            this.RTB_ProcessDecode.Name = "RTB_ProcessDecode";
-            this.RTB_ProcessDecode.Size = new System.Drawing.Size(628, 483);
-            this.RTB_ProcessDecode.TabIndex = 0;
-            this.RTB_ProcessDecode.Text = "";
             // 
             // MainForm
             // 
@@ -570,7 +568,7 @@ namespace Лабораторная_1
         private System.Windows.Forms.Label labelBinaryTitle;
         private System.Windows.Forms.Label labelDecimalTitle;
         private System.Windows.Forms.ToolTip toolTip1;
-        private RichTextBox RTB_ProcessDecode;
+        private System.Windows.Forms.RichTextBox RTB_ProcessDecode;
         private System.Windows.Forms.RichTextBox textBoxCipherText;
     }
 }
