@@ -60,23 +60,16 @@ namespace Лабораторная_1
             this.textBoxPlainText = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.label24 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.textBoxDecryptProcess = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.textBoxBinaryResult = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
             this.textBoxDecryptedText = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonDecrypt = new System.Windows.Forms.Button();
-            this.textBoxDecryptionKey = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
             this.textBoxCipherInput = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.RTB_ProcessDecode = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoundKeys)).BeginInit();
@@ -88,7 +81,6 @@ namespace Лабораторная_1
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
@@ -399,7 +391,6 @@ namespace Лабораторная_1
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.Color.White;
-            this.tabPage4.Controls.Add(this.panel3);
             this.tabPage4.Controls.Add(this.groupBox4);
             this.tabPage4.Controls.Add(this.groupBox3);
             this.tabPage4.Controls.Add(this.label17);
@@ -409,99 +400,32 @@ namespace Лабораторная_1
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Расшифрование";
             // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.AliceBlue;
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.label24);
-            this.panel3.Location = new System.Drawing.Point(20, 576);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1140, 47);
-            this.panel3.TabIndex = 3;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(15, 2);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(595, 38);
-            this.label24.TabIndex = 0;
-            this.label24.Text = "Расшифрование осуществляется обратными операциями в обратном порядке:\r\nиспользова" +
-    "ние ключей раундов с 32-го по 1-й, обратные S-блоки, обратные перестановки.";
-            // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.textBoxDecryptProcess);
-            this.groupBox4.Controls.Add(this.label23);
-            this.groupBox4.Controls.Add(this.textBoxBinaryResult);
-            this.groupBox4.Controls.Add(this.label22);
-            this.groupBox4.Controls.Add(this.textBoxDecryptedText);
-            this.groupBox4.Controls.Add(this.label21);
+            this.groupBox4.Controls.Add(this.RTB_ProcessDecode);
             this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.groupBox4.Location = new System.Drawing.Point(590, 70);
+            this.groupBox4.Location = new System.Drawing.Point(497, 70);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(570, 500);
+            this.groupBox4.Size = new System.Drawing.Size(663, 553);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Результат расшифрования";
-            // 
-            // textBoxDecryptProcess
-            // 
-            this.textBoxDecryptProcess.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxDecryptProcess.Font = new System.Drawing.Font("Consolas", 9F);
-            this.textBoxDecryptProcess.Location = new System.Drawing.Point(20, 400);
-            this.textBoxDecryptProcess.Multiline = true;
-            this.textBoxDecryptProcess.Name = "textBoxDecryptProcess";
-            this.textBoxDecryptProcess.ReadOnly = true;
-            this.textBoxDecryptProcess.Size = new System.Drawing.Size(520, 80);
-            this.textBoxDecryptProcess.TabIndex = 5;
-            this.textBoxDecryptProcess.Text = "1. sds\r\nИспользование ключей раундов в обратном порядке\r\n2. Обратные S-блоки\r\n3. " +
-    "Обратная перестановка\r\n4. Объединение блоков";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(20, 370);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(172, 19);
-            this.label23.TabIndex = 4;
-            this.label23.Text = "Процесс расшифрования:";
-            // 
-            // textBoxBinaryResult
-            // 
-            this.textBoxBinaryResult.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxBinaryResult.Font = new System.Drawing.Font("Consolas", 9F);
-            this.textBoxBinaryResult.Location = new System.Drawing.Point(20, 270);
-            this.textBoxBinaryResult.Multiline = true;
-            this.textBoxBinaryResult.Name = "textBoxBinaryResult";
-            this.textBoxBinaryResult.ReadOnly = true;
-            this.textBoxBinaryResult.Size = new System.Drawing.Size(520, 80);
-            this.textBoxBinaryResult.TabIndex = 3;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(20, 240);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(246, 19);
-            this.label22.TabIndex = 2;
-            this.label22.Text = "Двоичное представление результата:";
+            this.groupBox4.Text = "Процесс расшифрования:";
             // 
             // textBoxDecryptedText
             // 
             this.textBoxDecryptedText.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBoxDecryptedText.Font = new System.Drawing.Font("Consolas", 10F);
-            this.textBoxDecryptedText.Location = new System.Drawing.Point(20, 70);
+            this.textBoxDecryptedText.Location = new System.Drawing.Point(20, 370);
             this.textBoxDecryptedText.Multiline = true;
             this.textBoxDecryptedText.Name = "textBoxDecryptedText";
             this.textBoxDecryptedText.ReadOnly = true;
-            this.textBoxDecryptedText.Size = new System.Drawing.Size(520, 150);
+            this.textBoxDecryptedText.Size = new System.Drawing.Size(430, 150);
             this.textBoxDecryptedText.TabIndex = 1;
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(20, 40);
+            this.label21.Location = new System.Drawing.Point(20, 340);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(162, 19);
             this.label21.TabIndex = 0;
@@ -510,14 +434,14 @@ namespace Лабораторная_1
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.buttonDecrypt);
-            this.groupBox3.Controls.Add(this.textBoxDecryptionKey);
-            this.groupBox3.Controls.Add(this.label19);
+            this.groupBox3.Controls.Add(this.textBoxDecryptedText);
+            this.groupBox3.Controls.Add(this.label21);
             this.groupBox3.Controls.Add(this.textBoxCipherInput);
             this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.groupBox3.Location = new System.Drawing.Point(20, 70);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(550, 500);
+            this.groupBox3.Size = new System.Drawing.Size(471, 553);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Входные данные для расшифрования";
@@ -528,44 +452,23 @@ namespace Лабораторная_1
             this.buttonDecrypt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonDecrypt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonDecrypt.ForeColor = System.Drawing.Color.White;
-            this.buttonDecrypt.Location = new System.Drawing.Point(20, 370);
+            this.buttonDecrypt.Location = new System.Drawing.Point(20, 274);
             this.buttonDecrypt.Name = "buttonDecrypt";
-            this.buttonDecrypt.Size = new System.Drawing.Size(200, 40);
+            this.buttonDecrypt.Size = new System.Drawing.Size(430, 40);
             this.buttonDecrypt.TabIndex = 4;
             this.buttonDecrypt.Text = "Расшифровать";
             this.buttonDecrypt.UseVisualStyleBackColor = false;
             this.buttonDecrypt.Click += new System.EventHandler(this.ButtonDecrypt_Click);
             // 
-            // textBoxDecryptionKey
-            // 
-            this.textBoxDecryptionKey.Font = new System.Drawing.Font("Consolas", 10F);
-            this.textBoxDecryptionKey.Location = new System.Drawing.Point(20, 270);
-            this.textBoxDecryptionKey.Multiline = true;
-            this.textBoxDecryptionKey.Name = "textBoxDecryptionKey";
-            this.textBoxDecryptionKey.Size = new System.Drawing.Size(500, 80);
-            this.textBoxDecryptionKey.TabIndex = 3;
-            this.textBoxDecryptionKey.Text = "Секретный ключ шифрования";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(20, 240);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(179, 19);
-            this.label19.TabIndex = 2;
-            this.label19.Text = "Ключ для расшифрования:";
-            // 
             // textBoxCipherInput
             // 
+            this.textBoxCipherInput.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBoxCipherInput.Font = new System.Drawing.Font("Consolas", 9F);
             this.textBoxCipherInput.Location = new System.Drawing.Point(20, 70);
             this.textBoxCipherInput.Multiline = true;
             this.textBoxCipherInput.Name = "textBoxCipherInput";
-            this.textBoxCipherInput.Size = new System.Drawing.Size(500, 150);
+            this.textBoxCipherInput.Size = new System.Drawing.Size(430, 198);
             this.textBoxCipherInput.TabIndex = 1;
-            this.textBoxCipherInput.Text = "1101 0010 1010 1100 0111 1001 0101 0011\r\n1010 0110 1100 1011 0100 1110 0011 1001\r" +
-    "\n0110 1011 1100 0101 0010 1110 1001 0110\r\n1011 0100 1101 0010 0111 1001 0101 110" +
-    "0";
             // 
             // label18
             // 
@@ -585,6 +488,16 @@ namespace Лабораторная_1
             this.label17.Size = new System.Drawing.Size(336, 25);
             this.label17.TabIndex = 0;
             this.label17.Text = "Расшифрование по ГОСТ 28147-89";
+            // 
+            // RTB_ProcessDecode
+            // 
+            this.RTB_ProcessDecode.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RTB_ProcessDecode.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RTB_ProcessDecode.Location = new System.Drawing.Point(16, 37);
+            this.RTB_ProcessDecode.Name = "RTB_ProcessDecode";
+            this.RTB_ProcessDecode.Size = new System.Drawing.Size(628, 483);
+            this.RTB_ProcessDecode.TabIndex = 0;
+            this.RTB_ProcessDecode.Text = "";
             // 
             // MainForm
             // 
@@ -613,10 +526,7 @@ namespace Лабораторная_1
             this.groupBox1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -648,19 +558,11 @@ namespace Лабораторная_1
         private System.Windows.Forms.Button buttonEncrypt;
         private System.Windows.Forms.TextBox textBoxPlainText;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label24;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.TextBox textBoxDecryptProcess;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox textBoxBinaryResult;
-        private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox textBoxDecryptedText;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button buttonDecrypt;
-        private System.Windows.Forms.TextBox textBoxDecryptionKey;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox textBoxCipherInput;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
@@ -668,6 +570,7 @@ namespace Лабораторная_1
         private System.Windows.Forms.Label labelBinaryTitle;
         private System.Windows.Forms.Label labelDecimalTitle;
         private System.Windows.Forms.ToolTip toolTip1;
+        private RichTextBox RTB_ProcessDecode;
         private System.Windows.Forms.RichTextBox textBoxCipherText;
     }
 }

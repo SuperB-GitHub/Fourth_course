@@ -27,8 +27,8 @@ namespace Лабораторная_1
                 "- Замена по S-блокам\r\n   " +
                 "- Циклический сдвиг\r\n" +
                 "4. Конечная перестановка\r\n5. Объединение блоков");
-
         }
+
         // Инициализация таблиц
         private void InitializeRoundKeysGrid()
         {
@@ -53,7 +53,7 @@ namespace Лабораторная_1
             }
         }
 
-        private void InitializeSBlocksGrid() 
+        private void InitializeSBlocksGrid()
         {
             dataGridViewSBlocks.ColumnCount = 9;
             dataGridViewSBlocks.Columns[0].Name = "Вход";
@@ -228,9 +228,90 @@ namespace Лабораторная_1
 
         private void ButtonDecrypt_Click(object sender, EventArgs e)
         {
-            // Реализация расшифрования будет позже
-            MessageBox.Show("Функция расшифрования в разработке", "Информация",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                if (string.IsNullOrEmpty(textBoxCipherInput.Text))
+                {
+                    MessageBox.Show("Введите шифротекст", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (roundKeys[0] == 0)
+                {
+                    MessageBox.Show("Сначала сгенерируйте ключи раундов!", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // 1. Преобразуем двоичный текст из textBoxCipherInput в байты
+                string cipherText = textBoxCipherInput.Text.Trim();
+
+                // Убираем лишние пробелы и переносы
+                cipherText = cipherText.Replace("\r", "").Replace("\n", " ").Replace("  ", " ");
+                string[] binaryParts = cipherText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Преобразуем каждую 8-битную строку в байт
+                List<byte> cipherBytes = new List<byte>();
+                foreach (string part in binaryParts)
+                {
+                    if (part.Length == 8)
+                    {
+                        byte b = Convert.ToByte(part, 2);
+                        cipherBytes.Add(b);
+                    }
+                }
+
+                if (cipherBytes.Count == 0)
+                {
+                    MessageBox.Show("Неверный формат шифротекста! Введите двоичные данные (группы по 8 бит)",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Дополняем до кратности 8 байтам если нужно
+                while (cipherBytes.Count % 8 != 0)
+                {
+                    cipherBytes.Add(0);
+                }
+
+                byte[] inputBytes = cipherBytes.ToArray();
+
+                // 2. Вызываем общую функцию ГОСТ для РАСШИФРОВАНИЯ (encrypt = false)
+                string processLog;
+                byte[] decryptedBytes = GOSTAlgorithm(inputBytes, false, out processLog);
+
+                // 3. Преобразуем байты обратно в текст
+                Encoding win1251 = Encoding.GetEncoding(1251);
+                string decryptedText = win1251.GetString(decryptedBytes).TrimEnd('\0');
+
+                // 4. Формируем двоичное представление результата
+                StringBuilder binaryResult = new StringBuilder();
+                for (int i = 0; i < decryptedBytes.Length; i++)
+                {
+                    binaryResult.Append(Convert.ToString(decryptedBytes[i], 2).PadLeft(8, '0'));
+                    binaryResult.Append(" ");
+                    if ((i + 1) % 4 == 0) binaryResult.AppendLine();
+                }
+
+                // 5. Заполняем все поля вывода
+                textBoxDecryptedText.Text = decryptedText;
+                RTB_ProcessDecode.Text = processLog;
+
+                // 6. Дополнительная информация в textBoxDecryptProcess
+                RTB_ProcessDecode.AppendText("\n=== ИТОГОВЫЙ РЕЗУЛЬТАТ РАСШИФРОВАНИЯ ===\n");
+                RTB_ProcessDecode.AppendText($"Расшифрованный текст: \"{decryptedText}\"\n");
+                RTB_ProcessDecode.AppendText($"Двоичное представление:\n{binaryResult}\n");
+                RTB_ProcessDecode.AppendText($"Длина: {decryptedBytes.Length} байт ({decryptedBytes.Length * 8} бит)\n");
+
+                MessageBox.Show("Текст успешно расшифрован!", "Информация",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при расшифровании: {ex.Message}", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Основной алгоритм ГОСТ 28147-89
@@ -295,12 +376,14 @@ namespace Лабораторная_1
                 }
                 else
                 {
-                    // Расшифрование: раунды 31-0 в обратном порядке
-                    Swap(ref left, ref right); // Начальный обмен для расшифрования
+                    // Расшифрование: раунды 31-0 в обратном порядке, НО в обратном порядке подключей
+                    // Ключи используются в обратном порядке
                     for (int round = 31; round >= 0; round--)
                     {
                         ProcessRound(ref left, ref right, roundKeys[round], 32 - round, encrypt, log);
                     }
+                    // После всех раундов меняем местами
+                    Swap(ref left, ref right);
                 }
 
                 // Сохраняем результат
@@ -355,7 +438,7 @@ namespace Лабораторная_1
             }
             log.AppendLine();
 
-            // 3. Замена по S-блокам
+            // 3. Замена по S-блокам - ВАЖНО: для дешифрования S-блоки используются в обратном порядке
             log.AppendLine($"   Шаг 3: Замена по S-блокам:");
             uint sBoxResult = 0;
             for (int i = 0; i < 8; i++)
@@ -428,19 +511,6 @@ namespace Лабораторная_1
             return result.ToString();
         }
 
-        private string FormatBinary64(ulong value)
-        {
-            string binary = Convert.ToString((long)value, 2).PadLeft(64, '0');
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < 64; i++)
-            {
-                result.Append(binary[i]);
-                if ((i + 1) % 4 == 0 && i < 63)
-                    result.Append(' ');
-            }
-            return result.ToString();
-        }
-        
         private void UpdateRoundKeysGridView()
         {
             dataGridViewRoundKeys.Rows.Clear();
@@ -489,6 +559,5 @@ namespace Лабораторная_1
             a = b;
             b = temp;
         }
-
     }
 }
