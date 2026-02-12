@@ -69,6 +69,8 @@ namespace Лабораторная_1
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.TB_EncodedText = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRoundKeys)).BeginInit();
@@ -82,6 +84,7 @@ namespace Лабораторная_1
             this.tabPage4.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -147,16 +150,16 @@ namespace Лабораторная_1
             this.dataGridViewRoundKeys.AllowUserToResizeRows = false;
             this.dataGridViewRoundKeys.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRoundKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRoundKeys.Location = new System.Drawing.Point(20, 282);
+            this.dataGridViewRoundKeys.Location = new System.Drawing.Point(20, 298);
             this.dataGridViewRoundKeys.Name = "dataGridViewRoundKeys";
             this.dataGridViewRoundKeys.RowHeadersVisible = false;
-            this.dataGridViewRoundKeys.Size = new System.Drawing.Size(1140, 326);
+            this.dataGridViewRoundKeys.Size = new System.Drawing.Size(1140, 310);
             this.dataGridViewRoundKeys.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 260);
+            this.label4.Location = new System.Drawing.Point(16, 276);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(255, 19);
             this.label4.TabIndex = 6;
@@ -165,12 +168,12 @@ namespace Лабораторная_1
             // textBoxBinaryKey
             // 
             this.textBoxBinaryKey.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxBinaryKey.Font = new System.Drawing.Font("Consolas", 9F);
-            this.textBoxBinaryKey.Location = new System.Drawing.Point(24, 86);
+            this.textBoxBinaryKey.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxBinaryKey.Location = new System.Drawing.Point(20, 86);
             this.textBoxBinaryKey.Multiline = true;
             this.textBoxBinaryKey.Name = "textBoxBinaryKey";
             this.textBoxBinaryKey.ReadOnly = true;
-            this.textBoxBinaryKey.Size = new System.Drawing.Size(500, 159);
+            this.textBoxBinaryKey.Size = new System.Drawing.Size(500, 187);
             this.textBoxBinaryKey.TabIndex = 5;
             // 
             // label3
@@ -309,6 +312,7 @@ namespace Лабораторная_1
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.White;
+            this.tabPage3.Controls.Add(this.groupBox5);
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Controls.Add(this.label10);
@@ -322,9 +326,9 @@ namespace Лабораторная_1
             // 
             this.groupBox2.Controls.Add(this.textBoxCipherText);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.groupBox2.Location = new System.Drawing.Point(20, 232);
+            this.groupBox2.Location = new System.Drawing.Point(587, 48);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1133, 391);
+            this.groupBox2.Size = new System.Drawing.Size(566, 575);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Результат шифрования";
@@ -337,7 +341,7 @@ namespace Лабораторная_1
             this.textBoxCipherText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxCipherText.Location = new System.Drawing.Point(3, 21);
             this.textBoxCipherText.Name = "textBoxCipherText";
-            this.textBoxCipherText.Size = new System.Drawing.Size(1127, 367);
+            this.textBoxCipherText.Size = new System.Drawing.Size(560, 551);
             this.textBoxCipherText.TabIndex = 0;
             this.textBoxCipherText.Text = "";
             // 
@@ -348,7 +352,7 @@ namespace Лабораторная_1
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.groupBox1.Location = new System.Drawing.Point(20, 48);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1133, 178);
+            this.groupBox1.Size = new System.Drawing.Size(561, 250);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Исходный текст";
@@ -359,7 +363,7 @@ namespace Лабораторная_1
             this.buttonEncrypt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonEncrypt.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.buttonEncrypt.ForeColor = System.Drawing.Color.White;
-            this.buttonEncrypt.Location = new System.Drawing.Point(476, 130);
+            this.buttonEncrypt.Location = new System.Drawing.Point(175, 204);
             this.buttonEncrypt.Name = "buttonEncrypt";
             this.buttonEncrypt.Size = new System.Drawing.Size(200, 40);
             this.buttonEncrypt.TabIndex = 6;
@@ -369,11 +373,12 @@ namespace Лабораторная_1
             // 
             // textBoxPlainText
             // 
-            this.textBoxPlainText.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBoxPlainText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.textBoxPlainText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxPlainText.Location = new System.Drawing.Point(6, 24);
             this.textBoxPlainText.Multiline = true;
             this.textBoxPlainText.Name = "textBoxPlainText";
-            this.textBoxPlainText.Size = new System.Drawing.Size(1121, 100);
+            this.textBoxPlainText.Size = new System.Drawing.Size(541, 174);
             this.textBoxPlainText.TabIndex = 1;
             // 
             // label10
@@ -413,6 +418,7 @@ namespace Лабораторная_1
             // 
             this.RTB_ProcessDecode.BackColor = System.Drawing.Color.WhiteSmoke;
             this.RTB_ProcessDecode.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RTB_ProcessDecode.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.RTB_ProcessDecode.Location = new System.Drawing.Point(16, 37);
             this.RTB_ProcessDecode.Name = "RTB_ProcessDecode";
             this.RTB_ProcessDecode.Size = new System.Drawing.Size(628, 483);
@@ -451,7 +457,7 @@ namespace Лабораторная_1
             // textBoxDecryptedText
             // 
             this.textBoxDecryptedText.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxDecryptedText.Font = new System.Drawing.Font("Consolas", 10F);
+            this.textBoxDecryptedText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxDecryptedText.Location = new System.Drawing.Point(20, 370);
             this.textBoxDecryptedText.Multiline = true;
             this.textBoxDecryptedText.Name = "textBoxDecryptedText";
@@ -471,7 +477,7 @@ namespace Лабораторная_1
             // textBoxCipherInput
             // 
             this.textBoxCipherInput.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.textBoxCipherInput.Font = new System.Drawing.Font("Consolas", 9F);
+            this.textBoxCipherInput.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxCipherInput.Location = new System.Drawing.Point(20, 70);
             this.textBoxCipherInput.Multiline = true;
             this.textBoxCipherInput.Name = "textBoxCipherInput";
@@ -496,6 +502,28 @@ namespace Лабораторная_1
             this.label17.Size = new System.Drawing.Size(336, 25);
             this.label17.TabIndex = 0;
             this.label17.Text = "Расшифрование по ГОСТ 28147-89";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.TB_EncodedText);
+            this.groupBox5.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.groupBox5.Location = new System.Drawing.Point(20, 326);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(561, 294);
+            this.groupBox5.TabIndex = 3;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Шифротекст";
+            // 
+            // TB_EncodedText
+            // 
+            this.TB_EncodedText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.TB_EncodedText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TB_EncodedText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TB_EncodedText.Location = new System.Drawing.Point(3, 21);
+            this.TB_EncodedText.Multiline = true;
+            this.TB_EncodedText.Name = "TB_EncodedText";
+            this.TB_EncodedText.Size = new System.Drawing.Size(555, 270);
+            this.TB_EncodedText.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -527,6 +555,8 @@ namespace Лабораторная_1
             this.groupBox4.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -570,5 +600,7 @@ namespace Лабораторная_1
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.RichTextBox RTB_ProcessDecode;
         private System.Windows.Forms.RichTextBox textBoxCipherText;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TextBox TB_EncodedText;
     }
 }

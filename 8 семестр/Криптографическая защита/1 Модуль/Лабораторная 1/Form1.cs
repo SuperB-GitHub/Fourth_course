@@ -210,10 +210,9 @@ namespace Лабораторная_1
             string processLog;
             byte[] encryptedBytes = GOSTAlgorithm(inputBytes, true, out processLog);
 
+            textBoxCipherText.Text = processLog.ToString();
+
             StringBuilder resultText = new StringBuilder();
-            resultText.AppendLine(processLog);
-            resultText.AppendLine("=== ИТОГОВЫЙ РЕЗУЛЬТАТ ===");
-            resultText.AppendLine();
             resultText.AppendLine("Зашифрованный текст (двоичный):");
 
             for (int i = 0; i < encryptedBytes.Length; i++)
@@ -225,8 +224,8 @@ namespace Лабораторная_1
 
             resultText.AppendLine();
             resultText.AppendLine($"Длина: {encryptedBytes.Length} байт ({encryptedBytes.Length * 8} бит)");
+            TB_EncodedText.Text = resultText.ToString();
 
-            textBoxCipherText.Text = resultText.ToString();
             MessageBox.Show("Текст успешно зашифрован!", "Информация",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
