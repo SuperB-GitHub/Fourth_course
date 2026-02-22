@@ -17,9 +17,10 @@ namespace Лабораторная_работа_2
                 Input_c(out long c);
 
                 long answer = MethodPollard(n, xi, c);
-                Console.WriteLine(answer != 0 ? 
-                    $"\nЧисло {answer} нетривиальный делитель числа {n}" :
-                    "\nДелитель не найден");
+                Console.WriteLine(answer != 0 ?
+                    $"\nЧисло {answer} нетривиальный делитель числа {n}" : 
+                    IsPrime(n) ? $"\nДелитель не найден, так как число {n} простое" : 
+                    "\nДелитель не найден, поменяйте параметры");
 
                 contin = OutputEnd();
             }
@@ -89,17 +90,17 @@ namespace Лабораторная_работа_2
         {
             int widthABD = n.ToString().Length + 2;
 
-            string medianFormat = $"│ {{0,{2}}} │ {{1,{widthABD}}} │ {{2,{widthABD}}} │ {{3,{widthABD}}} │";
+            string medianFormat = $"│ {{0,{widthABD}}} │ {{1,{widthABD}}} │ {{2,{widthABD}}} │ {{3,{widthABD}}} │";
 
             Console.WriteLine();
-            Console.WriteLine("┌" + new string('─', 4) + "┬" +
+            Console.WriteLine("┌" + new string('─', widthABD + 2) + "┬" +
                                    new string('─', widthABD + 2) + "┬" +
                                    new string('─', widthABD + 2) + "┬" +
                                    new string('─', widthABD + 2) + "┐");
 
             Console.WriteLine(string.Format(medianFormat, "i", "a", "b", "d"));
 
-            Console.WriteLine("├" + new string('─', 4) + "┼" +
+            Console.WriteLine("├" + new string('─', widthABD + 2) + "┼" +
                                    new string('─', widthABD + 2) + "┼" +
                                    new string('─', widthABD + 2) + "┼" +
                                    new string('─', widthABD + 2) + "┤");
@@ -109,7 +110,7 @@ namespace Лабораторная_работа_2
                 Console.WriteLine(string.Format(medianFormat, row.i.ToString(), row.a.ToString(), row.b.ToString(), row.d.ToString()));
             }
 
-            Console.WriteLine("└" + new string('─', 4) + "┴" +
+            Console.WriteLine("└" + new string('─', widthABD + 2) + "┴" +
                                    new string('─', widthABD + 2) + "┴" +
                                    new string('─', widthABD + 2) + "┴" +
                                    new string('─', widthABD + 2) + "┘");

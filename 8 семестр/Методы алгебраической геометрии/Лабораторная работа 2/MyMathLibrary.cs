@@ -133,8 +133,10 @@
         /// <summary>
         /// Расширенный алгоритм Евклида с выводом шагов
         /// </summary>
-        public static int EuclidAlg(int a, int b)
+        public static int EuclidAlg(int af, int bf)
         {
+            int a = Math.Max(Math.Abs(af), Math.Abs(bf));
+            int b = Math.Min(Math.Abs(af), Math.Abs(bf));
             List<int> rs = new List<int> { a, b };
             List<int> qs = new List<int>();
 
