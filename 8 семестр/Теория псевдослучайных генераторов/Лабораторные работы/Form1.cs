@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using static MyMathLibrary.MathUtils;
 
 namespace Лабораторные_работы
 {
@@ -40,7 +41,7 @@ namespace Лабораторные_работы
             for (int i = 0; i < count; i++)
             {
                 sequence.Add(current);
-                current = (Mod(a2 * LightPow(current, 2, m), m) + Mod(a1 * current, m) + b) % m;
+                current = (Mod(a2 * FastPowMod(current, 2, m), m) + Mod(a1 * current, m) + b) % m;
                 //current = (a2 * current * current + a1 * current + b) % m;
             }
 
@@ -67,7 +68,7 @@ namespace Лабораторные_работы
             long aMinus1 = a - 1;
 
             // Получаем простые делители m
-            var primeFactors = GetPrimeFactors(m);
+            var primeFactors = PrimeFactors(m);
             foreach (var factor in primeFactors)
             {
                 if (aMinus1 % factor != 0)
@@ -108,7 +109,7 @@ namespace Лабораторные_работы
 
             // 2. Проверка делимости a-1 и а2 на все простые делители m
             long aMinus1 = a1 - 1;
-            var primeFactors = GetPrimeFactors(m);
+            var primeFactors = PrimeFactors(m);
             foreach (var factor in primeFactors)
             {
                 if (aMinus1 % factor != 0 || a2 % factor != 0)
@@ -439,61 +440,6 @@ namespace Лабораторные_работы
         }
 
         // Вспомогательные функции
-        static long Mod(long a, long m)
-        {
-            return (a % m + m) % m;
-        }
-        static long LightPow(long num, long deg, long m)
-        {
-            if (deg == 0)
-            {
-                return 1;
-            }
-            else
-            {
-                long result = num;
-                for (int i = 0; i < deg - 1; i++)
-                {
-                    result = Mod(result * num, m);
-                }
-                return result;
-            }
-
-        }
-        static long NOD(long a, long b)
-        {
-            a = Math.Abs(a);
-            b = Math.Abs(b);
-            while (b != 0)
-            {
-                long temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
-        }
-        private List<long> GetPrimeFactors(long n)
-        {
-            List<long> factors = new List<long>();
-            long i = 2;
-            long temp = n;
-
-            while (i * i <= temp)
-            {
-                if (temp % i == 0)
-                {
-                    factors.Add(i);
-                    while (temp % i == 0)
-                        temp /= i;
-                }
-                i++;
-            }
-
-            if (temp > 1)
-                factors.Add(temp);
-
-            return factors;
-        }
         private string SeqToString(List<long> sequence, int numbersPerLine = 10)
         {
             if (sequence == null || sequence.Count == 0)
