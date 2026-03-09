@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace WinFormsApp1
+namespace Лабораторная_работа_3
 {
-    public partial class MainForm : Form
+    public partial class Form1 : Form
     {
         private float a, b;
 
-        public MainForm()
+        public Form1()
         {
             InitializeComponent();
         }

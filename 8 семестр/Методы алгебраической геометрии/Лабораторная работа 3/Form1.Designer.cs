@@ -1,6 +1,9 @@
-﻿namespace WinFormsApp1
+﻿using System.Drawing.Printing;
+using System.Xml.Linq;
+
+namespace Лабораторная_работа_3
 {
-    partial class MainForm
+    partial class Form1
     {
         /// <summary>
         /// Required designer variable.
@@ -41,7 +44,7 @@
             // 
             // tbB
             // 
-            tbB.Location = new Point(151, 16);
+            tbB.Location = new Point(160, 16);
             tbB.Margin = new Padding(3, 2, 3, 2);
             tbB.Name = "tbB";
             tbB.Size = new Size(53, 23);
@@ -106,7 +109,7 @@
             labelResult.Size = new Size(676, 22);
             labelResult.TabIndex = 9;
             // 
-            // MainForm
+            // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -120,14 +123,12 @@
             Controls.Add(lblResult);
             Controls.Add(graphPanel);
             Margin = new Padding(3, 2, 3, 2);
-            Name = "MainForm";
+            Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Эллиптические кривые над полем вещественных чисел";
             ResumeLayout(false);
             PerformLayout();
         }
-
-        #endregion
 
         private System.Windows.Forms.TextBox tbA;
         private System.Windows.Forms.TextBox tbB;
@@ -137,5 +138,9 @@
         private Label label1;
         private Label label2;
         private Label labelResult;
+
+        #endregion
+
+
     }
 }
