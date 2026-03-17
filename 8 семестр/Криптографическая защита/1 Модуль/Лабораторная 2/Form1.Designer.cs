@@ -81,6 +81,9 @@
             numericTotalCycles = new NumericUpDown();
             labelAccreditationsPerCycle = new Label();
             numericAccreditationsPerCycle = new NumericUpDown();
+            groupBoxScheme = new GroupBox();
+            radioSequential = new RadioButton();
+            radioParallel = new RadioButton();
             tabPage2 = new TabPage();
             checkBoxBCatchReuse = new CheckBox();
             groupBoxBMode = new GroupBox();
@@ -94,9 +97,10 @@
             numericErrorPercent = new NumericUpDown();
             checkBoxUseOldR = new CheckBox();
             tabPage4 = new TabPage();
+            tableLayoutPanel1 = new TableLayoutPanel();
             buttonStartProcess = new Button();
-            buttonNextCycle = new Button();
             buttonReset = new Button();
+            buttonNextCycle = new Button();
             labelCurrentCycle = new Label();
             labelCurrentAccreditation = new Label();
             listBoxProcessLog = new ListBox();
@@ -118,12 +122,14 @@
             groupBoxCycles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericTotalCycles).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericAccreditationsPerCycle).BeginInit();
+            groupBoxScheme.SuspendLayout();
             tabPage2.SuspendLayout();
             groupBoxBMode.SuspendLayout();
             groupBoxAMode.SuspendLayout();
             groupBoxAError.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericErrorPercent).BeginInit();
             tabPage4.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewResults).BeginInit();
             SuspendLayout();
@@ -146,6 +152,7 @@
             tabPage1.Controls.Add(groupBox1);
             tabPage1.Controls.Add(groupBoxKeys);
             tabPage1.Controls.Add(groupBoxCycles);
+            tabPage1.Controls.Add(groupBoxScheme);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Size = new Size(1042, 534);
@@ -156,9 +163,9 @@
             // 
             groupBox1.Controls.Add(RTB_LogGen);
             groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            groupBox1.Location = new Point(8, 271);
+            groupBox1.Location = new Point(8, 337);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(1006, 255);
+            groupBox1.Size = new Size(1006, 189);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Логи рассчётов";
@@ -169,7 +176,7 @@
             RTB_LogGen.Dock = DockStyle.Fill;
             RTB_LogGen.Location = new Point(3, 25);
             RTB_LogGen.Name = "RTB_LogGen";
-            RTB_LogGen.Size = new Size(1000, 227);
+            RTB_LogGen.Size = new Size(1000, 161);
             RTB_LogGen.TabIndex = 2;
             RTB_LogGen.Text = "";
             // 
@@ -242,7 +249,7 @@
             labelN.Name = "labelN";
             labelN.Size = new Size(262, 19);
             labelN.TabIndex = 5;
-            labelN.Text = "n = ...";
+            labelN.Text = "n =";
             // 
             // labelOpenKey
             // 
@@ -250,7 +257,7 @@
             labelOpenKey.Name = "labelOpenKey";
             labelOpenKey.Size = new Size(350, 19);
             labelOpenKey.TabIndex = 6;
-            labelOpenKey.Text = "Открытые ключи V: ...";
+            labelOpenKey.Text = "Открытые ключи V:";
             // 
             // labelSecretKey
             // 
@@ -258,7 +265,7 @@
             labelSecretKey.Name = "labelSecretKey";
             labelSecretKey.Size = new Size(350, 19);
             labelSecretKey.TabIndex = 7;
-            labelSecretKey.Text = "Секретные ключи S: ...";
+            labelSecretKey.Text = "Секретные ключи S:";
             // 
             // groupBoxCycles
             // 
@@ -309,6 +316,36 @@
             numericAccreditationsPerCycle.Size = new Size(52, 29);
             numericAccreditationsPerCycle.TabIndex = 3;
             numericAccreditationsPerCycle.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            // 
+            // groupBoxScheme
+            // 
+            groupBoxScheme.Controls.Add(radioSequential);
+            groupBoxScheme.Controls.Add(radioParallel);
+            groupBoxScheme.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            groupBoxScheme.Location = new Point(8, 271);
+            groupBoxScheme.Name = "groupBoxScheme";
+            groupBoxScheme.Size = new Size(1006, 60);
+            groupBoxScheme.TabIndex = 4;
+            groupBoxScheme.TabStop = false;
+            groupBoxScheme.Text = "Выбор схемы идентификации";
+            // 
+            // radioSequential
+            // 
+            radioSequential.Checked = true;
+            radioSequential.Location = new Point(10, 25);
+            radioSequential.Name = "radioSequential";
+            radioSequential.Size = new Size(400, 25);
+            radioSequential.TabIndex = 0;
+            radioSequential.TabStop = true;
+            radioSequential.Text = "ЛР 2: Последовательная схема (1 бит за раунд)";
+            // 
+            // radioParallel
+            // 
+            radioParallel.Location = new Point(420, 25);
+            radioParallel.Name = "radioParallel";
+            radioParallel.Size = new Size(400, 25);
+            radioParallel.TabIndex = 1;
+            radioParallel.Text = "ЛР 3: Параллельная схема (K бит за раунд)";
             // 
             // tabPage2
             // 
@@ -434,9 +471,7 @@
             // 
             // tabPage4
             // 
-            tabPage4.Controls.Add(buttonStartProcess);
-            tabPage4.Controls.Add(buttonNextCycle);
-            tabPage4.Controls.Add(buttonReset);
+            tabPage4.Controls.Add(tableLayoutPanel1);
             tabPage4.Controls.Add(labelCurrentCycle);
             tabPage4.Controls.Add(labelCurrentAccreditation);
             tabPage4.Controls.Add(listBoxProcessLog);
@@ -446,73 +481,106 @@
             tabPage4.Name = "tabPage4";
             tabPage4.Size = new Size(1042, 534);
             tabPage4.TabIndex = 3;
-            tabPage4.Text = "4. Процесс";
+            tabPage4.Text = "3. Процесс";
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.Controls.Add(buttonStartProcess, 0, 0);
+            tableLayoutPanel1.Controls.Add(buttonReset, 2, 0);
+            tableLayoutPanel1.Controls.Add(buttonNextCycle, 1, 0);
+            tableLayoutPanel1.Location = new Point(9, 9);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(786, 38);
+            tableLayoutPanel1.TabIndex = 8;
             // 
             // buttonStartProcess
             // 
-            buttonStartProcess.Location = new Point(9, 9);
+            buttonStartProcess.BackColor = Color.White;
+            buttonStartProcess.Dock = DockStyle.Fill;
+            buttonStartProcess.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            buttonStartProcess.Location = new Point(3, 3);
             buttonStartProcess.Name = "buttonStartProcess";
-            buttonStartProcess.Size = new Size(88, 38);
+            buttonStartProcess.Size = new Size(255, 32);
             buttonStartProcess.TabIndex = 0;
             buttonStartProcess.Text = "Старт";
+            buttonStartProcess.UseVisualStyleBackColor = false;
             buttonStartProcess.Click += ButtonStartProcess_Click;
-            // 
-            // buttonNextCycle
-            // 
-            buttonNextCycle.Enabled = false;
-            buttonNextCycle.Location = new Point(105, 9);
-            buttonNextCycle.Name = "buttonNextCycle";
-            buttonNextCycle.Size = new Size(105, 38);
-            buttonNextCycle.TabIndex = 1;
-            buttonNextCycle.Text = "Следующий цикл";
-            buttonNextCycle.Click += ButtonNextCycle_Click;
             // 
             // buttonReset
             // 
-            buttonReset.Location = new Point(219, 9);
+            buttonReset.BackColor = Color.White;
+            buttonReset.Dock = DockStyle.Fill;
+            buttonReset.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            buttonReset.Location = new Point(525, 3);
             buttonReset.Name = "buttonReset";
-            buttonReset.Size = new Size(88, 38);
+            buttonReset.Size = new Size(258, 32);
             buttonReset.TabIndex = 2;
             buttonReset.Text = "Сброс";
+            buttonReset.UseVisualStyleBackColor = false;
             buttonReset.Click += ButtonReset_Click;
+            // 
+            // buttonNextCycle
+            // 
+            buttonNextCycle.BackColor = Color.White;
+            buttonNextCycle.Dock = DockStyle.Fill;
+            buttonNextCycle.Enabled = false;
+            buttonNextCycle.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            buttonNextCycle.Location = new Point(264, 3);
+            buttonNextCycle.Name = "buttonNextCycle";
+            buttonNextCycle.Size = new Size(255, 32);
+            buttonNextCycle.TabIndex = 1;
+            buttonNextCycle.Text = "Следующий цикл";
+            buttonNextCycle.UseVisualStyleBackColor = false;
+            buttonNextCycle.Click += ButtonNextCycle_Click;
             // 
             // labelCurrentCycle
             // 
-            labelCurrentCycle.Location = new Point(332, 9);
+            labelCurrentCycle.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelCurrentCycle.Location = new Point(801, 3);
             labelCurrentCycle.Name = "labelCurrentCycle";
-            labelCurrentCycle.Size = new Size(131, 19);
+            labelCurrentCycle.Size = new Size(131, 22);
             labelCurrentCycle.TabIndex = 3;
             labelCurrentCycle.Text = "Цикл: 0/0";
             // 
             // labelCurrentAccreditation
             // 
-            labelCurrentAccreditation.Location = new Point(332, 28);
+            labelCurrentAccreditation.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            labelCurrentAccreditation.Location = new Point(801, 25);
             labelCurrentAccreditation.Name = "labelCurrentAccreditation";
-            labelCurrentAccreditation.Size = new Size(131, 19);
+            labelCurrentAccreditation.Size = new Size(190, 19);
             labelCurrentAccreditation.TabIndex = 4;
             labelCurrentAccreditation.Text = "Аккредитация: 0/0";
             // 
             // listBoxProcessLog
             // 
-            listBoxProcessLog.Location = new Point(9, 56);
+            listBoxProcessLog.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            listBoxProcessLog.Location = new Point(12, 54);
             listBoxProcessLog.Name = "listBoxProcessLog";
-            listBoxProcessLog.Size = new Size(526, 184);
+            listBoxProcessLog.Size = new Size(537, 424);
             listBoxProcessLog.TabIndex = 5;
             // 
             // richTextBoxProtocolDetails
             // 
-            richTextBoxProtocolDetails.Location = new Point(542, 56);
+            richTextBoxProtocolDetails.BackColor = Color.White;
+            richTextBoxProtocolDetails.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            richTextBoxProtocolDetails.Location = new Point(566, 53);
             richTextBoxProtocolDetails.Name = "richTextBoxProtocolDetails";
             richTextBoxProtocolDetails.ReadOnly = true;
-            richTextBoxProtocolDetails.Size = new Size(473, 188);
+            richTextBoxProtocolDetails.Size = new Size(468, 425);
             richTextBoxProtocolDetails.TabIndex = 6;
             richTextBoxProtocolDetails.Text = "Детали протокола будут отображаться здесь...";
             // 
             // progressBarSuccess
             // 
-            progressBarSuccess.Location = new Point(9, 253);
+            progressBarSuccess.Location = new Point(9, 498);
             progressBarSuccess.Name = "progressBarSuccess";
-            progressBarSuccess.Size = new Size(1006, 28);
+            progressBarSuccess.Size = new Size(1025, 28);
             progressBarSuccess.TabIndex = 7;
             // 
             // tabPage5
@@ -527,18 +595,20 @@
             tabPage5.Name = "tabPage5";
             tabPage5.Size = new Size(1042, 534);
             tabPage5.TabIndex = 4;
-            tabPage5.Text = "5. Результаты";
+            tabPage5.Text = "4. Результаты";
             // 
             // labelSuccessRate
             // 
+            labelSuccessRate.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             labelSuccessRate.Location = new Point(9, 9);
             labelSuccessRate.Name = "labelSuccessRate";
-            labelSuccessRate.Size = new Size(520, 19);
+            labelSuccessRate.Size = new Size(714, 19);
             labelSuccessRate.TabIndex = 0;
             labelSuccessRate.Text = "Реальная успешность:";
             // 
             // labelTheoryRate
             // 
+            labelTheoryRate.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             labelTheoryRate.Location = new Point(9, 28);
             labelTheoryRate.Name = "labelTheoryRate";
             labelTheoryRate.Size = new Size(378, 19);
@@ -547,6 +617,7 @@
             // 
             // textBoxSummary
             // 
+            textBoxSummary.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             textBoxSummary.Location = new Point(9, 56);
             textBoxSummary.Multiline = true;
             textBoxSummary.Name = "textBoxSummary";
@@ -567,16 +638,18 @@
             // 
             // listBoxStolenKeys
             // 
+            listBoxStolenKeys.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             listBoxStolenKeys.Location = new Point(9, 328);
             listBoxStolenKeys.Name = "listBoxStolenKeys";
-            listBoxStolenKeys.Size = new Size(788, 199);
+            listBoxStolenKeys.Size = new Size(788, 193);
             listBoxStolenKeys.TabIndex = 4;
             // 
             // buttonExportResults
             // 
+            buttonExportResults.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             buttonExportResults.Location = new Point(805, 328);
             buttonExportResults.Name = "buttonExportResults";
-            buttonExportResults.Size = new Size(201, 38);
+            buttonExportResults.Size = new Size(201, 56);
             buttonExportResults.TabIndex = 5;
             buttonExportResults.Text = "Экспорт результатов в файл";
             buttonExportResults.Click += ButtonExportResults_Click;
@@ -589,7 +662,7 @@
             Controls.Add(tabControl1);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Лабораторная работа 2: Идентификация с нулевым разглашением";
+            Text = "Лабораторная работа: Идентификация с нулевым разглашением";
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
@@ -599,12 +672,14 @@
             groupBoxCycles.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)numericTotalCycles).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericAccreditationsPerCycle).EndInit();
+            groupBoxScheme.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
             groupBoxBMode.ResumeLayout(false);
             groupBoxAMode.ResumeLayout(false);
             groupBoxAError.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)numericErrorPercent).EndInit();
             tabPage4.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
             tabPage5.ResumeLayout(false);
             tabPage5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewResults).EndInit();
@@ -617,5 +692,7 @@
         private GroupBox groupBoxBMode;
         private RadioButton radioBHonest;
         private RadioButton radioBThief;
+        private GroupBox groupBoxScheme;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

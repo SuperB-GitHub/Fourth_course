@@ -1,10 +1,18 @@
-using Microsoft.VisualBasic;
 using static MyMathLibrary.MathUtils;
 
 namespace Лабораторная_2
 {
     public partial class Form1 : Form
     {
+        // Перечисление для выбора схемы
+        private enum SchemeType
+        {
+            Sequential, // Последовательная (ЛР 2)
+            Parallel    // Параллельная (ЛР 3)
+        }
+
+        private SchemeType currentScheme = SchemeType.Parallel; // По умолчанию параллельная
+
         // Класс для хранения состояния одного раунда (аккредитации)
         private class AccreditationResult
         {
@@ -12,16 +20,24 @@ namespace Лабораторная_2
             public int AccreditationNumber { get; set; }
             public long r { get; set; }
             public long x { get; set; }
-            public int[]? bBits { get; set; } 
+            public object Challenge { get; set; } // int для послед., int[] для паралл.
             public long y { get; set; }
             public bool IsSuccess { get; set; }
             public string? LogMessage { get; set; }
+            public string Scheme { get; set; } = "Parallel";
         }
 
         // Глобальные переменные состояния
-        private long p, q, n, V, S;
-        private List<long> openKeys = new List<long> { };
-        private List<long> secretKeys = new List<long> { };
+        private long p, q, n;
+
+        // Для последовательной схемы (ЛР 2)
+        private long V_single;
+        private long S_single;
+
+        // Для параллельной схемы (ЛР 3)
+        private List<long> openKeys = new List<long>();
+        private List<long> secretKeys = new List<long>();
+
         private Random random = new Random();
 
         // Для отслеживания процесса
@@ -36,10 +52,47 @@ namespace Лабораторная_2
         private bool keyStolen = false;
         private long stolenS = 0;
 
+        // RadioButton для выбора схемы (объявляем как поля класса)
+        private RadioButton radioSequential;
+        private RadioButton radioParallel;
+
         public Form1()
         {
             InitializeComponent();
             InitializeDefaults();
+
+            // Находим RadioButton на форме (ты их уже добавил в дизайнере)
+            FindSchemeRadioButtons();
+        }
+
+        private void FindSchemeRadioButtons()
+        {
+            // Ищем RadioButton на tabPage1
+            foreach (Control control in tabPage1.Controls)
+            {
+                if (control is GroupBox gb && gb.Text == "Выбор схемы идентификации")
+                {
+                    foreach (Control c in gb.Controls)
+                    {
+                        if (c is RadioButton rb)
+                        {
+                            if (rb.Text.Contains("Последовательная"))
+                                radioSequential = rb;
+                            else if (rb.Text.Contains("Параллельная"))
+                                radioParallel = rb;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            // Если не нашли, создаем ссылки по умолчанию (на случай если их нет)
+            if (radioSequential == null || radioParallel == null)
+            {
+                // Создаем заглушки, но лучше чтобы они были в дизайнере
+                radioParallel = new RadioButton { Checked = true };
+                radioSequential = new RadioButton { Checked = false };
+            }
         }
 
         private void InitializeDefaults()
@@ -54,6 +107,12 @@ namespace Лабораторная_2
 
         private void ButtonGenerateKeys_Click(object sender, EventArgs e)
         {
+            // Определяем выбранную схему
+            if (radioParallel != null && radioParallel.Checked)
+                currentScheme = SchemeType.Parallel;
+            else
+                currentScheme = SchemeType.Sequential;
+
             RTB_LogGen.Text = "";
             int pVal = (int)numericP.Value;
             int qVal = (int)numericQ.Value;
@@ -69,30 +128,77 @@ namespace Лабораторная_2
             q = qVal;
             n = p * q;
 
-            GenerateKeysForParallelScheme();
+            RTB_LogGen.AppendText($"Генерация параметров:\r\n");
+            RTB_LogGen.AppendText($"p = {p}, q = {q}\r\n");
+            RTB_LogGen.AppendText($"n = p * q = {n}\r\n");
+            RTB_LogGen.AppendText($"φ(n) = {EulerPhi(n)}\r\n\r\n");
 
-            labelN.Text = $"n = {n} (p={p}, q={q})";
-            labelOpenKey.Text = $"Открытые ключи V: {string.Join(", ", openKeys)}";
-            labelSecretKey.Text = $"Секретные ключи S: {string.Join(", ", secretKeys)}";
+            if (currentScheme == SchemeType.Sequential)
+            {
+                GenerateSequentialKeys();
+            }
+            else
+            {
+                GenerateKeysForParallelScheme();
+            }
+
+            // Обновляем отображение ключей
+            UpdateKeyLabels();
 
             ResetSimulation();
         }
 
+        private void GenerateSequentialKeys()
+        {
+            RTB_LogGen.AppendText("--- Последовательная схема (ЛР 2) ---\r\n");
+
+            // Генерируем V - квадратичный вычет
+            V_single = GenerateQuadraticResidue();
+            RTB_LogGen.AppendText($"Выбран открытый ключ V = {V_single}\r\n");
+
+            // Вычисляем S = sqrt(V^(-1)) mod n
+            S_single = ComputeSecretKey(V_single);
+            RTB_LogGen.AppendText($"Вычислен секретный ключ S = {S_single}\r\n");
+            RTB_LogGen.AppendText($"Проверка: S^2 * V mod n = {(S_single * S_single * V_single) % n} (должно быть 1)\r\n");
+        }
+
         private void GenerateKeysForParallelScheme()
         {
+            RTB_LogGen.AppendText("--- Параллельная схема (ЛР 3) ---\r\n");
+
             openKeys = new List<long>();
             secretKeys = new List<long>();
 
             int k = (int)numericAccreditationsPerCycle.Value;
+            RTB_LogGen.AppendText($"Генерация {k} пар ключей (K = {k})\r\n");
 
             for (int i = 0; i < k; i++)
             {
-                RTB_LogGen.Text += $"{i + 1})\n";
+                RTB_LogGen.AppendText($"\r\n{i + 1}) ");
                 long v = GenerateQuadraticResidue();
                 openKeys.Add(v);
 
                 long s = ComputeSecretKey(v);
                 secretKeys.Add(s);
+
+                RTB_LogGen.AppendText($"\tV{i + 1} = {v}, S{i + 1} = {s}\r\n");
+                RTB_LogGen.AppendText($"\tПроверка: S{i + 1}^2 * V{i + 1} mod n = {(s * s * v) % n}\r\n");
+            }
+        }
+
+        private void UpdateKeyLabels()
+        {
+            labelN.Text = $"n = {n} (p={p}, q={q})";
+
+            if (currentScheme == SchemeType.Sequential)
+            {
+                labelOpenKey.Text = $"Открытый ключ V: {V_single}";
+                labelSecretKey.Text = $"Секретный ключ S: {S_single}";
+            }
+            else
+            {
+                labelOpenKey.Text = $"Открытые ключи V: {string.Join(", ", openKeys)}";
+                labelSecretKey.Text = $"Секретные ключи S: {string.Join(", ", secretKeys)}";
             }
         }
 
@@ -100,21 +206,23 @@ namespace Лабораторная_2
         {
             long r = random.Next(2, (int)n - 1);
             long x = FastPowMod(r, 2, n);
-
-            RTB_LogGen.Text += $"r = {r} => x = r²(mod n) = {x}\n";
-
             return x;
         }
 
         private long ComputeSecretKey(long v)
         {
-            long vInv = FastPowMod(v, EulerPhi(n) - 1, n);
+            // Исправление: явно приводим к long и используем правильный метод
+            long phi = EulerPhi(n);
+            long exponent = phi - 1;
+
+            // Убедимся что exponent не отрицательный
+            if (exponent < 0) exponent += phi;
+
+            long vInv = FastPowMod(v, exponent, n);
             long s = SqrtMod(vInv, n);
 
-
-            RTB_LogGen.Text += $"S = √V⁻¹ (mod n) => " +
-                $"\n\t  V⁻¹ = [-1 = φ(n)-1 = {EulerPhi(n)}-1 = {EulerPhi(n)-1}] = {vInv}" +
-                $"\n\t√V⁻¹ (mod n) = {s}\n";
+            RTB_LogGen.AppendText($"V⁻¹ = V^(φ(n)-1) mod n = {vInv}");
+            RTB_LogGen.AppendText($"\tS = √V⁻¹ mod n = {s}");
 
             return s;
         }
@@ -136,6 +244,8 @@ namespace Лабораторная_2
             ResetSimulation();
             buttonStartProcess.Enabled = false;
             buttonNextCycle.Enabled = true;
+            richTextBoxProtocolDetails.Clear();
+            richTextBoxProtocolDetails.AppendText("Детали протокола:\r\n");
             RunNextCycle();
         }
 
@@ -147,6 +257,8 @@ namespace Лабораторная_2
         private void ButtonReset_Click(object sender, EventArgs e)
         {
             ResetSimulation();
+            richTextBoxProtocolDetails.Clear();
+            richTextBoxProtocolDetails.AppendText("Детали протокола будут отображаться здесь...\r\n");
         }
 
         private void ResetSimulation()
@@ -178,7 +290,6 @@ namespace Лабораторная_2
         {
             if (currentCycle >= totalCycles)
             {
-                // Все циклы завершены, показываем результаты
                 ShowFinalResults();
                 return;
             }
@@ -186,75 +297,117 @@ namespace Лабораторная_2
             currentCycle++;
             currentAccreditation = 0;
 
+            // Обновляем текущую схему
+            if (radioParallel != null && radioParallel.Checked)
+                currentScheme = SchemeType.Parallel;
+            else
+                currentScheme = SchemeType.Sequential;
+
             for (int i = 0; i < accreditationsPerCycle; i++)
             {
                 currentAccreditation = i + 1;
                 UpdateLabels();
 
-                // Выполняем одну аккредитацию (параллельная схема)
-                RunAccreditation(currentCycle, currentAccreditation);
+                if (currentScheme == SchemeType.Sequential)
+                {
+                    RunSequentialAccreditation(currentCycle, currentAccreditation);
+                }
+                else
+                {
+                    RunParallelAccreditation(currentCycle, currentAccreditation);
+                }
 
-                // Если ключ уже украли, прерываемся
                 if (keyStolen) break;
             }
 
             UpdateProgress();
         }
 
-        private void RunAccreditation(int cycleNum, int accNum)
+        // ========== ПОСЛЕДОВАТЕЛЬНАЯ СХЕМА (ЛР 2) ==========
+
+        private void RunSequentialAccreditation(int cycleNum, int accNum)
         {
             // ШАГ 1: А выбирает r и вычисляет x = r^2 mod n
             long r = GenerateR();
             long x = (r * r) % n;
 
             // Проверка на повтор r (для обнаружения кражи)
-            if (usedRValues.ContainsKey(r))
+            CheckForRReuse(r, cycleNum);
+
+            // ШАГ 2: В посылает случайный бит
+            int b = random.Next(2);
+
+            // ШАГ 3: А вычисляет y
+            long y = ComputeYSequential(r, b);
+
+            // Симуляция ошибки А (если честный А ошибся)
+            bool errorOccurred = SimulateError(ref y);
+
+            // Симуляция А-мошенника
+            bool fakeSuccess = false;
+            if (radioAFake.Checked && !keyStolen)
             {
-                // В-мошенник может украсть ключ!
-                if (radioBThief.Checked && checkBoxBCatchReuse.Checked)
-                {
-                    keyStolen = true;
-                    stolenS = TryStealKey(r, usedRValues[r], cycleNum);
-                }
+                fakeSuccess = SimulateFakeASequential(b);
+            }
+
+            // ШАГ 4: В проверяет
+            bool success = VerifyYSequential(x, y, b);
+
+            // Если А-мошенник не угадал - гарантированный провал
+            if (radioAFake.Checked && !keyStolen && !fakeSuccess)
+            {
+                success = false;
+            }
+
+            // Логирование
+            LogSequentialResult(cycleNum, accNum, r, x, b, y, success);
+        }
+
+        private long ComputeYSequential(long r, int b)
+        {
+            if (b == 0)
+                return r;
+            else
+                return (r * S_single) % n;
+        }
+
+        private bool VerifyYSequential(long x, long y, int b)
+        {
+            if (b == 0)
+            {
+                return x == (y * y) % n;
             }
             else
             {
-                usedRValues[r] = cycleNum;
+                return x == (y * y * V_single) % n;
             }
+        }
 
-            // ШАГ 2: В генерирует случайную битовую строку b1...bK
-            int[] bBits = GenerateRandomBits(accreditationsPerCycle);
+        private bool SimulateFakeASequential(int actualB)
+        {
+            // Мошенник должен угадать b заранее
+            int guessedB = random.Next(2);
+            return guessedB == actualB;
+        }
 
-            // ШАГ 3: А вычисляет y
-            long y = ComputeY(r, bBits);
+        private void LogSequentialResult(int cycleNum, int accNum, long r, long x, int b, long y, bool success)
+        {
+            string details = $"Цикл {cycleNum}.{accNum} [ПОСЛЕДОВАТЕЛЬНАЯ]:\r\n";
+            details += $"1. А: r = {r}, x = r² mod n = {x}\r\n";
+            details += $"2. В: b = {b}\r\n";
+            details += $"3. А: y = {(b == 0 ? "r" : "r*S")} = {y}\r\n";
 
-            // ШАГ 4: В проверяет
-            bool success = VerifyY(x, y, bBits);
+            if (b == 0)
+                details += $"4. В: Проверка x = y² mod n = {(y * y) % n} -> {(success ? "УСПЕХ" : "ПРОВАЛ")}\r\n";
+            else
+                details += $"4. В: Проверка x = y²*V mod n = {(y * y * V_single) % n} -> {(success ? "УСПЕХ" : "ПРОВАЛ")}\r\n";
 
-            // Симуляция ошибки А (если честный А ошибся)
-            if (radioAHonest.Checked && !keyStolen)
-            {
-                double errorProb = (double)numericErrorPercent.Value / 100.0;
-                if (random.NextDouble() < errorProb)
-                {
-                    // А ошибается - портим ответ
-                    y = (y + 1) % n; // Просто меняем ответ
-                    success = false;
-                }
-            }
+            richTextBoxProtocolDetails.AppendText(details + new string('-', 50) + "\r\n");
 
-            // Симуляция А-мошенника
-            if (radioAFake.Checked && !keyStolen)
-            {
-                // Мошенник не знает S, пытается угадать
-                success = SimulateFakeA(r, bBits);
-            }
-
-            // Логируем результат
-            string logMessage = $"Цикл {cycleNum}.{accNum}: x={x}, b={BitArrayToString(bBits)}, y={y} -> {(success ? "УСПЕХ" : "ПРОВАЛ")}";
+            string logMessage = $"Цикл {cycleNum}.{accNum} [ПОСЛ]: x={x}, b={b}, y={y} -> {(success ? "✓" : "✗")}";
             if (keyStolen) logMessage += " [КЛЮЧ УКРАДЕН!]";
 
-            listBoxProcessLog.Items.Insert(0, logMessage); // Добавляем сверху
+            listBoxProcessLog.Items.Insert(0, logMessage);
 
             allResults.Add(new AccreditationResult
             {
@@ -262,12 +415,121 @@ namespace Лабораторная_2
                 AccreditationNumber = accNum,
                 r = r,
                 x = x,
-                bBits = bBits,
+                Challenge = b,
                 y = y,
                 IsSuccess = success,
-                LogMessage = logMessage
+                LogMessage = logMessage,
+                Scheme = "Sequential"
             });
         }
+
+        // ========== ПАРАЛЛЕЛЬНАЯ СХЕМА (ЛР 3) ==========
+
+        private void RunParallelAccreditation(int cycleNum, int accNum)
+        {
+            // ШАГ 1: А выбирает r и вычисляет x = r^2 mod n
+            long r = GenerateR();
+            long x = (r * r) % n;
+
+            // Проверка на повтор r (для обнаружения кражи)
+            CheckForRReuse(r, cycleNum);
+
+            // ШАГ 2: В генерирует случайную битовую строку b1...bK
+            int[] bBits = GenerateRandomBits(accreditationsPerCycle);
+
+            // ШАГ 3: А вычисляет y
+            long y = ComputeYParallel(r, bBits);
+
+            // Симуляция ошибки А (если честный А ошибся)
+            bool errorOccurred = SimulateError(ref y);
+
+            // Симуляция А-мошенника
+            bool fakeSuccess = false;
+            if (radioAFake.Checked && !keyStolen)
+            {
+                fakeSuccess = SimulateFakeAParallel(bBits);
+                if (!fakeSuccess)
+                {
+                    y = (y + 1) % n; // Портим ответ если не угадал
+                }
+            }
+
+            // ШАГ 4: В проверяет
+            bool success = VerifyYParallel(x, y, bBits);
+
+            // Логирование
+            LogParallelResult(cycleNum, accNum, r, x, bBits, y, success);
+        }
+
+        private long ComputeYParallel(long r, int[] bBits)
+        {
+            long product = 1;
+            for (int i = 0; i < bBits.Length; i++)
+            {
+                if (bBits[i] == 1 && i < secretKeys.Count)
+                {
+                    product = (product * secretKeys[i]) % n;
+                }
+            }
+            return (r * product) % n;
+        }
+
+        private bool VerifyYParallel(long x, long y, int[] bBits)
+        {
+            long vProduct = 1;
+            for (int i = 0; i < bBits.Length; i++)
+            {
+                if (bBits[i] == 1 && i < openKeys.Count)
+                {
+                    vProduct = (vProduct * openKeys[i]) % n;
+                }
+            }
+
+            long rightSide = (y * y) % n;
+            rightSide = (rightSide * vProduct) % n;
+
+            return x == rightSide;
+        }
+
+        private bool SimulateFakeAParallel(int[] bBits)
+        {
+            // Вероятность успеха = (1/2)^K
+            double successProb = Math.Pow(0.5, bBits.Length);
+            return random.NextDouble() < successProb;
+        }
+
+        private void LogParallelResult(int cycleNum, int accNum, long r, long x, int[] bBits, long y, bool success)
+        {
+            string bString = BitArrayToString(bBits);
+
+            string details = $"Цикл {cycleNum}.{accNum} [ПАРАЛЛЕЛЬНАЯ]:\r\n";
+            details += $"1. А: r = {r}, x = r² mod n = {x}\r\n";
+            details += $"2. В: b = {bString}\r\n";
+            details += $"3. А: y = r * ∏(S_i^b_i) = {y}\r\n";
+            details += $"4. В: Проверка x = y² * ∏(V_i^b_i) mod n -> {(success ? "УСПЕХ" : "ПРОВАЛ")}\r\n";
+
+            richTextBoxProtocolDetails.AppendText(details + new string('-', 50) + "\r\n");
+
+            string logMessage = $"Цикл {cycleNum}.{accNum} [ПАРАЛ]: x={x}, b={bString}, y={y} -> {(success ? "✓" : "✗")}";
+            if (keyStolen) logMessage += " [КЛЮЧ УКРАДЕН!]";
+
+            listBoxProcessLog.Items.Insert(0, logMessage);
+
+            allResults.Add(new AccreditationResult
+            {
+                CycleNumber = cycleNum,
+                AccreditationNumber = accNum,
+                r = r,
+                x = x,
+                Challenge = bBits,
+                y = y,
+                IsSuccess = success,
+                LogMessage = logMessage,
+                Scheme = "Parallel"
+            });
+        }
+
+        // ========== ОБЩИЕ МЕТОДЫ ==========
 
         private long GenerateR()
         {
@@ -288,66 +550,9 @@ namespace Лабораторная_2
             int[] bits = new int[count];
             for (int i = 0; i < count; i++)
             {
-                bits[i] = random.Next(2); // 0 или 1
+                bits[i] = random.Next(2);
             }
             return bits;
-        }
-
-        private long ComputeY(long r, int[] bBits)
-        {
-            // y = r * (S1^b1 * S2^b2 * ... * SK^bK) mod n
-            long product = 1;
-            for (int i = 0; i < bBits.Length; i++)
-            {
-                if (bBits[i] == 1 && i < secretKeys.Count)
-                {
-                    product = (product * secretKeys[i]) % n;
-                }
-            }
-            return (r * product) % n;
-        }
-
-        private bool VerifyY(long x, long y, int[] bBits)
-        {
-            // Проверка: x = y^2 * (V1^b1 * V2^b2 * ... * VK^bK) mod n
-            long vProduct = 1;
-            for (int i = 0; i < bBits.Length; i++)
-            {
-                if (bBits[i] == 1 && i < openKeys.Count)
-                {
-                    vProduct = (vProduct * openKeys[i]) % n;
-                }
-            }
-
-            long rightSide = (y * y) % n;
-            rightSide = (rightSide * vProduct) % n;
-
-            return x == rightSide;
-        }
-
-        private bool SimulateFakeA(long r, int[] bBits)
-        {
-            // Мошенник не знает S
-            // Он может угадать биты и подготовиться, но не к обоим случаям сразу
-
-            // Упрощенно: вероятность успеха = (1/2)^K
-            // Здесь мы просто рандомно определяем успех/неудачу
-            double successProb = Math.Pow(0.5, bBits.Length);
-            return random.NextDouble() < successProb;
-        }
-
-        private long TryStealKey(long r, int oldCycle, int currentCycle)
-        {
-            // Если В заметил повтор r, он может вычислить S
-            // Нужно найти соответствующие y из старого и нового цикла
-            // S = y_new / y_old или что-то подобное
-
-            // В реальности здесь сложная логика поиска по логам
-            // Упрощенно: возвращаем какой-то ключ для демонстрации
-            if (secretKeys.Count > 0)
-                return secretKeys[0];
-
-            return 0;
         }
 
         private string BitArrayToString(int[] bits)
@@ -355,15 +560,55 @@ namespace Лабораторная_2
             return string.Join("", bits);
         }
 
+        private void CheckForRReuse(long r, int currentCycle)
+        {
+            if (usedRValues.ContainsKey(r))
+            {
+                if (radioBThief.Checked && checkBoxBCatchReuse.Checked)
+                {
+                    keyStolen = true;
+                    stolenS = TryStealKey(r);
+                }
+            }
+            else
+            {
+                usedRValues[r] = currentCycle;
+            }
+        }
+
+        private bool SimulateError(ref long y)
+        {
+            if (radioAHonest.Checked && !keyStolen)
+            {
+                double errorProb = (double)numericErrorPercent.Value / 100.0;
+                if (random.NextDouble() < errorProb)
+                {
+                    y = (y + 1) % n;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private long TryStealKey(long r)
+        {
+            // Упрощенно для демонстрации
+            if (currentScheme == SchemeType.Sequential)
+                return S_single;
+            else if (secretKeys.Count > 0)
+                return secretKeys[0];
+
+            return 0;
+        }
+
         private void UpdateProgress()
         {
             int totalAccreditations = totalCycles * accreditationsPerCycle;
             int completed = allResults.Count;
-            int successes = allResults.FindAll(r => r.IsSuccess).Count;
 
             if (totalAccreditations > 0)
             {
-                progressBarSuccess.Value = (completed * 100) / totalAccreditations;
+                progressBarSuccess.Value = Math.Min(100, (completed * 100) / totalAccreditations);
             }
         }
 
@@ -372,54 +617,123 @@ namespace Лабораторная_2
             buttonStartProcess.Enabled = true;
             buttonNextCycle.Enabled = false;
 
-            // Переключаемся на вкладку результатов
             tabControl1.SelectedTab = tabPage5;
 
             // Подсчет статистики
             int totalAccreditations = allResults.Count;
-            int successes = allResults.FindAll(r => r.IsSuccess).Count;
+            int successes = allResults.Count(r => r.IsSuccess);
             double successRate = totalAccreditations > 0 ? (double)successes / totalAccreditations : 0;
 
             labelSuccessRate.Text = $"Реальная успешность: {successes}/{totalAccreditations} ({successRate:P2})";
 
-            double theoryCheatProb = Math.Pow(0.5, accreditationsPerCycle * totalCycles);
+            double theoryCheatProb;
+            if (currentScheme == SchemeType.Sequential)
+            {
+                theoryCheatProb = Math.Pow(0.5, totalCycles);
+            }
+            else
+            {
+                theoryCheatProb = Math.Pow(0.5, accreditationsPerCycle * totalCycles);
+            }
             labelTheoryRate.Text = $"Теоретическая вероятность обмана: {theoryCheatProb:E4}";
 
             // Формирование отчета
             string summary = $"Параметры: p={p}, q={q}, n={n}\r\n";
-            summary += $"Открытые ключи V: {string.Join(", ", openKeys)}\r\n";
-            summary += $"Секретные ключи S: {string.Join(", ", secretKeys)}\r\n";
+            summary += $"Схема: {(currentScheme == SchemeType.Sequential ? "Последовательная (ЛР 2)" : "Параллельная (ЛР 3)")}\r\n";
+
+            if (currentScheme == SchemeType.Sequential)
+            {
+                summary += $"Открытый ключ V: {V_single}\r\n";
+                summary += $"Секретный ключ S: {S_single}\r\n";
+            }
+            else
+            {
+                summary += $"Открытые ключи V: {string.Join(", ", openKeys)}\r\n";
+                summary += $"Секретные ключи S: {string.Join(", ", secretKeys)}\r\n";
+            }
+
             summary += $"Циклов: {totalCycles}, Аккредитаций в цикле: {accreditationsPerCycle}\r\n";
             summary += $"Режим А: {(radioAHonest.Checked ? "Честный" : "Мошенник")}\r\n";
             summary += $"Режим В: {(radioBHonest.Checked ? "Честный" : "Мошенник")}\r\n";
+            summary += $"Вероятность ошибки А: {numericErrorPercent.Value}%\r\n";
+            summary += $"Повтор r: {(checkBoxUseOldR.Checked ? "Разрешен (опасно!)" : "Запрещен")}\r\n";
             summary += $"====================================\r\n";
+            summary += $"Всего раундов: {totalAccreditations}\r\n";
+            summary += $"Успешно: {successes}\r\n";
+            summary += $"Провалов: {totalAccreditations - successes}\r\n";
 
             textBoxSummary.Text = summary;
 
-            // Если ключ украли, показываем это
+            // Очищаем и заполняем DataGridView
+            dataGridViewResults.DataSource = null;
+            dataGridViewResults.Rows.Clear();
+            dataGridViewResults.Columns.Clear();
+
+            dataGridViewResults.Columns.Add("Cycle", "Цикл");
+            dataGridViewResults.Columns.Add("Acc", "Аккред.");
+            dataGridViewResults.Columns.Add("Scheme", "Схема");
+            dataGridViewResults.Columns.Add("X", "x");
+            dataGridViewResults.Columns.Add("Challenge", "Запрос");
+            dataGridViewResults.Columns.Add("Y", "y");
+            dataGridViewResults.Columns.Add("Result", "Результат");
+
+            foreach (var r in allResults)
+            {
+                string challenge = r.Challenge is int intVal ? intVal.ToString() : string.Join("", (int[])r.Challenge);
+                dataGridViewResults.Rows.Add(
+                    r.CycleNumber,
+                    r.AccreditationNumber,
+                    r.Scheme == "Sequential" ? "Посл." : "Парал.",
+                    r.x,
+                    challenge,
+                    r.y,
+                    r.IsSuccess ? "✓" : "✗"
+                );
+            }
+
+            listBoxStolenKeys.Items.Clear();
             if (keyStolen)
             {
-                listBoxStolenKeys.Items.Add($"КЛЮЧ УКРАДЕН! S={stolenS} (обнаружен повтор r)");
+                listBoxStolenKeys.Items.Add($"*** КЛЮЧ УКРАДЕН! S = {stolenS} ***");
+                listBoxStolenKeys.Items.Add("Причина: А повторно использовал r, В-мошенник вычислил секрет");
             }
 
             // Добавляем последние логи
-            foreach (var result in allResults.GetRange(Math.Max(0, allResults.Count - 10), Math.Min(10, allResults.Count)))
+            listBoxStolenKeys.Items.Add("");
+            listBoxStolenKeys.Items.Add("Последние 10 операций:");
+            int startIndex = Math.Max(0, allResults.Count - 10);
+            int count = Math.Min(10, allResults.Count);
+            for (int i = startIndex; i < startIndex + count; i++)
             {
-                listBoxStolenKeys.Items.Add(result.LogMessage);
+                listBoxStolenKeys.Items.Add(allResults[i].LogMessage);
             }
         }
 
         private void ButtonExportResults_Click(object sender, EventArgs e)
         {
-            // Сохранение результатов в файл
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text files (*.txt)|*.txt";
+            saveFileDialog.Filter = "Text files (*.txt)|*.txt|CSV files (*.csv)|*.csv";
             saveFileDialog.DefaultExt = "txt";
+            saveFileDialog.FileName = $"ZKPLab_{DateTime.Now:yyyyMMdd_HHmmss}";
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                System.IO.File.WriteAllText(saveFileDialog.FileName, textBoxSummary.Text);
-                MessageBox.Show("Результаты сохранены!");
+                string content = textBoxSummary.Text;
+
+                // Если CSV, добавляем разделители
+                if (saveFileDialog.FilterIndex == 2)
+                {
+                    content = "Cycle,Accreditation,Scheme,X,Challenge,Y,Result\n";
+                    foreach (var r in allResults)
+                    {
+                        string challenge = r.Challenge is int intVal ? intVal.ToString() : $"\"{string.Join("", (int[])r.Challenge)}\"";
+                        content += $"{r.CycleNumber},{r.AccreditationNumber},{r.Scheme},{r.x},{challenge},{r.y},{r.IsSuccess}\n";
+                    }
+                }
+
+                System.IO.File.WriteAllText(saveFileDialog.FileName, content);
+                MessageBox.Show($"Результаты сохранены в файл:\n{saveFileDialog.FileName}", "Успех",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
