@@ -24,6 +24,8 @@
         private NumericUpDown numericTotalCycles;
         private Label labelAccreditationsPerCycle;
         private NumericUpDown numericAccreditationsPerCycle;
+        private RadioButton radioSequential;
+        private RadioButton radioParallel;
 
         // Вкладка 2: Настройка А
         private GroupBox groupBoxAMode;
@@ -292,7 +294,7 @@
             // numericTotalCycles
             // 
             numericTotalCycles.Location = new Point(217, 23);
-            numericTotalCycles.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
+            numericTotalCycles.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             numericTotalCycles.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericTotalCycles.Name = "numericTotalCycles";
             numericTotalCycles.Size = new Size(52, 29);
@@ -611,7 +613,7 @@
             labelTheoryRate.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
             labelTheoryRate.Location = new Point(9, 28);
             labelTheoryRate.Name = "labelTheoryRate";
-            labelTheoryRate.Size = new Size(378, 19);
+            labelTheoryRate.Size = new Size(834, 19);
             labelTheoryRate.TabIndex = 1;
             labelTheoryRate.Text = "Теоретическая вероятность обмана:";
             // 

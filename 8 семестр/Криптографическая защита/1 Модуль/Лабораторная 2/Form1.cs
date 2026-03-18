@@ -20,7 +20,7 @@ namespace Лабораторная_2
             public int AccreditationNumber { get; set; }
             public long r { get; set; }
             public long x { get; set; }
-            public object Challenge { get; set; } // int для послед., int[] для паралл.
+            public object? Challenge { get; set; }
             public long y { get; set; }
             public bool IsSuccess { get; set; }
             public string? LogMessage { get; set; }
@@ -52,58 +52,13 @@ namespace Лабораторная_2
         private bool keyStolen = false;
         private long stolenS = 0;
 
-        // RadioButton для выбора схемы (объявляем как поля класса)
-        private RadioButton radioSequential;
-        private RadioButton radioParallel;
-
         public Form1()
         {
             InitializeComponent();
-            InitializeDefaults();
-
-            // Находим RadioButton на форме (ты их уже добавил в дизайнере)
-            FindSchemeRadioButtons();
         }
 
-        private void FindSchemeRadioButtons()
-        {
-            // Ищем RadioButton на tabPage1
-            foreach (Control control in tabPage1.Controls)
-            {
-                if (control is GroupBox gb && gb.Text == "Выбор схемы идентификации")
-                {
-                    foreach (Control c in gb.Controls)
-                    {
-                        if (c is RadioButton rb)
-                        {
-                            if (rb.Text.Contains("Последовательная"))
-                                radioSequential = rb;
-                            else if (rb.Text.Contains("Параллельная"))
-                                radioParallel = rb;
-                        }
-                    }
-                    break;
-                }
-            }
 
-            // Если не нашли, создаем ссылки по умолчанию (на случай если их нет)
-            if (radioSequential == null || radioParallel == null)
-            {
-                // Создаем заглушки, но лучше чтобы они были в дизайнере
-                radioParallel = new RadioButton { Checked = true };
-                radioSequential = new RadioButton { Checked = false };
-            }
-        }
-
-        private void InitializeDefaults()
-        {
-            // Установка начальных значений
-            totalCycles = (int)numericTotalCycles.Value;
-            accreditationsPerCycle = (int)numericAccreditationsPerCycle.Value;
-            UpdateLabels();
-        }
-
-        // ========== ВКЛАДКА 1: ГЕНЕРАЦИЯ КЛЮЧЕЙ ==========
+        #region ВКЛАДКА 1: ГЕНЕРАЦИЯ КЛЮЧЕЙ
 
         private void ButtonGenerateKeys_Click(object sender, EventArgs e)
         {
@@ -211,11 +166,9 @@ namespace Лабораторная_2
 
         private long ComputeSecretKey(long v)
         {
-            // Исправление: явно приводим к long и используем правильный метод
             long phi = EulerPhi(n);
             long exponent = phi - 1;
 
-            // Убедимся что exponent не отрицательный
             if (exponent < 0) exponent += phi;
 
             long vInv = FastPowMod(v, exponent, n);
@@ -237,6 +190,8 @@ namespace Лабораторная_2
             return 1;
         }
 
+        #endregion
+        #region ВКЛАДКА 3: ПРОЦЕСС
         // ========== ВКЛАДКА 4: ПРОЦЕСС ==========
 
         private void ButtonStartProcess_Click(object sender, EventArgs e)
@@ -528,6 +483,7 @@ namespace Лабораторная_2
                 Scheme = "Parallel"
             });
         }
+        #endregion
 
         // ========== ОБЩИЕ МЕТОДЫ ==========
 
@@ -535,13 +491,11 @@ namespace Лабораторная_2
         {
             if (checkBoxUseOldR.Checked && usedRValues.Count > 0)
             {
-                // Сознательно используем старый r (для демонстрации уязвимости)
                 var enumerator = usedRValues.Keys.GetEnumerator();
                 if (enumerator.MoveNext())
                     return enumerator.Current;
             }
 
-            // Новое случайное r
             return random.Next(2, (int)n - 1);
         }
 
@@ -592,7 +546,6 @@ namespace Лабораторная_2
 
         private long TryStealKey(long r)
         {
-            // Упрощенно для демонстрации
             if (currentScheme == SchemeType.Sequential)
                 return S_single;
             else if (secretKeys.Count > 0)
@@ -635,7 +588,7 @@ namespace Лабораторная_2
             {
                 theoryCheatProb = Math.Pow(0.5, accreditationsPerCycle * totalCycles);
             }
-            labelTheoryRate.Text = $"Теоретическая вероятность обмана: {theoryCheatProb:E4}";
+            labelTheoryRate.Text = $"Теоретическая вероятность обмана: {theoryCheatProb:F10}";
 
             // Формирование отчета
             string summary = $"Параметры: p={p}, q={q}, n={n}\r\n";
@@ -699,7 +652,6 @@ namespace Лабораторная_2
             }
 
             // Добавляем последние логи
-            listBoxStolenKeys.Items.Add("");
             listBoxStolenKeys.Items.Add("Последние 10 операций:");
             int startIndex = Math.Max(0, allResults.Count - 10);
             int count = Math.Min(10, allResults.Count);
