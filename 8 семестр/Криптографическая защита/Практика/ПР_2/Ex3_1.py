@@ -17,7 +17,7 @@ total_numbers = end - start - 1  # исключаем границы? или в�
 numbers = list(range(501, 700))
 total = len(numbers)
 
-print(f"Интервал: (500, 700) -> числа от 501 до 699")
+print(f"Интервал: (500, 700)")
 print(f"Всего чисел в интервале: {total}")
 print(f"Найдено простых чисел в интервале: {len(primes_in_interval)}")
 print(f"Первые 10 простых чисел: {first_10_primes}")
