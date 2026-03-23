@@ -85,6 +85,19 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.TB_k = new System.Windows.Forms.TextBox();
+            this.TB_Fx = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -98,6 +111,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.PCG_Count)).BeginInit();
             this.GB_PCG_GenSeq.SuspendLayout();
             this.GB_PCG_ParamGen.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -745,6 +762,8 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.White;
+            this.tabPage3.Controls.Add(this.groupBox5);
+            this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -762,6 +781,132 @@
             this.tabPage4.Text = "Генератор Геффе";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.TB_k);
+            this.groupBox1.Controls.Add(this.TB_Fx);
+            this.groupBox1.Controls.Add(this.label17);
+            this.groupBox1.Location = new System.Drawing.Point(20, 20);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(320, 134);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Параметры генератора";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.button1.Location = new System.Drawing.Point(12, 101);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(291, 23);
+            this.button1.TabIndex = 15;
+            this.button1.Text = "Сгенерировать";
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(35, 71);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(17, 16);
+            this.label15.TabIndex = 10;
+            this.label15.Text = "k:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(17, 39);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(35, 16);
+            this.label16.TabIndex = 9;
+            this.label16.Text = "Ф(х):";
+            // 
+            // TB_k
+            // 
+            this.TB_k.Location = new System.Drawing.Point(58, 68);
+            this.TB_k.Name = "TB_k";
+            this.TB_k.Size = new System.Drawing.Size(55, 22);
+            this.TB_k.TabIndex = 6;
+            // 
+            // TB_Fx
+            // 
+            this.TB_Fx.Location = new System.Drawing.Point(58, 36);
+            this.TB_Fx.Name = "TB_Fx";
+            this.TB_Fx.Size = new System.Drawing.Size(245, 22);
+            this.TB_Fx.TabIndex = 5;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(690, 60);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(130, 16);
+            this.label17.TabIndex = 1;
+            this.label17.Text = "Количество чисел:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(58, 17);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(153, 16);
+            this.label11.TabIndex = 16;
+            this.label11.Text = "Степени многочленов";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.listBox1);
+            this.groupBox5.Controls.Add(this.richTextBox2);
+            this.groupBox5.Controls.Add(this.dataGridView1);
+            this.groupBox5.Controls.Add(this.richTextBox1);
+            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.groupBox5.Location = new System.Drawing.Point(20, 161);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(1164, 502);
+            this.groupBox5.TabIndex = 6;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Результаты работы";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Location = new System.Drawing.Point(6, 21);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(677, 424);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(693, 21);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(453, 424);
+            this.dataGridView1.TabIndex = 1;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Location = new System.Drawing.Point(58, 459);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(1100, 37);
+            this.richTextBox2.TabIndex = 2;
+            this.richTextBox2.Text = "";
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(7, 459);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(45, 36);
+            this.listBox1.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -773,7 +918,6 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Лабораторные работы";
-
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
@@ -794,6 +938,11 @@
             this.GB_PCG_GenSeq.PerformLayout();
             this.GB_PCG_ParamGen.ResumeLayout(false);
             this.GB_PCG_ParamGen.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -857,5 +1006,18 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox TB_PCG_m;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox TB_k;
+        private System.Windows.Forms.TextBox TB_Fx;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
