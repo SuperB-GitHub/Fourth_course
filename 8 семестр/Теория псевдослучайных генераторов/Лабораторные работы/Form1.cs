@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using static MyMathLibrary.MathUtils;
@@ -11,6 +14,7 @@ namespace Лабораторные_работы
     {
         private List<long> SeqLCG = new List<long>();
         private List<long> SeqPCG = new List<long>();
+        private List<long> SeqFIB = new List<long>();
         private (int start, int period) PeriodLCG = (0, 0);
         private (int start, int period) PeriodPCG = (0, 0);
 
@@ -42,10 +46,65 @@ namespace Лабораторные_работы
             {
                 sequence.Add(current);
                 current = (Mod(a2 * FastPowMod(current, 2, m), m) + Mod(a1 * current, m) + b) % m;
-                //current = (a2 * current * current + a1 * current + b) % m;
             }
 
             return sequence;
+        }
+        private List<List<long>> GenFIBSeq(long k, List<long> fk)
+        {
+            long size = fk.Count() - 1;
+            long[,] T = new long[size, size];
+            for (int i = 1; i <= T.GetLength(1); i++)
+            {
+                T[0, i-1] = fk[i];
+            }
+
+            for (int i = 1; i < T.GetLength(0); i++)
+            {
+                for (int j = 0; j < T.GetLength(1); j++)
+                {
+                    T[i, j] = i-1 == j ? 1 : 0;
+                }
+            }
+
+            RTB_FIB_Output.Text += "\n\nT = \n";
+            PrintMatrix(T);
+
+            RTB_FIB_Output.Text += $"\n\nV = T^k = T^{k} = \n";
+            long[,] V = T;
+            for(long k_i = 1; k_i < k; k_i++)
+            {
+                V = MultiplyMatrices(V, T);
+            }
+            PrintMatrix(V);
+
+            RTB_FIB_Output.Text += $"\n\nQ(t+1) = V * Q(t) = \n\n";
+
+            
+            List<List<long>> regs = new List<List<long>>();
+            for (int i = 0; i < V.GetLength(0); i++)
+            {
+                List<long> list = new List<long>();
+                for (int j = 0; j < V.GetLength(1); j++)
+                {
+                    if (V[i, j] == 1) list.Add(j+1);
+                }
+                regs.Add(list);
+                RTB_FIB_Output.Text += $"q{i+1}(t+1) = q{string.Join($"(t) + q",list)}(t)\n";
+            }
+
+            return regs;
+        }
+        private void GenFIBDiag(List<List<long>> regs, long size, List<long> SP)
+        {
+            Dictionary<long, List<long>> rslos = new Dictionary<long, List<long>>();
+
+            for (long key = 1; key <= size + 1; key++)
+            {
+                rslos[key] = new List<long> { SP[(int)key - 1] };
+            }
+
+
         }
 
         // Проверки на максимальный период
@@ -285,6 +344,49 @@ namespace Лабораторные_работы
                 MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void BTN_FIB_GenSeq_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!long.TryParse(TB_FIB_k.Text, out long k))
+                {
+                    MessageBox.Show("Неверное значение параметра k", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<long> Fk = TB_FIB_Fx.Text.Split(' ')
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(long.Parse)
+                    .ToList();
+
+                if (TB_FIB_StartPos.Text.Length == Fk.Max())
+                {
+                    MessageBox.Show("Неверное значение начальной позиции", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<long> SP = TB_FIB_StartPos.Text.Where(c => char.IsDigit(c))
+                    .Select(c => long.Parse(c.ToString()))
+                    .ToList();
+
+                List<long> bitsFk = new List<long>();
+                for (long i = 0; i <= Fk.Max(); i++)
+                {
+                    long bit = Fk.Contains(i) ? 1 : 0;
+                    bitsFk.Add(bit);
+                    RTB_FIB_Output.Text += $"a{i} = {bit}; ";
+                }
+
+
+                GenFIBDiag(GenFIBSeq(k, bitsFk), Fk.Max(), SP);
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         // Обработчики кнопки "Сохранить"
         private void BTN_LCG_Save_Click(object sender, EventArgs e)
@@ -395,6 +497,11 @@ namespace Лабораторные_работы
             CB_PCG_MaxPeriod.Checked = false;
             PeriodPCG = (0, 0);
         }
+        private void BTN_FIB_Clear_Click(object sender, EventArgs e)
+        {
+            RTB_FIB_Output.Text = "";
+            RTB_FIB_OutQs.Text = "";
+        }
 
         // Обработчики выбора пресета
         private void CB_LCG_PreSets_SelectedIndexChanged(object sender, EventArgs e)
@@ -492,6 +599,43 @@ namespace Лабораторные_работы
                 seen[pair] = i;
             }
             return (0, sequence.Count);
+        }
+        private long[,] MultiplyMatrices(long[,] a, long[,] b)
+        {
+            int rowsA = a.GetLength(0);
+            int colsA = a.GetLength(1);
+            int rowsB = b.GetLength(0);
+            int colsB = b.GetLength(1);
+
+            if (colsA != rowsB)
+                throw new ArgumentException("Матрицы нельзя перемножить");
+
+            long[,] result = new long[rowsA, colsB];
+
+            for (int i = 0; i < rowsA; i++)
+            {
+                for (int j = 0; j < colsB; j++)
+                {
+                    for (long k = 0; k < colsA; k++)
+                    {
+                        result[i, j] += a[i, k] * b[k, j];
+                        result[i, j] = Mod(result[i, j], 2);
+
+                    }
+                }
+            }
+            return result;
+        }
+        private void PrintMatrix(long[,] a)
+        {
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    RTB_FIB_Output.Text += $"{a[i, j]} ";
+                }
+                RTB_FIB_Output.Text += $"\n";
+            }
         }
 
         
