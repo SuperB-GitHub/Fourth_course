@@ -1,4 +1,5 @@
 ﻿using static MyMathLibrary.MathUtils;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Лабораторная_работа_3
 {
@@ -40,6 +41,9 @@ namespace Лабораторная_работа_3
                 Input_PQ(out Coords q, abm, false);
                 PplusQ(p, q, abm[2]);
                 twoP(p, abm);
+
+                Input_n(out long n);
+                Lab5(p, n, abm);
 
                 contin = OutputEnd();
             }
@@ -103,6 +107,24 @@ namespace Лабораторная_работа_3
 
             Console.WriteLine($"Полученное выражение: E{abm[2]}(a:{abm[0]}, b:{abm[1]}) => y² = x³ + {abm[0]}x + {abm[1]}");
         }
+        static void Input_n(out long n)
+        {
+            int cursorTop = Console.CursorTop;
+
+            Console.Write($"\nВведите значение скаляра: ");
+            while (!long.TryParse(Console.ReadLine(), out n))
+            {
+                Console.SetCursorPosition(0, cursorTop);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, cursorTop);
+                Console.Write("Некорректный ввод. Введите целое число: ");
+            }
+            Console.SetCursorPosition(0, cursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, cursorTop);
+
+            Console.WriteLine($"\n3) Введено значение скаляра: {n}");
+        }
         static bool OutputEnd()
         {
             Console.Write($"\nЖелаете продолжить? (Enter) ");
@@ -131,7 +153,7 @@ namespace Лабораторная_работа_3
             Console.WriteLine($"n | {string.Join(" | ", num.Select(n => $"{n}".PadRight(2)))}");
             Console.WriteLine($"y | {string.Join(" | ", yi.Select(n => $"{n}".PadRight(2)))}\n");
 
-            Console.WriteLine("\nНайденные что-то: ");
+            Console.WriteLine("\nНайденные точки: ");
             HashSet<Coords> fine = new HashSet<Coords> ();
             for(int x = 0; x <= xi.Count()-1; x++)
             {
@@ -155,8 +177,6 @@ namespace Лабораторная_работа_3
         }
         static void PplusQ(Coords p, Coords q, long m)
         {
-            
-
             long lambda1 = q.y - p.y;
             long lambda2 = q.x - p.x;
             if (lambda2 != 0)
@@ -190,7 +210,7 @@ namespace Лабораторная_работа_3
         }
         static Coords TheoremViet(Coords p, Coords q, long m, long lambda)
         {
-            Console.WriteLine("По теореме Виета для кубических уравнений:");
+            Console.WriteLine("По приколу (теореме Виета для кубических уравнений):");
             long x = FastPowMod(lambda, 2, m) - p.x - q.x;
             Console.WriteLine($"x₃ = λ² - x₁ - x₂ = {x}(mod {m}) ≡ {x = Mod(x, m)}(mod {m}) ");
             long y = lambda * (p.x - x) - p.y;
@@ -198,6 +218,32 @@ namespace Лабораторная_работа_3
 
             return new Coords{x = x, y = y};
         }
+        static void Lab5(Coords p, long n, List<long> abm)
+        {
+            string bin = Convert.ToString(n, 2);
+            Console.WriteLine($"{n}₁₀ = {bin}₂");
 
+            Coords R = new Coords(0, 0);
+            PplusQ(R, p, abm[2]);
+            twoP(R, abm);
+
+        }
+        static void AddFunc(Coords P, Coords R, long m)
+        {
+            Coords nul = new Coords(0, 0);
+
+            if(R == nul)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+        static void MulFunc(Coords P, Coords R, List<long> abm)
+        {
+
+        }
     }
 }
