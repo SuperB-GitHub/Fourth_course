@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.Security;
 using System.Windows.Forms;
 using static MyMathLibrary.MathUtils;
 
@@ -14,9 +15,10 @@ namespace Лабораторные_работы
     {
         private List<long> SeqLCG = new List<long>();
         private List<long> SeqPCG = new List<long>();
-        private List<long> SeqFIB = new List<long>();
+        private Dictionary<long, List<long>> SeqFIB = new Dictionary<long, List<long>>();
         private (int start, int period) PeriodLCG = (0, 0);
         private (int start, int period) PeriodPCG = (0, 0);
+        private int PeriodFIB = 0;
 
         public Form1()
         {
@@ -66,6 +68,7 @@ namespace Лабораторные_работы
                     T[i, j] = i-1 == j ? 1 : 0;
                 }
             }
+            RTB_FIB_Output.Text = "";
 
             RTB_FIB_Output.Text += "\n\nT = \n";
             PrintMatrix(T);
@@ -99,11 +102,43 @@ namespace Лабораторные_работы
         {
             Dictionary<long, List<long>> rslos = new Dictionary<long, List<long>>();
 
-            for (long key = 1; key <= size + 1; key++)
+            for (long key = 1; key <= size; key++)
             {
                 rslos[key] = new List<long> { SP[(int)key - 1] };
             }
 
+            List<long> EP = new List<long>();
+            int s = 0;
+
+            while (!EP.SequenceEqual(SP))
+            {
+                
+                EP = new List<long>();
+                for (long key = 1; key <= size; key++)
+                {
+                    List<long> reg = regs[(int)(key - 1)];
+                    long sums = 0;
+                    foreach (long item in reg)
+                    {
+                        sums += rslos[item][s];
+                    }
+                    rslos[key] = new List<long>(rslos[key]) { Mod(sums, 2) };
+                    EP.Add(Mod(sums, 2));
+                }
+                s++;
+            }
+
+            SeqFIB = rslos;
+            FillDataGridViewSimple(rslos);
+
+            CB_FIB_Qs.Items.Clear();
+
+            foreach (var key in rslos.Keys)
+            {
+                CB_FIB_Qs.Items.Add(key);
+            }
+
+            CB_FIB_Qs.Sorted = true;
 
         }
 
@@ -359,7 +394,9 @@ namespace Лабораторные_работы
                     .Select(long.Parse)
                     .ToList();
 
-                if (TB_FIB_StartPos.Text.Length == Fk.Max())
+                long N = Fk.Max();
+
+                if (TB_FIB_StartPos.Text.Length != N)
                 {
                     MessageBox.Show("Неверное значение начальной позиции", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -370,7 +407,7 @@ namespace Лабораторные_работы
                     .ToList();
 
                 List<long> bitsFk = new List<long>();
-                for (long i = 0; i <= Fk.Max(); i++)
+                for (long i = 0; i <= N; i++)
                 {
                     long bit = Fk.Contains(i) ? 1 : 0;
                     bitsFk.Add(bit);
@@ -378,7 +415,12 @@ namespace Лабораторные_работы
                 }
 
 
-                GenFIBDiag(GenFIBSeq(k, bitsFk), Fk.Max(), SP);
+                GenFIBDiag(GenFIBSeq(k, bitsFk), N, SP);
+
+                long S = (long)Math.Pow(2, N) - 1;
+                PeriodFIB = (int)S;
+                Lab_FIB_S.Text = $"S = 2^N-1 = 2^{N} - 1 = {S}";
+                Lab_FIB_NOD.Text = $"НОД(S, k) = НОД({S}, {k}) = {NOD(S,k)}";
 
 
             }
@@ -406,6 +448,15 @@ namespace Лабораторные_работы
                 return;
             }
             SaveFunc(2);
+        }
+        private void BTN_FIB_Save_Click(object sender, EventArgs e)
+        {
+            if (SeqPCG == null || SeqFIB.Count == 0)
+            {
+                MessageBox.Show("Нет данных для сохранения. Сначала сгенерируйте последовательность.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            SaveFunc(3);
         }
         private void SaveFunc(int typeGen)
         {
@@ -436,6 +487,15 @@ namespace Лабораторные_работы
                     period = PeriodPCG.period;
                     maxPer = CB_PCG_MaxPeriod.Checked;
                     seq = SeqPCG;
+                    break;
+                case 3:
+                    fileName = "Фибоначчи";
+                    name = "Генератор Фибоначчи псевдослучайных чисел на РСЛОС";
+                    param = $"Параметры: Ф(k) = {TB_FIB_Fx.Text}, k = {TB_FIB_k.Text}, Нач.поз. = {TB_FIB_StartPos.Text}, qs = {CB_FIB_Qs.Text}";
+                    count = PeriodFIB;
+                    period = PeriodFIB;
+                    maxPer = NOD(PeriodFIB, int.Parse(TB_FIB_k.Text)) == 1;
+                    seq = SeqFIB[long.Parse(CB_FIB_Qs.Text)];
                     break;
             }
             using (SaveFileDialog saveDialog = new SaveFileDialog())
@@ -501,6 +561,9 @@ namespace Лабораторные_работы
         {
             RTB_FIB_Output.Text = "";
             RTB_FIB_OutQs.Text = "";
+            CB_FIB_Qs.Items.Clear();
+            DGW_FIB_Diagram.Rows.Clear();
+            RTB_FIB_OutQs.Clear();
         }
 
         // Обработчики выбора пресета
@@ -542,6 +605,27 @@ namespace Лабораторные_работы
                     TB_PCG_x0.Text = "1";
 
                     PCG_Count.Value = 200;
+                }
+            }
+        }
+        private void CB_FIB_Qs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CB_FIB_Qs.SelectedItem != null)
+            {
+                long selectedKey = (long)CB_FIB_Qs.SelectedItem;
+
+                if (SeqFIB.ContainsKey(selectedKey))
+                {
+                    List<long> selectedList = SeqFIB[selectedKey];
+
+                    RTB_FIB_OutQs.Clear();
+
+                    RTB_FIB_OutQs.Text = string.Join("", selectedList);
+
+                }
+                else
+                {
+                    RTB_FIB_OutQs.Text = "Ключ не найден в словаре";
                 }
             }
         }
@@ -637,7 +721,57 @@ namespace Лабораторные_работы
                 RTB_FIB_Output.Text += $"\n";
             }
         }
+        private void FillDataGridViewSimple(Dictionary<long, List<long>> rslos)
+        {
+            // Очищаем существующие столбцы и строки
+            DGW_FIB_Diagram.Columns.Clear();
+            DGW_FIB_Diagram.Rows.Clear();
 
-        
+            // Добавляем столбцы из ключей словаря
+            foreach (var key in rslos.Keys)
+            {
+                DGW_FIB_Diagram.Columns.Add(key.ToString(), "q"+key.ToString());
+            }
+
+            // Находим максимальное количество элементов в списках
+            int maxRowCount = rslos.Values.Max(list => list.Count);
+
+            // Заполняем строки
+            for (int i = 0; i < maxRowCount; i++)
+            {
+                // Создаем массив значений для строки
+                string[] rowValues = new string[rslos.Count];
+                int columnIndex = 0;
+
+                foreach (var kvp in rslos)
+                {
+                    if (i < kvp.Value.Count)
+                    {
+                        rowValues[columnIndex] = kvp.Value[i].ToString();
+                    }
+                    else
+                    {
+                        rowValues[columnIndex] = string.Empty;
+                    }
+                    columnIndex++;
+                }
+
+                // Добавляем строку
+                int rowIndex = DGW_FIB_Diagram.Rows.Add(rowValues);
+
+                // Устанавливаем заголовок строки
+                DGW_FIB_Diagram.Rows[rowIndex].HeaderCell.Value = (i + 1).ToString();
+            }
+
+            foreach (DataGridViewColumn column in DGW_FIB_Diagram.Columns)
+            {
+                column.Width = 389/DGW_FIB_Diagram.ColumnCount; // Ширина столбца в пикселях
+            }
+            // Настройка внешнего вида
+            DGW_FIB_Diagram.RowHeadersWidth = 55;
+            DGW_FIB_Diagram.ReadOnly = true;
+            DGW_FIB_Diagram.AllowUserToAddRows = false;
+        }
+
     }
 }

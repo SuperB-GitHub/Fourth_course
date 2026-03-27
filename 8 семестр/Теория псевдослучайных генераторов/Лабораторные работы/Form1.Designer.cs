@@ -84,10 +84,19 @@
             this.TB_PCG_x0 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.Lab_FIB_NOD = new System.Windows.Forms.Label();
+            this.Lab_FIB_S = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.TB_FIB_StartPos = new System.Windows.Forms.TextBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.BTN_FIB_Save = new System.Windows.Forms.Button();
+            this.BTN_FIB_Clear = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.LB_FIB_Qs = new System.Windows.Forms.ListBox();
-            this.RTB_FIB_OutQs = new System.Windows.Forms.RichTextBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.DGW_FIB_Diagram = new System.Windows.Forms.DataGridView();
+            this.RTB_FIB_OutQs = new System.Windows.Forms.RichTextBox();
             this.RTB_FIB_Output = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -98,11 +107,7 @@
             this.TB_FIB_Fx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.BTN_FIB_Save = new System.Windows.Forms.Button();
-            this.BTN_FIB_Clear = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.TB_FIB_StartPos = new System.Windows.Forms.TextBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.CB_FIB_Qs = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -117,10 +122,12 @@
             this.GB_PCG_GenSeq.SuspendLayout();
             this.GB_PCG_ParamGen.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGW_FIB_Diagram)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -768,6 +775,7 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.White;
+            this.tabPage3.Controls.Add(this.groupBox8);
             this.tabPage3.Controls.Add(this.groupBox7);
             this.tabPage3.Controls.Add(this.groupBox5);
             this.tabPage3.Controls.Add(this.groupBox1);
@@ -778,11 +786,97 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Генератор Фибоначчи ";
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.Lab_FIB_NOD);
+            this.groupBox8.Controls.Add(this.Lab_FIB_S);
+            this.groupBox8.Controls.Add(this.label14);
+            this.groupBox8.Controls.Add(this.label20);
+            this.groupBox8.Controls.Add(this.TB_FIB_StartPos);
+            this.groupBox8.Location = new System.Drawing.Point(402, 20);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(363, 134);
+            this.groupBox8.TabIndex = 17;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Параметры диаграммы";
+            // 
+            // Lab_FIB_NOD
+            // 
+            this.Lab_FIB_NOD.AutoSize = true;
+            this.Lab_FIB_NOD.Location = new System.Drawing.Point(9, 103);
+            this.Lab_FIB_NOD.Name = "Lab_FIB_NOD";
+            this.Lab_FIB_NOD.Size = new System.Drawing.Size(0, 16);
+            this.Lab_FIB_NOD.TabIndex = 13;
+            // 
+            // Lab_FIB_S
+            // 
+            this.Lab_FIB_S.AutoSize = true;
+            this.Lab_FIB_S.Location = new System.Drawing.Point(9, 73);
+            this.Lab_FIB_S.Name = "Lab_FIB_S";
+            this.Lab_FIB_S.Size = new System.Drawing.Size(0, 16);
+            this.Lab_FIB_S.TabIndex = 12;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(9, 23);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(150, 16);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "Начальное значение:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(690, 60);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(130, 16);
+            this.label20.TabIndex = 1;
+            this.label20.Text = "Количество чисел:";
+            // 
+            // TB_FIB_StartPos
+            // 
+            this.TB_FIB_StartPos.Location = new System.Drawing.Point(12, 42);
+            this.TB_FIB_StartPos.Name = "TB_FIB_StartPos";
+            this.TB_FIB_StartPos.Size = new System.Drawing.Size(283, 22);
+            this.TB_FIB_StartPos.TabIndex = 5;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.BTN_FIB_Save);
+            this.groupBox7.Controls.Add(this.BTN_FIB_Clear);
+            this.groupBox7.Location = new System.Drawing.Point(782, 20);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(402, 134);
+            this.groupBox7.TabIndex = 16;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Управление";
+            // 
+            // BTN_FIB_Save
+            // 
+            this.BTN_FIB_Save.Location = new System.Drawing.Point(17, 23);
+            this.BTN_FIB_Save.Name = "BTN_FIB_Save";
+            this.BTN_FIB_Save.Size = new System.Drawing.Size(297, 30);
+            this.BTN_FIB_Save.TabIndex = 7;
+            this.BTN_FIB_Save.Text = "Сохранить";
+            this.BTN_FIB_Save.UseVisualStyleBackColor = true;
+            this.BTN_FIB_Save.Click += new System.EventHandler(this.BTN_FIB_Save_Click);
+            // 
+            // BTN_FIB_Clear
+            // 
+            this.BTN_FIB_Clear.Location = new System.Drawing.Point(17, 73);
+            this.BTN_FIB_Clear.Name = "BTN_FIB_Clear";
+            this.BTN_FIB_Clear.Size = new System.Drawing.Size(297, 30);
+            this.BTN_FIB_Clear.TabIndex = 8;
+            this.BTN_FIB_Clear.Text = "Очистить";
+            this.BTN_FIB_Clear.UseVisualStyleBackColor = true;
+            this.BTN_FIB_Clear.Click += new System.EventHandler(this.BTN_FIB_Clear_Click);
+            // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.LB_FIB_Qs);
+            this.groupBox5.Controls.Add(this.CB_FIB_Qs);
+            this.groupBox5.Controls.Add(this.groupBox6);
             this.groupBox5.Controls.Add(this.RTB_FIB_OutQs);
-            this.groupBox5.Controls.Add(this.DGW_FIB_Diagram);
             this.groupBox5.Controls.Add(this.RTB_FIB_Output);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox5.Location = new System.Drawing.Point(20, 161);
@@ -792,34 +886,35 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Результаты работы";
             // 
-            // LB_FIB_Qs
+            // groupBox6
             // 
-            this.LB_FIB_Qs.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.LB_FIB_Qs.FormattingEnabled = true;
-            this.LB_FIB_Qs.ItemHeight = 24;
-            this.LB_FIB_Qs.Location = new System.Drawing.Point(7, 468);
-            this.LB_FIB_Qs.Name = "LB_FIB_Qs";
-            this.LB_FIB_Qs.Size = new System.Drawing.Size(45, 28);
-            this.LB_FIB_Qs.TabIndex = 3;
-            // 
-            // RTB_FIB_OutQs
-            // 
-            this.RTB_FIB_OutQs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RTB_FIB_OutQs.Location = new System.Drawing.Point(58, 459);
-            this.RTB_FIB_OutQs.Name = "RTB_FIB_OutQs";
-            this.RTB_FIB_OutQs.Size = new System.Drawing.Size(1100, 37);
-            this.RTB_FIB_OutQs.TabIndex = 2;
-            this.RTB_FIB_OutQs.Text = "";
+            this.groupBox6.Controls.Add(this.DGW_FIB_Diagram);
+            this.groupBox6.Location = new System.Drawing.Point(693, 13);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(465, 432);
+            this.groupBox6.TabIndex = 4;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Диаграмма состояний";
             // 
             // DGW_FIB_Diagram
             // 
             this.DGW_FIB_Diagram.BackgroundColor = System.Drawing.Color.White;
-            this.DGW_FIB_Diagram.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.DGW_FIB_Diagram.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DGW_FIB_Diagram.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGW_FIB_Diagram.Location = new System.Drawing.Point(693, 21);
+            this.DGW_FIB_Diagram.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DGW_FIB_Diagram.Location = new System.Drawing.Point(3, 18);
             this.DGW_FIB_Diagram.Name = "DGW_FIB_Diagram";
-            this.DGW_FIB_Diagram.Size = new System.Drawing.Size(453, 424);
+            this.DGW_FIB_Diagram.Size = new System.Drawing.Size(459, 411);
             this.DGW_FIB_Diagram.TabIndex = 1;
+            // 
+            // RTB_FIB_OutQs
+            // 
+            this.RTB_FIB_OutQs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RTB_FIB_OutQs.Location = new System.Drawing.Point(89, 468);
+            this.RTB_FIB_OutQs.Name = "RTB_FIB_OutQs";
+            this.RTB_FIB_OutQs.Size = new System.Drawing.Size(1069, 28);
+            this.RTB_FIB_OutQs.TabIndex = 2;
+            this.RTB_FIB_OutQs.Text = "";
             // 
             // RTB_FIB_Output
             // 
@@ -833,8 +928,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Controls.Add(this.TB_FIB_StartPos);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.BTN_FIB_GenSeq);
             this.groupBox1.Controls.Add(this.label15);
@@ -844,7 +937,7 @@
             this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Location = new System.Drawing.Point(20, 20);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(667, 134);
+            this.groupBox1.Size = new System.Drawing.Size(363, 134);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Параметры генератора";
@@ -861,7 +954,7 @@
             // BTN_FIB_GenSeq
             // 
             this.BTN_FIB_GenSeq.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.BTN_FIB_GenSeq.Location = new System.Drawing.Point(158, 95);
+            this.BTN_FIB_GenSeq.Location = new System.Drawing.Point(20, 96);
             this.BTN_FIB_GenSeq.Name = "BTN_FIB_GenSeq";
             this.BTN_FIB_GenSeq.Size = new System.Drawing.Size(291, 23);
             this.BTN_FIB_GenSeq.TabIndex = 15;
@@ -920,51 +1013,15 @@
             this.tabPage4.Text = "Генератор Геффе";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // BTN_FIB_Save
+            // CB_FIB_Qs
             // 
-            this.BTN_FIB_Save.Location = new System.Drawing.Point(17, 23);
-            this.BTN_FIB_Save.Name = "BTN_FIB_Save";
-            this.BTN_FIB_Save.Size = new System.Drawing.Size(297, 30);
-            this.BTN_FIB_Save.TabIndex = 7;
-            this.BTN_FIB_Save.Text = "Сохранить";
-            this.BTN_FIB_Save.UseVisualStyleBackColor = true;
-            // 
-            // BTN_FIB_Clear
-            // 
-            this.BTN_FIB_Clear.Location = new System.Drawing.Point(17, 73);
-            this.BTN_FIB_Clear.Name = "BTN_FIB_Clear";
-            this.BTN_FIB_Clear.Size = new System.Drawing.Size(297, 30);
-            this.BTN_FIB_Clear.TabIndex = 8;
-            this.BTN_FIB_Clear.Text = "Очистить";
-            this.BTN_FIB_Clear.UseVisualStyleBackColor = true;
-            this.BTN_FIB_Clear.Click += new System.EventHandler(this.BTN_FIB_Clear_Click);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(336, 18);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(150, 16);
-            this.label14.TabIndex = 9;
-            this.label14.Text = "Начальное значение:";
-            // 
-            // TB_FIB_StartPos
-            // 
-            this.TB_FIB_StartPos.Location = new System.Drawing.Point(339, 39);
-            this.TB_FIB_StartPos.Name = "TB_FIB_StartPos";
-            this.TB_FIB_StartPos.Size = new System.Drawing.Size(283, 22);
-            this.TB_FIB_StartPos.TabIndex = 5;
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.BTN_FIB_Save);
-            this.groupBox7.Controls.Add(this.BTN_FIB_Clear);
-            this.groupBox7.Location = new System.Drawing.Point(713, 20);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(320, 134);
-            this.groupBox7.TabIndex = 16;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Управление";
+            this.CB_FIB_Qs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CB_FIB_Qs.FormattingEnabled = true;
+            this.CB_FIB_Qs.Location = new System.Drawing.Point(6, 468);
+            this.CB_FIB_Qs.Name = "CB_FIB_Qs";
+            this.CB_FIB_Qs.Size = new System.Drawing.Size(77, 28);
+            this.CB_FIB_Qs.TabIndex = 5;
+            this.CB_FIB_Qs.SelectedIndexChanged += new System.EventHandler(this.CB_FIB_Qs_SelectedIndexChanged);
             // 
             // Form1
             // 
@@ -998,11 +1055,14 @@
             this.GB_PCG_ParamGen.ResumeLayout(false);
             this.GB_PCG_ParamGen.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DGW_FIB_Diagram)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1078,11 +1138,16 @@
         private System.Windows.Forms.RichTextBox RTB_FIB_Output;
         private System.Windows.Forms.DataGridView DGW_FIB_Diagram;
         private System.Windows.Forms.RichTextBox RTB_FIB_OutQs;
-        private System.Windows.Forms.ListBox LB_FIB_Qs;
         private System.Windows.Forms.Button BTN_FIB_Save;
         private System.Windows.Forms.Button BTN_FIB_Clear;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox TB_FIB_StartPos;
         private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label Lab_FIB_NOD;
+        private System.Windows.Forms.Label Lab_FIB_S;
+        private System.Windows.Forms.ComboBox CB_FIB_Qs;
     }
 }
