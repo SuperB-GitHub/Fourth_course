@@ -2,6 +2,7 @@
 
 namespace Лабораторная_работа_3
 {
+
     class Coords
     {
         public Coords()
@@ -41,6 +42,18 @@ namespace Лабораторная_работа_3
             }
             return false;
         }
+        public long indexof(List<Coords> list)
+        {
+            for (long i = 0; i < list.Count(); i++)
+            {
+                Coords item = list[(int)i];
+                if (x == item.x && y == item.y)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
     }
 
     class Program
@@ -60,10 +73,13 @@ namespace Лабораторная_работа_3
                 PplusQ(p, q, abm[2]);
                 twoP(p, abm);
 
+                Console.WriteLine("\nСкалярное умножение точек ЭК");
                 Input_n(out long n);
                 Lab5(p, n, abm);
 
+                Console.WriteLine($"\nНахождение порядка точки в группе ЭК");
                 Lab6(p, abm);
+
                 contin = OutputEnd();
             }
         }
@@ -238,7 +254,7 @@ namespace Лабораторная_работа_3
             return new Coords { x = x, y = y };
         }
 
-        // Лабораторная №5
+        // Лабораторная работа 5
         static void Lab5(Coords p, long n, List<long> abm)
         {
             List<long> bin = Convert.ToString(n, 2).Select(c => long.Parse(c.ToString())).ToList();
@@ -268,9 +284,12 @@ namespace Лабораторная_работа_3
         {
             Coords nul = new Coords(0, 0);
 
-            if (R.x == nul.x && R.y == nul.y)
+            if (R.equals(nul))
             {
-                R = P;
+                return P;
+            }
+            else if (P.equals(nul))
+            {
                 return R;
             }
             else
@@ -286,7 +305,7 @@ namespace Лабораторная_работа_3
         {
             Coords nul = new Coords(0, 0);
 
-            if (R.x == nul.x && R.y == nul.y)
+            if (R.equals(nul))
             {
                 return R;
             }
@@ -312,9 +331,9 @@ namespace Лабораторная_работа_3
         static void Lab6(Coords P, List<long> abm)
         {
             long p = abm[2];
-            
-            long m = (long)Math.Ceiling(Math.Sqrt(abm[2] + 1 + 2 * Math.Sqrt(5)));
-            //Console.WriteLine($"\n{m} = {Math.Sqrt(abm[2] + 1 + 2 * Math.Sqrt(5))}");
+            long m = (long)Math.Ceiling(Math.Sqrt(p + 1 + 2 * Math.Sqrt(p)));
+            Console.WriteLine($"\nm = √N₁, где N₁ = p + 1 + 2√p = {p} + 1 + {2 * Math.Sqrt(p)} ≈ " +
+                $"{p + 1 + 2 * Math.Sqrt(p)} => √N₁ ≈ {Math.Sqrt(p + 1 + 2 * Math.Sqrt(p))} = {m}");
 
             List<long> ts = new List<long>();
             List<Coords> tps = new List<Coords>();
@@ -325,21 +344,36 @@ namespace Лабораторная_работа_3
             }
 
             Console.WriteLine();
-            Console.WriteLine($"n  | {string.Join(" | ", ts.Select(n => $"{n}".PadRight(7)))}");
+            Console.WriteLine($"t  | {string.Join(" | ", ts.Select(n => $"{n}".PadRight(7)))}");
             Console.WriteLine($"tp | {string.Join(" | ", tps.Select(n => $"{n.print()}".PadRight(7)))}");
+            Console.WriteLine();
 
             Coords Q = SkalMul(P, m, abm);
             Console.Write($"Q = -mP = -{m}P = -{m}{P.print()} = -{Q.print()} = ");
             Q.y = Mod(Q.y * (-1), p);
-            Console.WriteLine($"{Q.print()}(mod {p})");
+            Console.WriteLine($"{Q.print()}(mod {p})\n");
 
             Coords R = new Coords(0, 0);
+            Console.WriteLine($"R -> 0");
+            long n = 0;
 
             for (int i = 0; i < m-1; i++)
             {
-
-                Console.WriteLine(R.contains(tps));
+                if (R.contains(tps))
+                {
+                    n = m * i + R.indexof(tps) + 1;
+                    Console.WriteLine($"{i + 1}) R{R.print()} содержится в таблице, период n = m:{m} * i:{i} + t:{R.indexof(tps) + 1} = {n}");
+                    break;
+                }
+                else
+                {
+                    Console.Write($"{i + 1}) R{R.print()} не содержится в таблице, поэтому R = R{R.print()} + Q{Q.print()} = ");
+                    R = AddFunc(R, Q, p);
+                    Console.WriteLine($"R{R.print()}");
+                    
+                }
             }
+            Console.WriteLine($"Ответ: Период n = {n}");
 
         }
         static Coords SkalMul(Coords p, long n, List<long> abm)
@@ -356,8 +390,6 @@ namespace Лабораторная_работа_3
                 {
                     R = AddFunc(p, R, abm[2]);
                 }
-
-                Console.WriteLine();
             }
             return R;
         }
