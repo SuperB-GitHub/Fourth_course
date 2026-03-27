@@ -1,5 +1,4 @@
 ﻿using static MyMathLibrary.MathUtils;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Лабораторная_работа_3
 {
@@ -9,7 +8,7 @@ namespace Лабораторная_работа_3
         {
         }
 
-        public Coords(int x, int y)
+        public Coords(long x, long y)
         {
             this.x = x;
             this.y = y;
@@ -22,6 +21,25 @@ namespace Лабораторная_работа_3
         {
             x = x_y[0];
             y = x_y[1];
+        }
+        public string print()
+        {
+            return $"({x}, {y})";
+        }
+        public bool equals(Coords other)
+        {
+            return x == other.x && y == other.y ? true : false;
+        }
+        public bool contains(List<Coords> list)
+        {
+            foreach (Coords item in list)
+            {
+                if (x == item.x && y == item.y)
+                {
+                    return true;   
+                }
+            }
+            return false;
         }
     }
 
@@ -45,6 +63,7 @@ namespace Лабораторная_работа_3
                 Input_n(out long n);
                 Lab5(p, n, abm);
 
+                Lab6(p, abm);
                 contin = OutputEnd();
             }
         }
@@ -82,7 +101,7 @@ namespace Лабораторная_работа_3
                 Input_PQ(out t, abm, PorQ);
             }
 
-            
+
         }
         static void Input_e(out List<long> abm)
         {
@@ -154,17 +173,17 @@ namespace Лабораторная_работа_3
             Console.WriteLine($"y | {string.Join(" | ", yi.Select(n => $"{n}".PadRight(2)))}\n");
 
             Console.WriteLine("\nНайденные точки: ");
-            HashSet<Coords> fine = new HashSet<Coords> ();
-            for(int x = 0; x <= xi.Count()-1; x++)
+            HashSet<Coords> fine = new HashSet<Coords>();
+            for (int x = 0; x <= xi.Count() - 1; x++)
             {
-                for(int y = 0; y <= yi.Count()-1; y++)
+                for (int y = 0; y <= yi.Count() - 1; y++)
                 {
                     Coords tmp = new Coords(x, y);
-                    if(checkCoords(abm, tmp))
+                    if (checkCoords(abm, tmp))
                     {
                         fine.Add(tmp);
                         Console.Write($"({x}, {y}) ");
-                    } 
+                    }
                 }
             }
             Console.WriteLine($"и O\nПЭК = {fine.Count() + 1}\n");
@@ -172,7 +191,7 @@ namespace Лабораторная_работа_3
         static bool checkCoords(List<long> abm, Coords xy)
         {
             long x = Mod(FastPowMod(xy.x, 3, abm[2]) + abm[0] * xy.x + abm[1], abm[2]);
-            long y = FastPowMod(xy.y,2,abm[2]);
+            long y = FastPowMod(xy.y, 2, abm[2]);
             return x == y;
         }
         static void PplusQ(Coords p, Coords q, long m)
@@ -216,34 +235,131 @@ namespace Лабораторная_работа_3
             long y = lambda * (p.x - x) - p.y;
             Console.WriteLine($"y₃ = λ(x₁ - x₃) - y₁ = {y}(mod {m}) ≡ {y = Mod(y, m)}(mod {m}) ");
 
-            return new Coords{x = x, y = y};
+            return new Coords { x = x, y = y };
         }
+
+        // Лабораторная №5
         static void Lab5(Coords p, long n, List<long> abm)
         {
-            string bin = Convert.ToString(n, 2);
-            Console.WriteLine($"{n}₁₀ = {bin}₂");
+            List<long> bin = Convert.ToString(n, 2).Select(c => long.Parse(c.ToString())).ToList();
+            Console.WriteLine($"{n}₁₀ = {Convert.ToString(n, 2)}₂\n");
 
             Coords R = new Coords(0, 0);
-            PplusQ(R, p, abm[2]);
-            twoP(R, abm);
+            Console.WriteLine($"1) R -> O\n2)");
 
+            foreach (long item in bin)
+            {
+                Console.Write($"  ({item}): R{R.print()} = 2R");
+                R = MulFunc(R, abm);
+                Console.Write($"{R.print()}");
+
+                if (item == 1)
+                {
+                    Console.Write($" => R = R{R.print()} + P{p.print()}");
+                    R = AddFunc(p, R, abm[2]);
+                    Console.Write($" = R{R.print()}");
+                }
+
+                Console.WriteLine();
+            }
+            Console.WriteLine($"3) {n}R = R{R.print()})");
         }
-        static void AddFunc(Coords P, Coords R, long m)
+        static Coords AddFunc(Coords P, Coords R, long m)
         {
             Coords nul = new Coords(0, 0);
 
-            if(R == nul)
+            if (R.x == nul.x && R.y == nul.y)
             {
-
+                R = P;
+                return R;
             }
             else
             {
-
+                long lambda1 = R.y - P.y;
+                long lambda2 = R.x - P.x;
+                long lambda = Mod(lambda1 * InversElem(lambda2, m), m);
+                Coords t = JokeFunc(R, P, m, lambda);
+                return t;
             }
         }
-        static void MulFunc(Coords P, Coords R, List<long> abm)
+        static Coords MulFunc(Coords R, List<long> abm)
         {
+            Coords nul = new Coords(0, 0);
+
+            if (R.x == nul.x && R.y == nul.y)
+            {
+                return R;
+            }
+            else
+            {
+                long m = abm[2];
+                long lambda1 = 3 * FastPowMod(R.x, 2, m) + abm[0];
+                long lambda2 = 2 * R.y;
+                long lambda = Mod(lambda1 * InversElem(lambda2, m), m);
+                Coords t = JokeFunc(R, R, m, lambda);
+                return t;
+            }
+            
+        }
+        static Coords JokeFunc(Coords p, Coords q, long m, long lambda)
+        {
+            long x = Mod(FastPowMod(lambda, 2, m) - p.x - q.x, m);
+            long y = Mod(lambda * (p.x - x) - p.y, m);
+            return new Coords(x, y);
+        }
+
+        //Лабораторная работа 6
+        static void Lab6(Coords P, List<long> abm)
+        {
+            long p = abm[2];
+            
+            long m = (long)Math.Ceiling(Math.Sqrt(abm[2] + 1 + 2 * Math.Sqrt(5)));
+            //Console.WriteLine($"\n{m} = {Math.Sqrt(abm[2] + 1 + 2 * Math.Sqrt(5))}");
+
+            List<long> ts = new List<long>();
+            List<Coords> tps = new List<Coords>();
+            for (int t = 1; t <= m; t++)
+            {
+                ts.Add(t);
+                tps.Add(SkalMul(P, t, abm));
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"n  | {string.Join(" | ", ts.Select(n => $"{n}".PadRight(7)))}");
+            Console.WriteLine($"tp | {string.Join(" | ", tps.Select(n => $"{n.print()}".PadRight(7)))}");
+
+            Coords Q = SkalMul(P, m, abm);
+            Console.Write($"Q = -mP = -{m}P = -{m}{P.print()} = -{Q.print()} = ");
+            Q.y = Mod(Q.y * (-1), p);
+            Console.WriteLine($"{Q.print()}(mod {p})");
+
+            Coords R = new Coords(0, 0);
+
+            for (int i = 0; i < m-1; i++)
+            {
+
+                Console.WriteLine(R.contains(tps));
+            }
 
         }
-    }
+        static Coords SkalMul(Coords p, long n, List<long> abm)
+        {
+            List<long> bin = Convert.ToString(n, 2).Select(c => long.Parse(c.ToString())).ToList();
+
+            Coords R = new Coords(0, 0);
+
+            foreach (long item in bin)
+            {
+                R = MulFunc(R, abm);
+
+                if (item == 1)
+                {
+                    R = AddFunc(p, R, abm[2]);
+                }
+
+                Console.WriteLine();
+            }
+            return R;
+        }
+    } 
 }
