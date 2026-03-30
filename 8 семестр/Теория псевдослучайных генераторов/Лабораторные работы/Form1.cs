@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Security;
 using System.Windows.Forms;
-using static MyMathLibrary.MathUtils;
+using static MyLibrary.MathUtils;
+using static MyLibrary.StringUtils;
+using static System.Net.Mime.MediaTypeNames;
+
+
 
 namespace Лабораторные_работы
 {
@@ -52,7 +53,7 @@ namespace Лабораторные_работы
 
             return sequence;
         }
-        private List<List<long>> GenFIBSeq(long k, List<long> fk)
+        private List<List<long>> GenFIBSeq(long k, List<long> fk, bool print)
         {
             long size = fk.Count() - 1;
             long[,] T = new long[size, size];
@@ -68,20 +69,20 @@ namespace Лабораторные_работы
                     T[i, j] = i-1 == j ? 1 : 0;
                 }
             }
-            RTB_FIB_Output.Text = "";
+            if (print) RTB_FIB_Output.Text += "";
 
-            RTB_FIB_Output.Text += "\n\nT = \n";
-            PrintMatrix(T);
+            if (print) RTB_FIB_Output.Text += "\n\nT = \n";
+            if (print) PrintMatrix(T);
 
-            RTB_FIB_Output.Text += $"\n\nV = T^k = T^{k} = \n";
+            if (print) RTB_FIB_Output.Text += $"\n\nV = T^k = T^{k} = \n";
             long[,] V = T;
             for(long k_i = 1; k_i < k; k_i++)
             {
                 V = MultiplyMatrices(V, T);
             }
-            PrintMatrix(V);
+            if (print) PrintMatrix(V);
 
-            RTB_FIB_Output.Text += $"\n\nQ(t+1) = V * Q(t) = \n\n";
+            if (print) RTB_FIB_Output.Text += $"\n\nQ(t+1) = V * Q(t) = \n\n";
 
             
             List<List<long>> regs = new List<List<long>>();
@@ -93,7 +94,7 @@ namespace Лабораторные_работы
                     if (V[i, j] == 1) list.Add(j+1);
                 }
                 regs.Add(list);
-                RTB_FIB_Output.Text += $"q{i+1}(t+1) = q{string.Join($"(t) + q",list)}(t)\n";
+                if (print) RTB_FIB_Output.Text += $"q{i+1}(t+1) = q{string.Join($"(t) + q",list)}(t)\n";
             }
 
             return regs;
@@ -415,7 +416,7 @@ namespace Лабораторные_работы
                 }
 
 
-                GenFIBDiag(GenFIBSeq(k, bitsFk), N, SP);
+                GenFIBDiag(GenFIBSeq(k, bitsFk, true), N, SP);
 
                 long S = (long)Math.Pow(2, N) - 1;
                 PeriodFIB = (int)S;
@@ -619,8 +620,12 @@ namespace Лабораторные_работы
                     List<long> selectedList = SeqFIB[selectedKey];
 
                     RTB_FIB_OutQs.Clear();
+                    string binaryString = string.Join("", selectedList);
+                    binaryString = binaryString.Substring(0, binaryString.Length - 1);
 
-                    RTB_FIB_OutQs.Text = string.Join("", selectedList);
+                    RTB_FIB_OutQs.Text = binaryString;
+
+                    RTB_FIB_Output.Text += $"\nq{selectedKey} = {Convert.ToInt64(binaryString, 2)}";
 
                 }
                 else

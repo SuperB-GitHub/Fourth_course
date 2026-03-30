@@ -94,6 +94,7 @@
             this.BTN_FIB_Save = new System.Windows.Forms.Button();
             this.BTN_FIB_Clear = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.CB_FIB_Qs = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.DGW_FIB_Diagram = new System.Windows.Forms.DataGridView();
             this.RTB_FIB_OutQs = new System.Windows.Forms.RichTextBox();
@@ -107,7 +108,32 @@
             this.TB_FIB_Fx = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.CB_FIB_Qs = new System.Windows.Forms.ComboBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.BTN_GEF_GenSeq = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.TB_GEF_k1 = new System.Windows.Forms.TextBox();
+            this.TB_GEF_Fx1 = new System.Windows.Forms.TextBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.BTN_GEF_Save = new System.Windows.Forms.Button();
+            this.BTN_GEF_Clear = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.CB_GEF_q1 = new System.Windows.Forms.ComboBox();
+            this.CB_GEF_q2 = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.TB_GEF_k2 = new System.Windows.Forms.TextBox();
+            this.TB_GEF_Fx2 = new System.Windows.Forms.TextBox();
+            this.CB_GEF_q3 = new System.Windows.Forms.ComboBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.TB_GEF_k3 = new System.Windows.Forms.TextBox();
+            this.TB_GEF_Fx3 = new System.Windows.Forms.TextBox();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.RTB_GEF_Output = new System.Windows.Forms.RichTextBox();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -128,6 +154,10 @@
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGW_FIB_Diagram)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.groupBox11.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -886,6 +916,16 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Результаты работы";
             // 
+            // CB_FIB_Qs
+            // 
+            this.CB_FIB_Qs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CB_FIB_Qs.FormattingEnabled = true;
+            this.CB_FIB_Qs.Location = new System.Drawing.Point(6, 468);
+            this.CB_FIB_Qs.Name = "CB_FIB_Qs";
+            this.CB_FIB_Qs.Size = new System.Drawing.Size(77, 28);
+            this.CB_FIB_Qs.TabIndex = 5;
+            this.CB_FIB_Qs.SelectedIndexChanged += new System.EventHandler(this.CB_FIB_Qs_SelectedIndexChanged);
+            // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.DGW_FIB_Diagram);
@@ -918,7 +958,7 @@
             // 
             // RTB_FIB_Output
             // 
-            this.RTB_FIB_Output.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RTB_FIB_Output.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.RTB_FIB_Output.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.RTB_FIB_Output.Location = new System.Drawing.Point(6, 21);
             this.RTB_FIB_Output.Name = "RTB_FIB_Output";
@@ -1005,6 +1045,10 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.groupBox12);
+            this.tabPage4.Controls.Add(this.groupBox11);
+            this.tabPage4.Controls.Add(this.groupBox10);
+            this.tabPage4.Controls.Add(this.groupBox9);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -1013,15 +1057,250 @@
             this.tabPage4.Text = "Генератор Геффе";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // CB_FIB_Qs
+            // groupBox9
             // 
-            this.CB_FIB_Qs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CB_FIB_Qs.FormattingEnabled = true;
-            this.CB_FIB_Qs.Location = new System.Drawing.Point(6, 468);
-            this.CB_FIB_Qs.Name = "CB_FIB_Qs";
-            this.CB_FIB_Qs.Size = new System.Drawing.Size(77, 28);
-            this.CB_FIB_Qs.TabIndex = 5;
-            this.CB_FIB_Qs.SelectedIndexChanged += new System.EventHandler(this.CB_FIB_Qs_SelectedIndexChanged);
+            this.groupBox9.Controls.Add(this.CB_GEF_q3);
+            this.groupBox9.Controls.Add(this.BTN_GEF_GenSeq);
+            this.groupBox9.Controls.Add(this.label23);
+            this.groupBox9.Controls.Add(this.label24);
+            this.groupBox9.Controls.Add(this.label25);
+            this.groupBox9.Controls.Add(this.TB_GEF_k3);
+            this.groupBox9.Controls.Add(this.TB_GEF_Fx3);
+            this.groupBox9.Controls.Add(this.CB_GEF_q2);
+            this.groupBox9.Controls.Add(this.label19);
+            this.groupBox9.Controls.Add(this.label21);
+            this.groupBox9.Controls.Add(this.label22);
+            this.groupBox9.Controls.Add(this.TB_GEF_k2);
+            this.groupBox9.Controls.Add(this.TB_GEF_Fx2);
+            this.groupBox9.Controls.Add(this.CB_GEF_q1);
+            this.groupBox9.Controls.Add(this.label12);
+            this.groupBox9.Controls.Add(this.label13);
+            this.groupBox9.Controls.Add(this.label18);
+            this.groupBox9.Controls.Add(this.TB_GEF_k1);
+            this.groupBox9.Controls.Add(this.TB_GEF_Fx1);
+            this.groupBox9.Location = new System.Drawing.Point(20, 20);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(546, 134);
+            this.groupBox9.TabIndex = 6;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Параметры генераторов";
+            // 
+            // BTN_GEF_GenSeq
+            // 
+            this.BTN_GEF_GenSeq.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.BTN_GEF_GenSeq.Location = new System.Drawing.Point(67, 105);
+            this.BTN_GEF_GenSeq.Name = "BTN_GEF_GenSeq";
+            this.BTN_GEF_GenSeq.Size = new System.Drawing.Size(291, 23);
+            this.BTN_GEF_GenSeq.TabIndex = 15;
+            this.BTN_GEF_GenSeq.Text = "Сгенерировать";
+            this.BTN_GEF_GenSeq.UseVisualStyleBackColor = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(364, 23);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(17, 16);
+            this.label13.TabIndex = 10;
+            this.label13.Text = "k:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 23);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(104, 16);
+            this.label18.TabIndex = 9;
+            this.label18.Text = "РСЛОС 1: Ф(х) =";
+            // 
+            // TB_GEF_k1
+            // 
+            this.TB_GEF_k1.Location = new System.Drawing.Point(387, 20);
+            this.TB_GEF_k1.Name = "TB_GEF_k1";
+            this.TB_GEF_k1.Size = new System.Drawing.Size(55, 22);
+            this.TB_GEF_k1.TabIndex = 6;
+            // 
+            // TB_GEF_Fx1
+            // 
+            this.TB_GEF_Fx1.Location = new System.Drawing.Point(113, 20);
+            this.TB_GEF_Fx1.Name = "TB_GEF_Fx1";
+            this.TB_GEF_Fx1.Size = new System.Drawing.Size(245, 22);
+            this.TB_GEF_Fx1.TabIndex = 5;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.BTN_GEF_Save);
+            this.groupBox10.Controls.Add(this.BTN_GEF_Clear);
+            this.groupBox10.Location = new System.Drawing.Point(939, 20);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(245, 134);
+            this.groupBox10.TabIndex = 17;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Управление";
+            // 
+            // BTN_GEF_Save
+            // 
+            this.BTN_GEF_Save.Location = new System.Drawing.Point(17, 23);
+            this.BTN_GEF_Save.Name = "BTN_GEF_Save";
+            this.BTN_GEF_Save.Size = new System.Drawing.Size(212, 30);
+            this.BTN_GEF_Save.TabIndex = 7;
+            this.BTN_GEF_Save.Text = "Сохранить";
+            this.BTN_GEF_Save.UseVisualStyleBackColor = true;
+            // 
+            // BTN_GEF_Clear
+            // 
+            this.BTN_GEF_Clear.Location = new System.Drawing.Point(17, 73);
+            this.BTN_GEF_Clear.Name = "BTN_GEF_Clear";
+            this.BTN_GEF_Clear.Size = new System.Drawing.Size(212, 30);
+            this.BTN_GEF_Clear.TabIndex = 8;
+            this.BTN_GEF_Clear.Text = "Очистить";
+            this.BTN_GEF_Clear.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(448, 23);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(18, 16);
+            this.label12.TabIndex = 11;
+            this.label12.Text = "q:";
+            // 
+            // CB_GEF_q1
+            // 
+            this.CB_GEF_q1.FormattingEnabled = true;
+            this.CB_GEF_q1.Location = new System.Drawing.Point(471, 18);
+            this.CB_GEF_q1.Name = "CB_GEF_q1";
+            this.CB_GEF_q1.Size = new System.Drawing.Size(59, 24);
+            this.CB_GEF_q1.TabIndex = 12;
+            // 
+            // CB_GEF_q2
+            // 
+            this.CB_GEF_q2.FormattingEnabled = true;
+            this.CB_GEF_q2.Location = new System.Drawing.Point(471, 46);
+            this.CB_GEF_q2.Name = "CB_GEF_q2";
+            this.CB_GEF_q2.Size = new System.Drawing.Size(59, 24);
+            this.CB_GEF_q2.TabIndex = 18;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(448, 51);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(18, 16);
+            this.label19.TabIndex = 17;
+            this.label19.Text = "q:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(364, 51);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(17, 16);
+            this.label21.TabIndex = 16;
+            this.label21.Text = "k:";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 51);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(104, 16);
+            this.label22.TabIndex = 15;
+            this.label22.Text = "РСЛОС 2: Ф(х) =";
+            // 
+            // TB_GEF_k2
+            // 
+            this.TB_GEF_k2.Location = new System.Drawing.Point(387, 48);
+            this.TB_GEF_k2.Name = "TB_GEF_k2";
+            this.TB_GEF_k2.Size = new System.Drawing.Size(55, 22);
+            this.TB_GEF_k2.TabIndex = 14;
+            // 
+            // TB_GEF_Fx2
+            // 
+            this.TB_GEF_Fx2.Location = new System.Drawing.Point(113, 48);
+            this.TB_GEF_Fx2.Name = "TB_GEF_Fx2";
+            this.TB_GEF_Fx2.Size = new System.Drawing.Size(245, 22);
+            this.TB_GEF_Fx2.TabIndex = 13;
+            // 
+            // CB_GEF_q3
+            // 
+            this.CB_GEF_q3.FormattingEnabled = true;
+            this.CB_GEF_q3.Location = new System.Drawing.Point(471, 75);
+            this.CB_GEF_q3.Name = "CB_GEF_q3";
+            this.CB_GEF_q3.Size = new System.Drawing.Size(59, 24);
+            this.CB_GEF_q3.TabIndex = 24;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(448, 80);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(18, 16);
+            this.label23.TabIndex = 23;
+            this.label23.Text = "q:";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(364, 80);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(17, 16);
+            this.label24.TabIndex = 22;
+            this.label24.Text = "k:";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 80);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(104, 16);
+            this.label25.TabIndex = 21;
+            this.label25.Text = "РСЛОС 3: Ф(х) =";
+            // 
+            // TB_GEF_k3
+            // 
+            this.TB_GEF_k3.Location = new System.Drawing.Point(387, 77);
+            this.TB_GEF_k3.Name = "TB_GEF_k3";
+            this.TB_GEF_k3.Size = new System.Drawing.Size(55, 22);
+            this.TB_GEF_k3.TabIndex = 20;
+            // 
+            // TB_GEF_Fx3
+            // 
+            this.TB_GEF_Fx3.Location = new System.Drawing.Point(113, 77);
+            this.TB_GEF_Fx3.Name = "TB_GEF_Fx3";
+            this.TB_GEF_Fx3.Size = new System.Drawing.Size(245, 22);
+            this.TB_GEF_Fx3.TabIndex = 19;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox11.Controls.Add(this.RTB_GEF_Output);
+            this.groupBox11.Location = new System.Drawing.Point(20, 160);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(1164, 500);
+            this.groupBox11.TabIndex = 18;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Сгенерированная последовательность";
+            // 
+            // RTB_GEF_Output
+            // 
+            this.RTB_GEF_Output.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_GEF_Output.Location = new System.Drawing.Point(3, 18);
+            this.RTB_GEF_Output.Name = "RTB_GEF_Output";
+            this.RTB_GEF_Output.Size = new System.Drawing.Size(1158, 479);
+            this.RTB_GEF_Output.TabIndex = 0;
+            this.RTB_GEF_Output.Text = "";
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Location = new System.Drawing.Point(583, 20);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(337, 134);
+            this.groupBox12.TabIndex = 19;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Мультиплексор";
             // 
             // Form1
             // 
@@ -1063,6 +1342,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.DGW_FIB_Diagram)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox11.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1149,5 +1433,31 @@
         private System.Windows.Forms.Label Lab_FIB_NOD;
         private System.Windows.Forms.Label Lab_FIB_S;
         private System.Windows.Forms.ComboBox CB_FIB_Qs;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Button BTN_GEF_GenSeq;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox TB_GEF_k1;
+        private System.Windows.Forms.TextBox TB_GEF_Fx1;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Button BTN_GEF_Save;
+        private System.Windows.Forms.Button BTN_GEF_Clear;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.ComboBox CB_GEF_q3;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox TB_GEF_k3;
+        private System.Windows.Forms.TextBox TB_GEF_Fx3;
+        private System.Windows.Forms.ComboBox CB_GEF_q2;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox TB_GEF_k2;
+        private System.Windows.Forms.TextBox TB_GEF_Fx2;
+        private System.Windows.Forms.ComboBox CB_GEF_q1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.RichTextBox RTB_GEF_Output;
+        private System.Windows.Forms.GroupBox groupBox12;
     }
 }
