@@ -1,6 +1,7 @@
-﻿using static MyMathLibrary.MathUtils;
+﻿using static MyLibrary.MathUtils;
+using static MyLibrary.StringUtils;
 
-namespace Лабораторная_работа_3
+namespace Лабораторная_работа_4
 {
 
     class Coords
@@ -159,13 +160,6 @@ namespace Лабораторная_работа_3
             Console.SetCursorPosition(0, cursorTop);
 
             Console.WriteLine($"\n3) Введено значение скаляра: {n}");
-        }
-        static bool OutputEnd()
-        {
-            Console.Write($"\nЖелаете продолжить? (Enter) ");
-            ConsoleKeyInfo key = Console.ReadKey();
-            if (key.Key != ConsoleKey.Enter) { return false; }
-            return true;
         }
 
         // Функции логики

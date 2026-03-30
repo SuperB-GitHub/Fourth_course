@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyMathLibrary
+namespace MyLibrary
 {
-    //Ver. 02032026
-    //Ver. 23032026
+    /// <summary>
+    /// Мои самописные математические функции для лабораторных работ 
+    /// 
+    /// Ver. 28032026
+    /// </summary>
     public static class MathUtils
     {
         /// <summary>
@@ -315,7 +318,6 @@ namespace MyMathLibrary
             int result = n;
             int temp = n;
 
-            // Проверяем простые делители
             for (int p = 2; p * p <= temp; p++)
             {
                 if (temp % p == 0)
@@ -327,7 +329,6 @@ namespace MyMathLibrary
                 }
             }
 
-            // Если остался простой делитель больше 1
             if (temp > 1)
                 result -= result / temp;
 
@@ -345,7 +346,6 @@ namespace MyMathLibrary
             long result = n;
             long temp = n;
 
-            // Проверяем простые делители
             for (uint p = 2; p * p <= temp; p++)
             {
                 if (temp % p == 0)
@@ -357,13 +357,16 @@ namespace MyMathLibrary
                 }
             }
 
-            // Если остался простой делитель больше 1
             if (temp > 1)
                 result -= result / temp;
 
             return result;
         }
 
+        /// <summary>
+        /// Вычисляет обратный элемент при помощи функции Эйлера φ(n)
+        /// </summary>
+        /// <returns> long = n^(φ(n) - 1) (mod m)</returns>
         public static long InversElem(long n, long m)
         {
             if (!CrossSimple(n,m)) return 0;
@@ -371,32 +374,98 @@ namespace MyMathLibrary
             return FastPowMod(n, EulerPhi(m) - 1, m);
         }
 
-        //static void InputList(string startMess, string errMess = "Некорректный ввод. Введите целые числа: ", string finalMess)
-        //{
-        //    int cursorTop = Console.CursorTop;
+    }
 
-        //    Console.Write($"Выберите значения для x и y от P через пробел: ");
-        //    string input = Console.ReadLine()!.Trim();
-        //    while (string.IsNullOrWhiteSpace(input))
-        //    {
-        //        Console.Write("Некорректный ввод. Введите целые числа: ");
-        //        input = Console.ReadLine()!.Trim();
-        //    }
+    /// <summary>
+    /// Мои самописные строковые функции для лабораторных работ 
+    /// 
+    /// Ver. 28032026
+    /// </summary>
+    public static class StringUtils
+    {
+        /// <summary>
+        /// Запрашивает у пользователя подтверждение на продолжение.
+        /// </summary>
+        /// <returns>true, если нажат Enter; false в противном случае.</returns>
+        public static bool OutputEnd()
+        {
+            Console.Write($"\nЖелаете продолжить? (Enter) ");
+            ConsoleKeyInfo key = Console.ReadKey();
+            return key.Key == ConsoleKey.Enter;
+        }
 
-        //    p = new Coords();
-        //    p.insert(input.Split(' ')
-        //        .Where(x => !string.IsNullOrWhiteSpace(x))
-        //        .Select(long.Parse)
-        //        .ToList());
+        /// <summary>
+        /// Универсальный метод для ввода списка чисел с настраиваемыми сообщениями
+        /// </summary>
+        /// <param name="startMess">Сообщение перед вводом</param>
+        /// <param name="errMess">Сообщение об ошибке</param>
+        /// <param name="finalMess">Формат итогового сообщения (можно использовать {0}, {1} и т.д. для подстановки значений)</param>
+        /// <param name="expectedCount">Ожидаемое количество чисел (0 - любое количество)</param>
+        /// <returns>Список введённых чисел</returns>
+        public static List<long> InputList(string startMess = "", string errMess = "Некорректный ввод. Введите целые числа: ", string finalMess = "", int expectedCount = 0)
+        {
+            int cursorTop = Console.CursorTop;
+            List<long> result = new List<long>();
 
-        //    List<long> tmp = ;
+            while (true)
+            {
+                Console.Write(startMess);
+                string? input = Console.ReadLine()?.Trim();
 
+                while (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.Write(errMess);
+                    input = Console.ReadLine()?.Trim();
+                }
 
-        //    Console.SetCursorPosition(0, cursorTop);
-        //    Console.Write(new string(' ', Console.WindowWidth));
-        //    Console.SetCursorPosition(0, cursorTop);
+                var numbers = input.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => long.TryParse(x, out long val) ? val : (long?)null)
+                    .ToList();
 
-        //    Console.WriteLine($"Полученное выражение: E{pq[2]}(a:{pq[0]}, b:{pq[1]}) => y² = x³ + {pq[0]}x + {pq[1]}");
-        //}
+                if (numbers.Any(x => x == null))
+                {
+                    Console.SetCursorPosition(0, cursorTop);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(0, cursorTop);
+                    Console.Write(errMess);
+                    continue;
+                }
+
+                result = numbers.Select(x => x.GetValueOrDefault()).ToList();
+
+                if (expectedCount > 0 && result.Count != expectedCount)
+                {
+                    Console.SetCursorPosition(0, cursorTop);
+                    Console.Write(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(0, cursorTop);
+                    Console.Write($"Ошибка: нужно ввести ровно {expectedCount} чисел. {errMess}");
+                    continue;
+                }
+
+                break;
+            }
+
+            Console.SetCursorPosition(0, cursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, cursorTop);
+
+            if (!string.IsNullOrEmpty(finalMess))
+            {
+                if (finalMess.Contains("{0}"))
+                    Console.WriteLine(string.Format(finalMess, result.ToArray()));
+                else
+                    Console.WriteLine(finalMess);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Ввод одного числа
+        /// </summary>
+        public static long InputNumber(string startMess, string errMess = "Некорректный ввод. Введите целое число: ", string finalMess = "")
+        {
+            return InputList(startMess, errMess, finalMess, 1).First();
+        }
     }
 }
