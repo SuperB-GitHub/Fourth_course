@@ -290,9 +290,16 @@ namespace Лабораторная_работа_4
             {
                 long lambda1 = R.y - P.y;
                 long lambda2 = R.x - P.x;
-                long lambda = Mod(lambda1 * InversElem(lambda2, m), m);
-                Coords t = JokeFunc(R, P, m, lambda);
-                return t;
+                if (lambda2 == 0)
+                {
+                    return new Coords(0, 0);
+                }
+                else
+                {
+                    long lambda = Mod(lambda1 * InversElem(lambda2, m), m);
+                    Coords t = JokeFunc(R, P, m, lambda);
+                    return t;
+                }
             }
         }
         static Coords MulFunc(Coords R, List<long> abm)
@@ -308,11 +315,17 @@ namespace Лабораторная_работа_4
                 long m = abm[2];
                 long lambda1 = 3 * FastPowMod(R.x, 2, m) + abm[0];
                 long lambda2 = 2 * R.y;
-                long lambda = Mod(lambda1 * InversElem(lambda2, m), m);
-                Coords t = JokeFunc(R, R, m, lambda);
-                return t;
+                if (lambda2 == 0)
+                {
+                    return nul;
+                }
+                else
+                {
+                    long lambda = Mod(lambda1 * InversElem(lambda2, m), m);
+                    Coords t = JokeFunc(R, R, m, lambda);
+                    return t;
+                }
             }
-            
         }
         static Coords JokeFunc(Coords p, Coords q, long m, long lambda)
         {
@@ -362,7 +375,8 @@ namespace Лабораторная_работа_4
                 else
                 {
                     Console.Write($"{i + 1}) R{R.print()} не содержится в таблице, поэтому R = R{R.print()} + Q{Q.print()} = ");
-                    R = AddFunc(R, Q, p);
+                    R = R.equals(Q) ? MulFunc(R, abm) : AddFunc(R, Q, p);
+                    //R = AddFunc(R, Q, p);
                     Console.WriteLine($"R{R.print()}");
                     
                 }
