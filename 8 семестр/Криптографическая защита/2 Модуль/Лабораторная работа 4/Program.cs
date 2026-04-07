@@ -6,8 +6,18 @@ using static MyLibrary.MathUtils;
 class ElGamalLab
 {
     static Random random = new Random();
+    static long P_fir, G_fir, Y_fir;
+    static Dictionary<int, char> alph = new Dictionary<int, char>
+        {
+            {1, 'А'}, {2, 'Б'}, {3, 'В'}, {4, 'Г'}, {5, 'Д'},
+            {6, 'Е'}, {7, 'Ё'}, {8, 'Ж'}, {9, 'З'}, {10, 'И'},
+            {11, 'Й'}, {12, 'К'}, {13, 'Л'}, {14, 'М'}, {15, 'Н'},
+            {16, 'О'}, {17, 'П'}, {18, 'Р'}, {19, 'С'}, {20, 'Т'},
+            {21, 'У'}, {22, 'Ф'}, {23, 'Х'}, {24, 'Ц'}, {25, 'Ч'},
+            {26, 'Ш'}, {27, 'Щ'}, {28, 'Ъ'}, {29, 'Ы'}, {30, 'Ь'},
+            {31, 'Э'}, {32, 'Ю'}, {33, 'Я'}
+        };
 
-    // Проверка, является ли g примитивным корнем по модулю p
     static bool IsPrimitiveRoot(long g, long p)
     {
         long phi = EulerPhi(p);
@@ -21,51 +31,46 @@ class ElGamalLab
         }
         return true;
     }
-
-    static void Input_p(out long n)
+    static int FindIndexByLetter(char letter)
     {
-        int cursorTop = Console.CursorTop;
-
-        Console.Write($"Введите простое число p: ");
-        while (!long.TryParse(Console.ReadLine(), out n) || !TestMillerRabin(n))
+        letter = char.ToUpper(letter);
+        foreach (var pair in alph)
         {
-            Console.SetCursorPosition(0, cursorTop);
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, cursorTop);
-            Console.Write("Некорректный ввод. Введите простое целое число: ");
+            if (pair.Value == letter)
+                return pair.Key;
         }
-        Console.SetCursorPosition(0, cursorTop);
-        Console.Write(new string(' ', Console.WindowWidth));
-        Console.SetCursorPosition(0, cursorTop);
+        return -1;
     }
-    static void Input_x(out long n, long p)
+    static bool IsRussianText(string text)
     {
-        int cursorTop = Console.CursorTop;
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
 
-        Console.Write($"Введите число x, такое что 1 < x < {p-1}: ");
-        while (!long.TryParse(Console.ReadLine(), out n) || !(n > 1 && n < (p - 1)))
+        foreach (char c in text)
         {
-            Console.SetCursorPosition(0, cursorTop);
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, cursorTop);
-            Console.Write($"Некорректный ввод. Введите целое число, такое что 1 < x < {p-1}: ");
+            if (char.IsWhiteSpace(c) || char.IsPunctuation(c) || char.IsDigit(c))
+                continue;
+
+            bool isRussian = (c >= 'а' && c <= 'я') || c == 'ё';
+
+            if (!isRussian)
+                return false;
         }
-        Console.SetCursorPosition(0, cursorTop);
-        Console.Write(new string(' ', Console.WindowWidth));
-        Console.SetCursorPosition(0, cursorTop);
+        return true;
     }
+
     static void Input_mess(out string n)
     {
         int cursorTop = Console.CursorTop;
 
         Console.Write($"Введите сообщение: ");
-        n = Console.ReadLine()!.Trim();
-        while (string.IsNullOrWhiteSpace(n))
+        n = Console.ReadLine()!.Trim().ToLower();
+        while (string.IsNullOrWhiteSpace(n) || !IsRussianText(n))
         {
             Console.SetCursorPosition(0, cursorTop);
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, cursorTop);
-            Console.Write("Некорректный ввод. Введите текст: ");
+            Console.Write("Некорректный ввод. Введите русский текст: ");
             n = Console.ReadLine()!.Trim();
         }
         Console.SetCursorPosition(0, cursorTop);
@@ -73,15 +78,60 @@ class ElGamalLab
         Console.SetCursorPosition(0, cursorTop);
 
     }
+    static void Input_err(out bool err)
+    {
+        int cursorTop = Console.CursorTop;
+
+        Console.Write($"Передано с ошибкой? (д/н): ");
+        string n = Console.ReadLine()!.Trim().ToLower();
+        while (string.IsNullOrWhiteSpace(n) || (n != "д" && n != "н"))
+        {
+            Console.SetCursorPosition(0, cursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, cursorTop);
+            Console.Write("Некорректный ввод. Введите <д> или <н>: ");
+            n = Console.ReadLine()!.Trim();
+        }
+        Console.SetCursorPosition(0, cursorTop);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, cursorTop);
+
+        err = n == "д";
+
+    }
+    static void Input_PGY(out List<long> pgy)
+    {
+        int cursorTop = Console.CursorTop;
+
+        Console.Write($"Введите открытый ключ p, g, y через пробел: ");
+        string input = Console.ReadLine()!.Trim();
+        while (string.IsNullOrWhiteSpace(input))
+        {
+            Console.Write("Некорректный ввод. Введите целые числа: ");
+            input = Console.ReadLine()!.Trim();
+        }
+
+        pgy = input.Split(' ')
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(long.Parse)
+            .ToList();
+
+        Console.SetCursorPosition(0, cursorTop);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, cursorTop);
+    }
 
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
-        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         Console.WriteLine("Лабораторная работа: Криптосистема Эль-Гамаля\n");
 
         Console.WriteLine("\t\t\t Абонент Б (Получатель) создает ключи\n");
-        Input_p(out long P);
+
+        long P = random.NextInt64(33,100);
+        while (!TestMillerRabin(P, 5))
+        {
+            P = random.NextInt64(33,100);
+        }
         Console.WriteLine($"1. Выбрано простое число P = {P}");
 
         long G = 0;
@@ -94,32 +144,30 @@ class ElGamalLab
             }
         }
         Console.WriteLine($"2. Выбран примитивный элемент G = {G}");
-        Input_x(out long X, P);
+        long X = random.NextInt64(1, P-1);
         Console.WriteLine($"3. Выбран секретный ключ X = {X} (закрытый ключ)");
         long Y = FastPowMod(G, X, P);
         Console.WriteLine($"4. Вычислен открытый ключ Y = g^x (mod p) = {Y} (mod {P})");
 
-        Console.WriteLine($"\nОткрытый ключ (P, G, Y) = ({P}, {G}, {Y})");
+        Console.WriteLine($"\nОткрытый ключ (P, G, Y) = ({P_fir = P}, {G_fir = G}, {Y_fir = Y})");
         Console.WriteLine($"Закрытый ключ X = {X}\n");
 
         Console.WriteLine("\t\t\t Абонент А (Отправитель) шифрует сообщение\n");
         Input_mess(out string message);
         Console.WriteLine($"Исходное сообщение: {message}\n");
-        Console.WriteLine($"Получен открытый ключ: P = {P}, G = {G}, Y = {Y}\n");
+        Input_PGY(out List<long> PGY);
+        Console.WriteLine($"Получен открытый ключ: P = {P = PGY[0]}, G = {G = PGY[1]}, Y = {Y = PGY[2]}\n");
 
         long[] aValues = new long[message.Length];
         long[] bValues = new long[message.Length];
-
-        Encoding win1251 = Encoding.GetEncoding(1251);
 
         for (int i = 0; i < message.Length; i++)
         {
             char symbol = message[i];
 
-            byte[] win1251Bytes = win1251.GetBytes(new char[] { symbol });
-            long M = win1251Bytes[0];
+            long M = FindIndexByLetter(symbol);
 
-            Console.Write($"Символ '{symbol}' -> код Win1251: {M}");
+            Console.WriteLine($"Символ '{symbol}' -> {M}");
 
             long k;
             do
@@ -142,10 +190,19 @@ class ElGamalLab
         }
 
         Console.WriteLine("\n\t\t\t Передача шифротекста абоненту Б \n");
-        Console.WriteLine("Абонент А отправляет пары (a, b):");
+        Input_err(out bool err);
         for (long i = 0; i < message.Length; i++)
         {
-            Console.WriteLine($"  Символ {i + 1}: (a={aValues[i]}, b={bValues[i]})");
+            if (err)
+            {
+                Console.WriteLine("Абонент А отправляет пары (a, b) (С ошибками):");
+                Console.WriteLine($"  Символ {i + 1}: (a={aValues[i]+1}, b={bValues[i]})");
+            }
+            else
+            {
+                Console.WriteLine("Абонент А отправляет пары (a, b):");
+                Console.WriteLine($"  Символ {i + 1}: (a={aValues[i]}, b={bValues[i]})");
+            }
         }
 
         Console.WriteLine("\n\t\t\t Абонент Б расшифровывает сообщение\n");
@@ -155,21 +212,21 @@ class ElGamalLab
 
         for (long i = 0; i < message.Length; i++)
         {
-            long a = aValues[i];
-            long b = bValues[i];
 
-            long ax = FastPowMod(a, X, P);
+            long a = err ? aValues[i] + 1 : aValues[i];
+            long b = bValues[i];
 
             long axInverse = FastPowMod(a, P - 1 - X, P);
 
-            long M = (b * axInverse) % P;
+            long M = Mod(b * axInverse, P);
 
-            byte[] win1251Bytes = new byte[] { (byte)M };
-            char decryptedChar = win1251.GetChars(win1251Bytes)[0];
+            char decryptedChar = alph[(int)M];
             decryptedMessage += decryptedChar;
 
-            Console.WriteLine($"Символ {i + 1}: a={a}, b={b} -> M={M} -> '{decryptedChar}'");
+            Console.WriteLine($"Символ {i + 1}: a = {a}, b = {b}, x = {X} -> ");
+            Console.WriteLine($"M = b * a^(p - 1 - x)(mod p) = {b} * {a}^{P - 1 - X}(mod {P}) = {b} * {axInverse}(mod {P}) = {M} -> '{decryptedChar}'\n");
         }
+        decryptedMessage = decryptedMessage.ToLower();
 
         Console.WriteLine("\n\t\t\t Сравнение исходного и расшифрованного сообщений\n");
         Console.WriteLine($"Исходное сообщение:       {message}");
@@ -181,9 +238,19 @@ class ElGamalLab
         }
         else
         {
-            Console.WriteLine("\nСообщения не совпадают. Скорее всего мало p.");
+            if (P_fir != P || G_fir != G || Y_fir != Y)
+            {
+                Console.WriteLine("\nСообщения не совпадают. Открытые ключи не совпали.");
+            }
+            else if (err)
+            {
+                Console.WriteLine("\nСообщения не совпадают. Была допущена ошибка при передаче зашифрованного сообщения.");
+            }
+            else
+            {
+                Console.WriteLine("\nСообщения не совпадают. Надо анализировать...");
+            }
         }
-
         Console.WriteLine("\nНажмите любую клавишу для завершения...");
         Console.ReadKey();
     }
