@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.Security;
 using System.Windows.Forms;
 using static MyLibrary.MathUtils;
 using static MyLibrary.StringUtils;
@@ -53,7 +54,7 @@ namespace Лабораторные_работы
 
             return sequence;
         }
-        private List<List<long>> GenFIBSeq(long k, List<long> fk, bool print)
+        private List<List<long>> GenFIBSeq(long k, List<long> fk, bool print = false)
         {
             long size = fk.Count() - 1;
             long[,] T = new long[size, size];
@@ -99,7 +100,7 @@ namespace Лабораторные_работы
 
             return regs;
         }
-        private void GenFIBDiag(List<List<long>> regs, long size, List<long> SP)
+        private Dictionary<long, List<long>> GenFIBDiag(List<List<long>> regs, long size, List<long> SP)
         {
             Dictionary<long, List<long>> rslos = new Dictionary<long, List<long>>();
 
@@ -129,17 +130,7 @@ namespace Лабораторные_работы
                 s++;
             }
 
-            SeqFIB = rslos;
-            FillDataGridViewSimple(rslos);
-
-            CB_FIB_Qs.Items.Clear();
-
-            foreach (var key in rslos.Keys)
-            {
-                CB_FIB_Qs.Items.Add(key);
-            }
-
-            CB_FIB_Qs.Sorted = true;
+            return rslos;
 
         }
 
@@ -416,7 +407,11 @@ namespace Лабораторные_работы
                 }
 
 
-                GenFIBDiag(GenFIBSeq(k, bitsFk, true), N, SP);
+                var rslos = GenFIBDiag(GenFIBSeq(k, bitsFk, true), N, SP);
+
+                SeqFIB = rslos;
+                FillDataGridViewSimple(rslos);
+                Fill_Qs(CB_FIB_Qs, rslos);
 
                 long S = (long)Math.Pow(2, N) - 1;
                 PeriodFIB = (int)S;
@@ -424,6 +419,119 @@ namespace Лабораторные_работы
                 Lab_FIB_NOD.Text = $"НОД(S, k) = НОД({S}, {k}) = {NOD(S,k)}";
 
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void BTN_GEF_GenSeq_Click(object sender, EventArgs e)
+        {
+            void   Input_k(string TextBox, out long k)
+            {
+                if (!long.TryParse(TextBox, out k))
+                {
+                    MessageBox.Show("Неверное значение параметра k", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            void   Input_Fk(string TextBox, out List<long> Fk, out long N)
+            {
+                Fk = TextBox.Split(' ')
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(long.Parse)
+                    .ToList();
+
+                N = Fk.Max();
+            }
+            void   Input_SP(string TextBox, long N, List<long> Fk, out List<long> SP, out List<long> bitsFk)
+            {
+                SP = TextBox.Where(c => char.IsDigit(c))
+                    .Select(c => long.Parse(c.ToString()))
+                    .ToList();
+
+                bitsFk = new List<long> { };
+
+                if (TextBox.Length != N)
+                {
+                    MessageBox.Show("Неверное значение начальной позиции", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                for (long i = 0; i <= N; i++)
+                {
+                    bitsFk.Add(Fk.Contains(i) ? 1 : 0);
+                }
+            }
+            string Print_Qs(Dictionary<long, List<long>> rslos, long q)
+            {
+                List<long> selectedList = rslos[q];
+
+                string binaryString = string.Join("", selectedList);
+                binaryString = binaryString.Substring(0, binaryString.Length - 1);
+
+                return binaryString;
+
+                //RTB_FIB_Output.Text += $"\nq{selectedKey} = {Convert.ToInt64(binaryString, 2)}";
+            }
+            string Multiplex(long x1, long x2, long x3)
+            {
+                return ((x1 * x2) == (x2 * x3) ? 1 : 0) == x3 ? "1" : "0";
+            }
+            
+
+            try
+            {
+                
+                Input_Fk(TB_GEF_Fx1.Text, out List<long> Fk1, out long N1);
+                Input_Fk(TB_GEF_Fx2.Text, out List<long> Fk2, out long N2);
+                Input_Fk(TB_GEF_Fx3.Text, out List<long> Fk3, out long N3);
+
+                Input_k(TB_GEF_k1.Text, out long k1);
+                Input_k(TB_GEF_k2.Text, out long k2);
+                Input_k(TB_GEF_k3.Text, out long k3);
+
+                Input_SP(TB_GEF_SP1.Text, N1, Fk1, out List<long> SP1, out List<long> bitsFk1);
+                Input_SP(TB_GEF_SP2.Text, N2, Fk2, out List<long> SP2, out List<long> bitsFk2);
+                Input_SP(TB_GEF_SP3.Text, N3, Fk3, out List<long> SP3, out List<long> bitsFk3);
+
+                var rslos1 = GenFIBDiag(GenFIBSeq(k1, bitsFk1), N1, SP1);
+                var rslos2 = GenFIBDiag(GenFIBSeq(k2, bitsFk2), N2, SP2);
+                var rslos3 = GenFIBDiag(GenFIBSeq(k3, bitsFk3), N3, SP3);
+
+                long S1 = (long)Math.Pow(2, N1) - 1;
+                Lab_GEF_S1.Text = $" {S1}";
+
+                long S2 = (long)Math.Pow(2, N2) - 1;
+                Lab_GEF_S2.Text = $" {S2}";
+
+                long S3 = (long)Math.Pow(2, N3) - 1;
+                Lab_GEF_S3.Text = $" {S3}";
+
+                long S = S1 * S2 * S3;
+                Lab_GEF_S.Text = $" {S}";
+
+                if (CB_GEF_q1.Items.Count == 0 || CB_GEF_q2.Items.Count == 0 || CB_GEF_q3.Items.Count == 0)
+                {
+                    Fill_Qs(CB_GEF_q1, rslos1);
+                    Fill_Qs(CB_GEF_q2, rslos2);
+                    Fill_Qs(CB_GEF_q3, rslos3);
+                }
+                else
+                {
+                    long q1 = (long)CB_GEF_q1.SelectedItem;
+                    long q2 = (long)CB_GEF_q2.SelectedItem;
+                    long q3 = (long)CB_GEF_q3.SelectedItem;
+                    RTB_GEF_Output.Text += $"РСЛОС1 = {Print_Qs(rslos1, q1)} \n" +
+                        $"РСЛОС2 = {Print_Qs(rslos2, q2)} \nРСЛОС3 = {Print_Qs(rslos3, q3)}\n";
+
+                    RTB_GEF_Output.Text += $"\n f(x1, x2, x3) = ";
+                    for (long i = 0; i < S; i++)
+                    {
+                        RTB_GEF_Output.Text += $"{Multiplex(rslos1[q1][(int)Mod(i, S1)], rslos2[q2][(int)Mod(i, S2)], rslos3[q3][(int)Mod(i, S3)])}";
+                    }
+
+                }
             }
             catch (Exception ex)
             {
@@ -777,6 +885,19 @@ namespace Лабораторные_работы
             DGW_FIB_Diagram.ReadOnly = true;
             DGW_FIB_Diagram.AllowUserToAddRows = false;
         }
+        private void Fill_Qs(ComboBox CB, Dictionary<long, List<long>> rslos)
+        {
+            CB.Items.Clear();
+
+            foreach (var key in rslos.Keys)
+            {
+                CB.Items.Add(key);
+            }
+
+            CB.Sorted = true;
+        }
+
+
 
     }
 }
