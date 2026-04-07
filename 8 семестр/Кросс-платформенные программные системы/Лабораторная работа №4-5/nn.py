@@ -8,7 +8,6 @@ from datetime import datetime
 
 _model = None
 
-# Создаем папку для сохранения предобработанных изображений
 PROCESSED_SAVE_DIR = 'processed_images'
 os.makedirs(PROCESSED_SAVE_DIR, exist_ok=True)
 
@@ -50,23 +49,17 @@ def get_model():
 
 def save_processed_image(img_array, original_filename):
     """Сохраняет предобработанное изображение 20x20 (фон черный, фигура в серых тонах)"""
-    # Убираем белый фон, делаем его черным
-    # Находим белые пиксели (255) и заменяем их на 0
     img_array_clean = img_array.copy()
     
-    # Если значение близко к белому ( > 200), делаем черным (фон)
     img_array_clean = np.where(img_array_clean > 200, 0, img_array_clean)
     
-    # Преобразуем в изображение
     img_pil = Image.fromarray(img_array_clean.astype(np.uint8))
     
-    # Создаем имя файла с timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
     base_name = os.path.splitext(os.path.basename(original_filename))[0]
     filename = f"{timestamp}_{base_name}_processed.png"
     filepath = os.path.join(PROCESSED_SAVE_DIR, filename)
     
-    # Сохраняем
     img_pil.save(filepath)
     print(f"Предобработанное изображение сохранено: {filepath}")
     
@@ -75,25 +68,19 @@ def save_processed_image(img_array, original_filename):
 def preprocess_image(image, save=True, original_filename="unknown"):
     """Предобработка изображения для нейросети"""
     
-    # Приводим к черно-белому
     if image.mode != 'L':
         image = image.convert('L')
     
-    # Изменяем размер
     image = image.resize((20, 20), Image.Resampling.LANCZOS)
     
-    # Получаем массив
     img_array = np.array(image)
     
-    # Инвертируем если нужно (чтобы фигура была светлой на темном фоне)
     if np.mean(img_array) > 127:
         img_array = 255 - img_array
     
-    # Сохраняем изображение (с удалением белого фона)
     if save:
         save_processed_image(img_array, original_filename)
     
-    # Нормализуем для нейросети (0-1)
     img_array_normalized = img_array.astype(np.float32) / 255.0
     img_array_normalized = img_array_normalized.flatten()
     img_array_normalized = img_array_normalized.reshape(1, -1)

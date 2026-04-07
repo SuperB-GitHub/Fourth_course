@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Распознавание геометрических фигур | Лабораторная работа №2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'Roboto', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+            padding: 36px 32px;
+            max-width: 640px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        h1 {
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #5b6e8c;
+            margin-bottom: 32px;
+            font-size: 14px;
+            font-weight: 450;
+            border-bottom: 1px solid #e9edf2;
+            display: inline-block;
+            width: auto;
+            padding-bottom: 6px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 24px;
+            padding: 44px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fafcff;
+            margin-bottom: 24px;
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
+        .upload-area.dragover {
+            border-color: #2563eb;
+            background: #eff6ff;
+            border-style: solid;
+        }
+
+        .upload-icon {
+            font-size: 44px;
+            font-weight: 300;
+            margin-bottom: 12px;
+            opacity: 0.7;
+            letter-spacing: 2px;
+        }
+
+        .upload-text {
+            color: #1e40af;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .upload-hint {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 12px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview-container {
+            text-align: center;
+            margin-bottom: 24px;
+            display: none;
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 16px;
+        }
+
+        .preview-container.show {
+            display: block;
+            animation: fadeSlideUp 0.3s ease;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-image {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 16px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+            object-fit: contain;
+            background: #ffffff;
+            border: 1px solid #eef2f6;
+        }
+
+        #filename {
+            font-size: 12px;
+            color: #5b6e8c;
+            margin-top: 10px;
+            font-weight: 450;
+        }
+
+        .predict-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 24px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .predict-btn:hover:not(:disabled) {
+            background: #0f172a;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .predict-btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .predict-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #94a3b8;
+        }
+
+        .result-container {
+            background: #f9fbfd;
+            border-radius: 24px;
+            padding: 24px;
+            display: none;
+            border: 1px solid #eef2f8;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: slideInUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            font-feature-settings: 'calt' off;
+        }
+
+        .prediction {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding: 20px 12px;
+            border-radius: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .prediction.circle { background: #fff7e6; color: #b45309; border-left: 4px solid #f59e0b; }
+        .prediction.triangle { background: #f1f5f9; color: #1e40af; border-left: 4px solid #3b82f6; }
+        .prediction.square { background: #ecfdf5; color: #065f46; border-left: 4px solid #10b981; }
+
+        .confidence {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 24px;
+            background: #ffffffcc;
+            padding: 8px;
+            border-radius: 40px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .probabilities {
+            margin-top: 20px;
+        }
+
+        .prob-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f6;
+        }
+
+        .prob-label {
+            font-weight: 600;
+            width: 110px;
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .prob-bar-container {
+            flex: 1;
+            height: 32px;
+            background: #eef2f8;
+            border-radius: 40px;
+            overflow: hidden;
+            margin: 0 12px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .prob-bar {
+            height: 100%;
+            background: #2c3e66;
+            border-radius: 40px;
+            transition: width 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            background: linear-gradient(90deg, #334155, #1e293b);
+        }
+
+        .prob-value {
+            min-width: 52px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1e293b;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 14px 18px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-left: 4px solid #ef4444;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: fadeSlideUp 0.25s ease;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.7s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 32px;
+            color: #8ba0bc;
+            font-size: 12px;
+            font-weight: 450;
+            border-top: 1px solid #eef2f8;
+            padding-top: 20px;
+        }
+
+        /* адаптив */
+        @media (max-width: 500px) {
+            .container {
+                padding: 24px 20px;
+            }
+            .prediction {
+                font-size: 26px;
+            }
+            .prob-label {
+                width: 80px;
+                font-size: 12px;
+            }
+            .prob-bar-container {
+                margin: 0 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Распознавание геометрических фигур</h1>
+        <div style="text-align: center;">
+            <div class="subtitle">круг • треугольник • квадрат</div>
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">⸙</div>
+            <div class="upload-text">Выберите или перетащите изображение</div>
+            <div class="upload-hint">Форматы JPG, PNG, до 16 МБ</div>
+            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg">
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+            <img id="previewImage" class="preview-image" alt="Предпросмотр">
+            <div id="filename" style="font-size: 12px; color: #5b6e8c; margin-top: 10px;"></div>
+        </div>
+
+        <button class="predict-btn" id="predictBtn" disabled>Распознать фигуру</button>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-title">Результат классификации</div>
+            <div class="prediction" id="prediction"></div>
+            <div class="confidence" id="confidence"></div>
+            <div class="probabilities" id="probabilities"></div>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <footer>Лабораторная работа №2 | нейросетевая модель</footer>
+    </div>
+
+    <script>
+        (function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const previewContainer = document.getElementById('previewContainer');
+            const previewImage = document.getElementById('previewImage');
+            const filenameSpan = document.getElementById('filename');
+            const predictBtn = document.getElementById('predictBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            
+            let currentFile = null;
+
+            function hideError() {
+                errorMessageDiv.classList.remove('show');
+                errorMessageDiv.textContent = '';
+            }
+
+            function showError(message) {
+                errorMessageDiv.textContent = message;
+                errorMessageDiv.classList.add('show');
+                resultContainer.classList.remove('show');
+            }
+
+            function resetResultUI() {
+                resultContainer.classList.remove('show');
+                const probabilitiesDiv = document.getElementById('probabilities');
+                if (probabilitiesDiv) probabilitiesDiv.innerHTML = '';
+            }
+
+            function formatShapeName(shape) {
+                return shape;
+            }
+
+            function updatePredictionStyle(prediction, confidencePercent) {
+                const predictionDiv = document.getElementById('prediction');
+                const confidenceSpan = document.getElementById('confidence');
+                
+                let shapeClass = '';
+                let displayText = '';
+                switch(prediction) {
+                    case 'Круг': 
+                        shapeClass = 'circle'; 
+                        displayText = 'Круг';
+                        break;
+                    case 'Треугольник': 
+                        shapeClass = 'triangle'; 
+                        displayText = 'Треугольник';
+                        break;
+                    case 'Квадрат': 
+                        shapeClass = 'square'; 
+                        displayText = 'Квадрат';
+                        break;
+                    default: 
+                        shapeClass = ''; 
+                        displayText = prediction;
+                }
+                
+                predictionDiv.className = `prediction ${shapeClass}`;
+                predictionDiv.innerHTML = displayText;
+                confidenceSpan.innerHTML = `Уверенность: ${confidencePercent}%`;
+            }
+
+            function displayResult(data) {
+                if (!data.success) {
+                    showError(data.error || 'Ошибка при обработке результата');
+                    return;
+                }
+                
+                const prediction = data.prediction;
+                const confidenceRaw = data.confidence;
+                const confidencePercent = typeof confidenceRaw === 'number' ? confidenceRaw.toFixed(1) : confidenceRaw;
+                
+                // обновляем стиль и текст
+                updatePredictionStyle(prediction, confidencePercent);
+                
+                // отрисовываем вероятности
+                const probabilitiesDiv = document.getElementById('probabilities');
+                if (data.probabilities) {
+                    let probsHtml = '<div style="margin-top: 8px; margin-bottom: 12px; font-weight: 500; color: #334155;">Распределение вероятностей</div>';
+                    const order = ['Круг', 'Треугольник', 'Квадрат'];
+                    for (const shape of order) {
+                        if (data.probabilities.hasOwnProperty(shape)) {
+                            let probValue = data.probabilities[shape];
+                            let numericProb = typeof probValue === 'number' ? probValue : parseFloat(probValue);
+                            if (isNaN(numericProb)) numericProb = 0;
+                            const roundedProb = numericProb.toFixed(1);
+                            const widthPercent = Math.min(100, Math.max(0, numericProb));
+                            probsHtml += `
+                                <div class="prob-item">
+                                    <span class="prob-label">${shape}</span>
+                                    <div class="prob-bar-container">
+                                        <div class="prob-bar" style="width: ${widthPercent}%">${roundedProb}%</div>
+                                    </div>
+                                    <span class="prob-value">${roundedProb}%</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    probabilitiesDiv.innerHTML = probsHtml;
+                } else {
+                    probabilitiesDiv.innerHTML = '<div style="padding: 8px; text-align:center; color:#5b6e8c;">Нет данных о вероятностях</div>';
+                }
+                
+                resultContainer.classList.add('show');
+                hideError();
+            }
+
+            function handleFile(file) {
+                if (!file.type.startsWith('image/')) {
+                    showError('Пожалуйста, выберите изображение (JPEG, PNG)');
+                    return false;
+                }
+                
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!allowedTypes.includes(file.type)) {
+                    showError('Поддерживаются только JPG и PNG форматы');
+                    return false;
+                }
+                
+                if (file.size > 16 * 1024 * 1024) {
+                    showError('Файл превышает 16 МБ');
+                    return false;
+                }
+                
+                currentFile = file;
+                
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    previewImage.src = ev.target.result;
+                    previewContainer.classList.add('show');
+                    filenameSpan.textContent = file.name;
+                };
+                reader.readAsDataURL(file);
+                
+                hideError();
+                resetResultUI();
+                predictBtn.disabled = false;
+                return true;
+            }
+
+            uploadArea.addEventListener('click', (e) => {
+                if (e.target === uploadArea || uploadArea.contains(e.target)) {
+                    fileInput.click();
+                }
+            });
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const droppedFile = files[0];
+                    if (droppedFile.type.startsWith('image/')) {
+                        handleFile(droppedFile);
+                    } else {
+                        showError('Пожалуйста, перетащите изображение');
+                    }
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+            
+            predictBtn.addEventListener('click', async () => {
+                if (!currentFile) {
+                    showError('Изображение не выбрано');
+                    return;
+                }
+                
+                predictBtn.disabled = true;
+                const originalBtnText = predictBtn.innerHTML;
+                predictBtn.innerHTML = 'Распознавание <span class="loading"></span>';
+                
+                const formData = new FormData();
+                formData.append('image', currentFile);
+                
+                try {
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        let errorDetail = `Сервер вернул ошибку ${response.status}`;
+                        try {
+                            const errorJson = await response.json();
+                            errorDetail = errorJson.error || errorDetail;
+                        } catch (e) {}
+                        throw new Error(errorDetail);
+                    }
+                    
+                    const data = await response.json();
+                    if (data && data.success === true) {
+                        displayResult(data);
+                    } else {
+                        const errMsg = data.error || 'Не удалось распознать фигуру';
+                        showError(errMsg);
+                    }
+                } catch (error) {
+                    console.error('Ошибка при запросе:', error);
+                    let friendlyMsg = 'Ошибка соединения с сервером. Проверьте, запущен ли бэкенд.';
+                    if (error.message && error.message.includes('fetch')) {
+                        friendlyMsg = 'Не удалось связаться с сервером. Убедитесь, что сервер запущен (flask / fastapi) по адресу /predict.';
+                    } else if (error.message) {
+                        friendlyMsg = `Ошибка: ${error.message}`;
+                    }
+                    showError(friendlyMsg);
+                } finally {
+                    predictBtn.disabled = false;
+                    predictBtn.innerHTML = originalBtnText;
+                    if (!currentFile) predictBtn.disabled = true;
+                }
+            });
+            
+            const originalHandle = handleFile;
+            window.handleFile = handleFile; 
+            
+            window.handleFileExternal = handleFile;
+        })();
+    </script>
+</body>
+</html>
