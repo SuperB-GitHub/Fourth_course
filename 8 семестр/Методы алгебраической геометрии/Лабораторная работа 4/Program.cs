@@ -67,19 +67,24 @@ namespace Лабораторная_работа_4
             while (contin)
             {
                 Console.Clear();
-                Input_e(out List<long> abm);
+                Input_eab(out List<long> abm);
                 TableXandY(abm, out List<long> xi, out List<long> yi);
                 Input_PQ(out Coords p, abm, true);
                 Input_PQ(out Coords q, abm, false);
-                PplusQ(p, q, abm[2]);
-                twoP(p, abm);
 
-                Console.WriteLine("\nСкалярное умножение точек ЭК");
-                Input_n(out long n);
-                Lab5(p, n, abm);
+                //Console.WriteLine("\nСложение и умножение точек ЭК");
+                //PplusQ(p, q, abm[2]);
+                //twoP(p, abm);
 
-                Console.WriteLine($"\nНахождение порядка точки в группе ЭК");
-                Lab6(p, abm);
+                //Console.WriteLine("\nСкалярное умножение точек ЭК");
+                //Input_n(out long n);
+                //Lab5(p, n, abm);
+
+                //Console.WriteLine($"\nНахождение порядка точки в группе ЭК");
+                //Lab6(p, abm);
+
+                Console.WriteLine($"\nГенерация ПСП над ЭК");
+                Lab7(p, q, abm);
 
                 contin = OutputEnd();
             }
@@ -120,7 +125,7 @@ namespace Лабораторная_работа_4
 
 
         }
-        static void Input_e(out List<long> abm)
+        static void Input_eab(out List<long> abm)
         {
             int cursorTop = Console.CursorTop;
 
@@ -160,6 +165,24 @@ namespace Лабораторная_работа_4
             Console.SetCursorPosition(0, cursorTop);
 
             Console.WriteLine($"\n3) Введено значение скаляра: {n}");
+        }
+        static void Input_c(out long c, Coords P, Coords Xo, List<long> abm)
+        {
+            int cursorTop = Console.CursorTop;
+
+            Console.Write($"\nВведите значение фиксир. числа с: ");
+            while (!long.TryParse(Console.ReadLine(), out c) || Xo.equals(AddFunc(SkalMul(Xo, c, abm), P, abm[2])))
+            {
+                Console.SetCursorPosition(0, cursorTop);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, cursorTop);
+                Console.Write("Некорректный ввод. Введите другое целое число: ");
+            }
+            Console.SetCursorPosition(0, cursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, cursorTop);
+
+            Console.WriteLine($"\nВведено число с: {c}");
         }
 
         // Функции логики
@@ -400,6 +423,30 @@ namespace Лабораторная_работа_4
                 }
             }
             return R;
+        }
+
+        //Лабораторная работа 7
+        static void Lab7(Coords P, Coords Xo, List<long> abm)
+        {
+            Input_c(out long c, P, Xo, abm);
+            //HashSet<Coords> LCG = new HashSet<Coords> {Xo};
+            List<Coords> LCG = new List<Coords> { Xo };
+            Console.WriteLine($"Xo = {Xo.print()}");
+
+            Console.Write($"X1 = c: {c} * Xo: {Xo.print()} + P: {P.print()} = ");
+            Coords mul = SkalMul(Xo, c, abm);
+            Xo = AddFunc(mul, P, abm[2]);
+            Console.WriteLine($"{mul.print()} + {P.print()} = {Xo.print()}");
+
+            while (!Xo.contains(LCG))
+            {
+                Console.Write($"X{LCG.Count} = c: {c} * X{LCG.Count - 1}: {Xo.print()} + P: {P.print()} = ");
+                LCG.Add(Xo);
+                mul = SkalMul(Xo, c, abm);
+                Xo = AddFunc(mul, P, abm[2]);
+                Console.WriteLine($"{mul.print()} + {P.print()} = {Xo.print()}");
+            }
+            Console.WriteLine($"Период ЛКГ = {LCG.Count - 1}");
         }
     } 
 }
