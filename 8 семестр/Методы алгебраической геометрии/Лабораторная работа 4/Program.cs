@@ -1,4 +1,5 @@
-﻿using static MyLibrary.MathUtils;
+﻿using System.Reflection.PortableExecutable;
+using static MyLibrary.MathUtils;
 using static MyLibrary.StringUtils;
 
 namespace Лабораторная_работа_4
@@ -54,6 +55,10 @@ namespace Лабораторная_работа_4
                 }
             }
             return -1;
+        }
+        public Coords invers(long m)
+        {
+            return new Coords(x, Mod(-y, m));
         }
     }
 
@@ -170,8 +175,8 @@ namespace Лабораторная_работа_4
         {
             int cursorTop = Console.CursorTop;
 
-            Console.Write($"\nВведите значение фиксир. числа с: ");
-            while (!long.TryParse(Console.ReadLine(), out c) || Xo.equals(AddFunc(SkalMul(Xo, c, abm), P, abm[2])))
+            Console.Write($"Введите значение фиксир. числа с: ");
+            while (!long.TryParse(Console.ReadLine(), out c) || Xo.equals(AddFunc(SkalMul(Xo, c, abm), P, abm)))
             {
                 Console.SetCursorPosition(0, cursorTop);
                 Console.Write(new string(' ', Console.WindowWidth));
@@ -182,7 +187,6 @@ namespace Лабораторная_работа_4
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, cursorTop);
 
-            Console.WriteLine($"\nВведено число с: {c}");
         }
 
         // Функции логики
@@ -289,7 +293,7 @@ namespace Лабораторная_работа_4
                 if (item == 1)
                 {
                     Console.Write($" => R = R{R.print()} + P{p.print()}");
-                    R = AddFunc(p, R, abm[2]);
+                    R = AddFunc(p, R, abm);
                     Console.Write($" = R{R.print()}");
                 }
 
@@ -297,8 +301,9 @@ namespace Лабораторная_работа_4
             }
             Console.WriteLine($"3) {n}R = R{R.print()})");
         }
-        static Coords AddFunc(Coords P, Coords R, long m)
+        static Coords AddFunc(Coords P, Coords R, List<long> abm)
         {
+            long m = abm[2];
             Coords nul = new Coords(0, 0);
 
             if (R.equals(nul))
@@ -308,6 +313,10 @@ namespace Лабораторная_работа_4
             else if (P.equals(nul))
             {
                 return R;
+            }
+            else if (P.equals(R))
+            {
+                return MulFunc(P, abm);
             }
             else
             {
@@ -398,8 +407,7 @@ namespace Лабораторная_работа_4
                 else
                 {
                     Console.Write($"{i + 1}) R{R.print()} не содержится в таблице, поэтому R = R{R.print()} + Q{Q.print()} = ");
-                    R = R.equals(Q) ? MulFunc(R, abm) : AddFunc(R, Q, p);
-                    //R = AddFunc(R, Q, p);
+                    R = AddFunc(R, Q, abm);
                     Console.WriteLine($"R{R.print()}");
                     
                 }
@@ -419,7 +427,7 @@ namespace Лабораторная_работа_4
 
                 if (item == 1)
                 {
-                    R = AddFunc(p, R, abm[2]);
+                    R = AddFunc(p, R, abm);
                 }
             }
             return R;
@@ -429,24 +437,47 @@ namespace Лабораторная_работа_4
         static void Lab7(Coords P, Coords Xo, List<long> abm)
         {
             Input_c(out long c, P, Xo, abm);
-            //HashSet<Coords> LCG = new HashSet<Coords> {Xo};
-            List<Coords> LCG = new List<Coords> { Xo };
-            Console.WriteLine($"Xo = {Xo.print()}");
+            Console.WriteLine($"Введено число с: {c}");
+            List<Coords> LCG = new List<Coords> {};
+            List<Coords> INV = new List<Coords> { };
+            
 
-            Console.Write($"X1 = c: {c} * Xo: {Xo.print()} + P: {P.print()} = ");
-            Coords mul = SkalMul(Xo, c, abm);
-            Xo = AddFunc(mul, P, abm[2]);
-            Console.WriteLine($"{mul.print()} + {P.print()} = {Xo.print()}");
-
-            while (!Xo.contains(LCG))
+            Console.WriteLine($"Генерация ЛКП:");
+            Console.WriteLine($"Xo = {Xo.print()}\n");
+            Coords x1 = Xo;
+            while (!x1.contains(LCG))
             {
-                Console.Write($"X{LCG.Count} = c: {c} * X{LCG.Count - 1}: {Xo.print()} + P: {P.print()} = ");
-                LCG.Add(Xo);
-                mul = SkalMul(Xo, c, abm);
-                Xo = AddFunc(mul, P, abm[2]);
-                Console.WriteLine($"{mul.print()} + {P.print()} = {Xo.print()}");
+                Console.Write($"X{LCG.Count + 1} = c: {c} * X{LCG.Count}: {x1.print()} + P: {P.print()} = ");
+                LCG.Add(x1);
+                Coords mul = SkalMul(x1, c, abm);
+                x1 = AddFunc(mul, P, abm);
+                Console.WriteLine($"{mul.print()} + {P.print()} = {x1.print()}");
             }
-            Console.WriteLine($"Период ЛКГ = {LCG.Count - 1}");
+            Console.Write("\n{");
+            foreach (var cord in LCG) { Console.Write($"{cord.print()} "); };
+            ;
+            Console.WriteLine("}\n");
+
+
+            Console.WriteLine($"Период ЛКГ = {LCG.Count - x1.indexof(LCG)}\n");
+
+            Console.WriteLine($"Генерация Инверсивной последовательности:");
+            Console.WriteLine($"Xo = {Xo.print()}\n");
+            Coords x2 = Xo;
+            while (!x2.contains(INV))
+            {
+                Console.Write($"X{INV.Count + 1} = c: {c} * X{INV.Count}^-1: {x2.print()}^-1 + P: {P.print()} = ");
+                INV.Add(x2);
+                Coords inv = x2.invers(abm[2]);
+                Coords mul = SkalMul(inv, c, abm);
+                x2 = mul.equals(P) ? MulFunc(P, abm) : AddFunc(mul, P, abm);
+                Console.WriteLine($"{c} * {inv.print()} + {P.print()} = {mul.print()} + {P.print()} = {x2.print()}");
+            }
+            Console.Write("\n{");
+            foreach (var cord in INV) { Console.Write($"{cord.print()} "); };
+            Console.WriteLine("}\n");
+
+            Console.WriteLine($"Период Инверсивной = {INV.Count - x2.indexof(INV)}");
         }
     } 
 }
