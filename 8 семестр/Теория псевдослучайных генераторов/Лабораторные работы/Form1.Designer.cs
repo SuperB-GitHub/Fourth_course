@@ -114,6 +114,20 @@
             this.BTN_GEF_Save = new System.Windows.Forms.Button();
             this.BTN_GEF_Clear = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.Lab_GEF_S = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.Lab_GEF_S3 = new System.Windows.Forms.Label();
+            this.Lab_GEF_S2 = new System.Windows.Forms.Label();
+            this.Lab_GEF_S1 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.TB_GEF_SP3 = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.TB_GEF_SP2 = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.TB_GEF_SP1 = new System.Windows.Forms.TextBox();
             this.CB_GEF_q3 = new System.Windows.Forms.ComboBox();
             this.BTN_GEF_GenSeq = new System.Windows.Forms.Button();
             this.label23 = new System.Windows.Forms.Label();
@@ -133,20 +147,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.TB_GEF_k1 = new System.Windows.Forms.TextBox();
             this.TB_GEF_Fx1 = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.TB_GEF_SP3 = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.TB_GEF_SP2 = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.TB_GEF_SP1 = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.Lab_GEF_S3 = new System.Windows.Forms.Label();
-            this.Lab_GEF_S2 = new System.Windows.Forms.Label();
-            this.Lab_GEF_S1 = new System.Windows.Forms.Label();
-            this.Lab_GEF_S = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -1111,6 +1111,7 @@
             this.BTN_GEF_Save.TabIndex = 7;
             this.BTN_GEF_Save.Text = "Сохранить";
             this.BTN_GEF_Save.UseVisualStyleBackColor = true;
+            this.BTN_GEF_Save.Click += new System.EventHandler(this.BTN_GEF_Save_Click);
             // 
             // BTN_GEF_Clear
             // 
@@ -1120,6 +1121,7 @@
             this.BTN_GEF_Clear.TabIndex = 8;
             this.BTN_GEF_Clear.Text = "Очистить";
             this.BTN_GEF_Clear.UseVisualStyleBackColor = true;
+            this.BTN_GEF_Clear.Click += new System.EventHandler(this.BTN_GEF_Clear_Click);
             // 
             // groupBox9
             // 
@@ -1162,6 +1164,126 @@
             this.groupBox9.TabIndex = 6;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Параметры генераторов";
+            // 
+            // Lab_GEF_S
+            // 
+            this.Lab_GEF_S.AutoSize = true;
+            this.Lab_GEF_S.Location = new System.Drawing.Point(822, 105);
+            this.Lab_GEF_S.Name = "Lab_GEF_S";
+            this.Lab_GEF_S.Size = new System.Drawing.Size(85, 16);
+            this.Lab_GEF_S.TabIndex = 38;
+            this.Lab_GEF_S.Text = "Тут будет S";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(794, 105);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(22, 16);
+            this.label33.TabIndex = 37;
+            this.label33.Text = "S: ";
+            // 
+            // Lab_GEF_S3
+            // 
+            this.Lab_GEF_S3.AutoSize = true;
+            this.Lab_GEF_S3.Location = new System.Drawing.Point(822, 80);
+            this.Lab_GEF_S3.Name = "Lab_GEF_S3";
+            this.Lab_GEF_S3.Size = new System.Drawing.Size(85, 16);
+            this.Lab_GEF_S3.TabIndex = 36;
+            this.Lab_GEF_S3.Text = "Тут будет S";
+            // 
+            // Lab_GEF_S2
+            // 
+            this.Lab_GEF_S2.AutoSize = true;
+            this.Lab_GEF_S2.Location = new System.Drawing.Point(822, 51);
+            this.Lab_GEF_S2.Name = "Lab_GEF_S2";
+            this.Lab_GEF_S2.Size = new System.Drawing.Size(85, 16);
+            this.Lab_GEF_S2.TabIndex = 35;
+            this.Lab_GEF_S2.Text = "Тут будет S";
+            // 
+            // Lab_GEF_S1
+            // 
+            this.Lab_GEF_S1.AutoSize = true;
+            this.Lab_GEF_S1.Location = new System.Drawing.Point(822, 23);
+            this.Lab_GEF_S1.Name = "Lab_GEF_S1";
+            this.Lab_GEF_S1.Size = new System.Drawing.Size(85, 16);
+            this.Lab_GEF_S1.TabIndex = 34;
+            this.Lab_GEF_S1.Text = "Тут будет S";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(794, 80);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(29, 16);
+            this.label29.TabIndex = 33;
+            this.label29.Text = "S3: ";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(794, 51);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(29, 16);
+            this.label30.TabIndex = 32;
+            this.label30.Text = "S2: ";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(794, 23);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(29, 16);
+            this.label31.TabIndex = 31;
+            this.label31.Text = "S1: ";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(460, 80);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(66, 16);
+            this.label26.TabIndex = 30;
+            this.label26.Text = "Нач. поз:";
+            // 
+            // TB_GEF_SP3
+            // 
+            this.TB_GEF_SP3.Location = new System.Drawing.Point(532, 77);
+            this.TB_GEF_SP3.Name = "TB_GEF_SP3";
+            this.TB_GEF_SP3.Size = new System.Drawing.Size(140, 22);
+            this.TB_GEF_SP3.TabIndex = 29;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(460, 51);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(66, 16);
+            this.label27.TabIndex = 28;
+            this.label27.Text = "Нач. поз:";
+            // 
+            // TB_GEF_SP2
+            // 
+            this.TB_GEF_SP2.Location = new System.Drawing.Point(532, 48);
+            this.TB_GEF_SP2.Name = "TB_GEF_SP2";
+            this.TB_GEF_SP2.Size = new System.Drawing.Size(140, 22);
+            this.TB_GEF_SP2.TabIndex = 27;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(460, 23);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(66, 16);
+            this.label28.TabIndex = 26;
+            this.label28.Text = "Нач. поз:";
+            // 
+            // TB_GEF_SP1
+            // 
+            this.TB_GEF_SP1.Location = new System.Drawing.Point(532, 20);
+            this.TB_GEF_SP1.Name = "TB_GEF_SP1";
+            this.TB_GEF_SP1.Size = new System.Drawing.Size(140, 22);
+            this.TB_GEF_SP1.TabIndex = 25;
             // 
             // CB_GEF_q3
             // 
@@ -1320,126 +1442,6 @@
             this.TB_GEF_Fx1.Name = "TB_GEF_Fx1";
             this.TB_GEF_Fx1.Size = new System.Drawing.Size(245, 22);
             this.TB_GEF_Fx1.TabIndex = 5;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(460, 80);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(66, 16);
-            this.label26.TabIndex = 30;
-            this.label26.Text = "Нач. поз:";
-            // 
-            // TB_GEF_SP3
-            // 
-            this.TB_GEF_SP3.Location = new System.Drawing.Point(532, 77);
-            this.TB_GEF_SP3.Name = "TB_GEF_SP3";
-            this.TB_GEF_SP3.Size = new System.Drawing.Size(140, 22);
-            this.TB_GEF_SP3.TabIndex = 29;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(460, 51);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(66, 16);
-            this.label27.TabIndex = 28;
-            this.label27.Text = "Нач. поз:";
-            // 
-            // TB_GEF_SP2
-            // 
-            this.TB_GEF_SP2.Location = new System.Drawing.Point(532, 48);
-            this.TB_GEF_SP2.Name = "TB_GEF_SP2";
-            this.TB_GEF_SP2.Size = new System.Drawing.Size(140, 22);
-            this.TB_GEF_SP2.TabIndex = 27;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(460, 23);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(66, 16);
-            this.label28.TabIndex = 26;
-            this.label28.Text = "Нач. поз:";
-            // 
-            // TB_GEF_SP1
-            // 
-            this.TB_GEF_SP1.Location = new System.Drawing.Point(532, 20);
-            this.TB_GEF_SP1.Name = "TB_GEF_SP1";
-            this.TB_GEF_SP1.Size = new System.Drawing.Size(140, 22);
-            this.TB_GEF_SP1.TabIndex = 25;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(794, 80);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(29, 16);
-            this.label29.TabIndex = 33;
-            this.label29.Text = "S3: ";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(794, 51);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(29, 16);
-            this.label30.TabIndex = 32;
-            this.label30.Text = "S2: ";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(794, 23);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(29, 16);
-            this.label31.TabIndex = 31;
-            this.label31.Text = "S1: ";
-            // 
-            // Lab_GEF_S3
-            // 
-            this.Lab_GEF_S3.AutoSize = true;
-            this.Lab_GEF_S3.Location = new System.Drawing.Point(822, 80);
-            this.Lab_GEF_S3.Name = "Lab_GEF_S3";
-            this.Lab_GEF_S3.Size = new System.Drawing.Size(85, 16);
-            this.Lab_GEF_S3.TabIndex = 36;
-            this.Lab_GEF_S3.Text = "Тут будет S";
-            // 
-            // Lab_GEF_S2
-            // 
-            this.Lab_GEF_S2.AutoSize = true;
-            this.Lab_GEF_S2.Location = new System.Drawing.Point(822, 51);
-            this.Lab_GEF_S2.Name = "Lab_GEF_S2";
-            this.Lab_GEF_S2.Size = new System.Drawing.Size(85, 16);
-            this.Lab_GEF_S2.TabIndex = 35;
-            this.Lab_GEF_S2.Text = "Тут будет S";
-            // 
-            // Lab_GEF_S1
-            // 
-            this.Lab_GEF_S1.AutoSize = true;
-            this.Lab_GEF_S1.Location = new System.Drawing.Point(822, 23);
-            this.Lab_GEF_S1.Name = "Lab_GEF_S1";
-            this.Lab_GEF_S1.Size = new System.Drawing.Size(85, 16);
-            this.Lab_GEF_S1.TabIndex = 34;
-            this.Lab_GEF_S1.Text = "Тут будет S";
-            // 
-            // Lab_GEF_S
-            // 
-            this.Lab_GEF_S.AutoSize = true;
-            this.Lab_GEF_S.Location = new System.Drawing.Point(822, 105);
-            this.Lab_GEF_S.Name = "Lab_GEF_S";
-            this.Lab_GEF_S.Size = new System.Drawing.Size(85, 16);
-            this.Lab_GEF_S.TabIndex = 38;
-            this.Lab_GEF_S.Text = "Тут будет S";
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(794, 105);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(22, 16);
-            this.label33.TabIndex = 37;
-            this.label33.Text = "S: ";
             // 
             // Form1
             // 

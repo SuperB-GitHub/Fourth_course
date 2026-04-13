@@ -18,9 +18,12 @@ namespace Лабораторные_работы
         private List<long> SeqLCG = new List<long>();
         private List<long> SeqPCG = new List<long>();
         private Dictionary<long, List<long>> SeqFIB = new Dictionary<long, List<long>>();
+        private List<long> SeqGEF = new List<long>();
+
         private (int start, int period) PeriodLCG = (0, 0);
         private (int start, int period) PeriodPCG = (0, 0);
         private int PeriodFIB = 0;
+        private int PeriodGEF = 0;
 
         public Form1()
         {
@@ -427,7 +430,7 @@ namespace Лабораторные_работы
         }
         private void BTN_GEF_GenSeq_Click(object sender, EventArgs e)
         {
-            void   Input_k(string TextBox, out long k)
+            void Input_k(string TextBox, out long k)
             {
                 if (!long.TryParse(TextBox, out k))
                 {
@@ -435,7 +438,7 @@ namespace Лабораторные_работы
                     return;
                 }
             }
-            void   Input_Fk(string TextBox, out List<long> Fk, out long N)
+            void Input_Fk(string TextBox, out List<long> Fk, out long N)
             {
                 Fk = TextBox.Split(' ')
                     .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -444,7 +447,7 @@ namespace Лабораторные_работы
 
                 N = Fk.Max();
             }
-            void   Input_SP(string TextBox, long N, List<long> Fk, out List<long> SP, out List<long> bitsFk)
+            void Input_SP(string TextBox, long N, List<long> Fk, out List<long> SP, out List<long> bitsFk)
             {
                 SP = TextBox.Where(c => char.IsDigit(c))
                     .Select(c => long.Parse(c.ToString()))
@@ -474,15 +477,13 @@ namespace Лабораторные_работы
 
                 //RTB_FIB_Output.Text += $"\nq{selectedKey} = {Convert.ToInt64(binaryString, 2)}";
             }
-            string Multiplex(long x1, long x2, long x3)
+            long Multiplex(long x1, long x2, long x3)
             {
-                return ((x1 * x2) == (x2 * x3) ? 1 : 0) == x3 ? "1" : "0";
+                return ((x1 * x2) == (x2 * x3) ? 1 : 0) == x3 ? 1 : 0;
             }
-            
 
-            try
-            {
-                
+            //try
+            //{
                 Input_Fk(TB_GEF_Fx1.Text, out List<long> Fk1, out long N1);
                 Input_Fk(TB_GEF_Fx2.Text, out List<long> Fk2, out long N2);
                 Input_Fk(TB_GEF_Fx3.Text, out List<long> Fk3, out long N3);
@@ -508,8 +509,8 @@ namespace Лабораторные_работы
                 long S3 = (long)Math.Pow(2, N3) - 1;
                 Lab_GEF_S3.Text = $" {S3}";
 
-                long S = S1 * S2 * S3;
-                Lab_GEF_S.Text = $" {S}";
+                bool coprime = CrossSimple(S1, S2, S3);
+                long S = 0;
 
                 if (CB_GEF_q1.Items.Count == 0 || CB_GEF_q2.Items.Count == 0 || CB_GEF_q3.Items.Count == 0)
                 {
@@ -519,6 +520,17 @@ namespace Лабораторные_работы
                 }
                 else
                 {
+                    if (coprime)
+                    {
+                        RTB_GEF_Output.Text += $"Т.к. НОД({S1}, {S2}, {S3}) = {(coprime ? 1 : 0)}, то S = {S1} * {S2} * {S3} = {S = S1 * S2 * S3}\n\n";
+                    }
+                    else
+                    {
+                        RTB_GEF_Output.Text += $"Т.к. НОД({S1}, {S2}, {S3}) = {(coprime ? 1 : 0)}, то S = НОK({S1}, {S2}, {S3}) = {S = HOK(S1, S2, S3)}\n\n";
+                    }
+                    Lab_GEF_S.Text = $" {S}";
+                    PeriodGEF = (int)S;
+
                     long q1 = (long)CB_GEF_q1.SelectedItem;
                     long q2 = (long)CB_GEF_q2.SelectedItem;
                     long q3 = (long)CB_GEF_q3.SelectedItem;
@@ -528,15 +540,17 @@ namespace Лабораторные_работы
                     RTB_GEF_Output.Text += $"\n f(x1, x2, x3) = ";
                     for (long i = 0; i < S; i++)
                     {
-                        RTB_GEF_Output.Text += $"{Multiplex(rslos1[q1][(int)Mod(i, S1)], rslos2[q2][(int)Mod(i, S2)], rslos3[q3][(int)Mod(i, S3)])}";
+                        long elem = Multiplex(rslos1[q1][(int)Mod(i, S1)], rslos2[q2][(int)Mod(i, S2)], rslos3[q3][(int)Mod(i, S3)]);
+                        SeqGEF.Add(elem);
+                        RTB_GEF_Output.Text += $"{elem}";
                     }
 
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         // Обработчики кнопки "Сохранить"
@@ -560,12 +574,21 @@ namespace Лабораторные_работы
         }
         private void BTN_FIB_Save_Click(object sender, EventArgs e)
         {
-            if (SeqPCG == null || SeqFIB.Count == 0)
+            if (SeqFIB == null || SeqFIB.Count == 0)
             {
                 MessageBox.Show("Нет данных для сохранения. Сначала сгенерируйте последовательность.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             SaveFunc(3);
+        }
+        private void BTN_GEF_Save_Click(object sender, EventArgs e)
+        {
+            if (SeqGEF == null || SeqGEF.Count == 0)
+            {
+                MessageBox.Show("Нет данных для сохранения. Сначала сгенерируйте последовательность.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            SaveFunc(4);
         }
         private void SaveFunc(int typeGen)
         {
@@ -605,6 +628,18 @@ namespace Лабораторные_работы
                     period = PeriodFIB;
                     maxPer = NOD(PeriodFIB, int.Parse(TB_FIB_k.Text)) == 1;
                     seq = SeqFIB[long.Parse(CB_FIB_Qs.Text)];
+                    break;
+                case 4:
+                    fileName = "Гефе";
+                    name = "Генератор Гефе псевдослучайных чисел на РСЛОСах";
+                    param = $"Параметры:\n" +
+                        $"Ф1(k) = {TB_GEF_Fx1.Text}, k1 = {TB_GEF_k1.Text}, Нач.поз.1 = {TB_GEF_SP1.Text}, q1s = {CB_GEF_q1.Text}\n" +
+                        $"Ф2(k) = {TB_GEF_Fx2.Text}, k2 = {TB_GEF_k2.Text}, Нач.поз.2 = {TB_GEF_SP2.Text}, q2s = {CB_GEF_q2.Text}\n" +
+                        $"Ф3(k) = {TB_GEF_Fx3.Text}, k3 = {TB_GEF_k3.Text}, Нач.поз.3 = {TB_GEF_SP3.Text}, q3s = {CB_GEF_q3.Text}";
+                    count = PeriodGEF;
+                    period = PeriodGEF;
+                    maxPer = CrossSimple(long.Parse(Lab_GEF_S1.Text), long.Parse(Lab_GEF_S2.Text), long.Parse(Lab_GEF_S3.Text));
+                    seq = SeqGEF;
                     break;
             }
             using (SaveFileDialog saveDialog = new SaveFileDialog())
@@ -673,6 +708,28 @@ namespace Лабораторные_работы
             CB_FIB_Qs.Items.Clear();
             DGW_FIB_Diagram.Rows.Clear();
             RTB_FIB_OutQs.Clear();
+        }
+        private void BTN_GEF_Clear_Click(object sender, EventArgs e)
+        {
+            RTB_GEF_Output.Text = "";
+            TB_GEF_Fx1.Clear();
+            TB_GEF_Fx2.Clear();
+            TB_GEF_Fx3.Clear();
+            TB_GEF_k1.Clear();
+            TB_GEF_k2.Clear();
+            TB_GEF_k3.Clear();
+            TB_GEF_SP1.Clear();
+            TB_GEF_SP2.Clear();
+            TB_GEF_SP3.Clear();
+            CB_GEF_q1.Items.Clear();
+            CB_GEF_q2.Items.Clear();
+            CB_GEF_q3.Items.Clear();
+            Lab_GEF_S1.Text = "Тут будет S";
+            Lab_GEF_S2.Text = "Тут будет S";
+            Lab_GEF_S3.Text = "Тут будет S";
+            Lab_GEF_S.Text = "Тут будет S";
+            SeqGEF = new List<long> ();
+
         }
 
         // Обработчики выбора пресета
@@ -896,7 +953,6 @@ namespace Лабораторные_работы
 
             CB.Sorted = true;
         }
-
 
 
     }

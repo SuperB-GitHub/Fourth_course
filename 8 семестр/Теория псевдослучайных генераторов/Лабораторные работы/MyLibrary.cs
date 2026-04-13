@@ -7,7 +7,8 @@ namespace MyLibrary
     /// <summary>
     /// Мои самописные математические функции для лабораторных работ 
     /// 
-    /// Ver. 28032026
+    /// Ver. 12042026
+    /// 
     /// </summary>
     public static class MathUtils
     {
@@ -77,6 +78,34 @@ namespace MyLibrary
             {
                 result = NOD(result, numbers[i]);
                 if (result == 1) return 1;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Вычисляет наименьшее общее кратное (НОК) двух чисел
+        /// </summary>
+        private static long HOK(long a, long b)
+        {
+            if (a == 0 || b == 0)
+                return 0;
+
+            return Math.Abs(a / NOD(a, b) * b);
+        }
+
+        /// <summary>
+        /// Находит НОK для трех и более чисел
+        /// Числа перечислять через запятую
+        /// </summary>
+        public static long HOK(params long[] numbers)
+        {
+            if (numbers == null || numbers.Length == 0)
+                return 0;
+
+            long result = numbers[0];
+            for (int i = 1; i < numbers.Length; i++)
+            {
+                result = HOK(result, numbers[i]);
             }
             return result;
         }
@@ -306,6 +335,30 @@ namespace MyLibrary
         {
             return NOD(a, b) == 1;
         }
+
+        /// <summary>
+        /// Проверяет, являются ли все числа попарно взаимно простыми
+        /// (наибольший общий делитель любой пары равен 1)
+        /// </summary>
+        /// <param name="numbers">Массив чисел для проверки</param>
+        /// <returns>true, если все числа попарно взаимно простые, иначе false</returns>
+        public static bool CrossSimple(params long[] numbers)
+        {
+            if (numbers == null || numbers.Length < 2)
+                return false;
+
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                for (int j = i + 1; j < numbers.Length; j++)
+                {
+                    if (NOD(numbers[i], numbers[j]) != 1)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
 
         /// <summary>
         /// Вычисляет функцию Эйлера φ(n) - количество чисел от 1 до n, взаимно простых с n
