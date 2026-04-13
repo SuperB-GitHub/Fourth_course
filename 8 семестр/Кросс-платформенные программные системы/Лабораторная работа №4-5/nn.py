@@ -9,7 +9,7 @@ from datetime import datetime
 _model = None
 
 PROCESSED_SAVE_DIR = 'processed_images'
-os.makedirs(PROCESSED_SAVE_DIR, exist_ok=True)
+
 
 def create_model():
     """Создает модель (такая же как при обучении)"""
@@ -79,6 +79,7 @@ def preprocess_image(image, save=True, original_filename="unknown"):
         img_array = 255 - img_array
     
     if save:
+        os.makedirs(PROCESSED_SAVE_DIR, exist_ok=True)
         save_processed_image(img_array, original_filename)
     
     img_array_normalized = img_array.astype(np.float32) / 255.0
@@ -90,7 +91,7 @@ def preprocess_image(image, save=True, original_filename="unknown"):
 def predict(image, original_filename="unknown"):
     """Предсказание фигуры с сохранением предобработанного изображения"""
     model = get_model()
-    processed = preprocess_image(image, save=True, original_filename=original_filename)
+    processed = preprocess_image(image, save=False, original_filename=original_filename)
     pred = model.predict(processed, verbose=0)
     
     classes = ['Круг', 'Треугольник', 'Квадрат']
