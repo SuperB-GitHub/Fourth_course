@@ -142,10 +142,10 @@ class RSALab
         } while (!IsPrimeBig(candidate, 5));
         return candidate;
     }
-    static BigInteger ModInverse(BigInteger e, BigInteger phi)
+    static BigInteger ModInverse(BigInteger e, BigInteger m)
     {
         BigInteger t = 0, newT = 1;
-        BigInteger r = phi, newR = e;
+        BigInteger r = m, newR = e;
 
         while (newR != 0)
         {
@@ -154,7 +154,7 @@ class RSALab
             (r, newR) = (newR, r - quotient * newR);
         }
 
-        if (t < 0) t += phi;
+        if (t < 0) t += m;
         return t;
     }
 
@@ -186,10 +186,11 @@ class RSALab
 
         Console.WriteLine("\t\t\t Абонент Б (Получатель) создает ключи\n");
 
-        Console.WriteLine("Генерация 1024-битных простых чисел p и q...");
-        BigInteger p = GeneratePrime(1024);
-        BigInteger q = GeneratePrime(1024);
-        while (p == q) q = GeneratePrime(1024);
+        int bits = 1024;
+        Console.WriteLine($"Генерация {bits}-битных простых чисел p и q...");
+        BigInteger p = GeneratePrime(bits);
+        BigInteger q = GeneratePrime(bits);
+        while (p == q) q = GeneratePrime(bits);
 
         Console.WriteLine($"1. Выбрано простое число p = \n{p}\n");
         Console.WriteLine($"2. Выбрано простое число q = \n{q}\n");
@@ -250,7 +251,7 @@ class RSALab
         Input_err(out bool err);
         for (int i = 0; i < encrypted.Length; i++)
         {
-            Console.WriteLine($"  Символ {i + 1}: {(err ? encrypted[i] : encrypted[i]+1)}");
+            Console.WriteLine($"  Символ {i + 1}: {(err ? encrypted[i] + 1 : encrypted[i])}");
         }
 
         Console.WriteLine("\n\t\t\t Абонент Б расшифровывает сообщение\n");
@@ -262,12 +263,18 @@ class RSALab
         string decryptedMessage = "";
         for (int i = 0; i < encrypted.Length; i++)
         {
-            BigInteger decryptedNum = BigInteger.ModPow((err ? encrypted[i] : encrypted[i] + 1), dec_key, dec_n);
-            char decryptedChar = alph[(int)decryptedNum];
-            decryptedMessage += decryptedChar;
+            BigInteger decryptedNum = BigInteger.ModPow((err ? encrypted[i] + 1 : encrypted[i]), dec_key, dec_n);
 
-            Console.WriteLine($"Символ {i + 1}: C = {encrypted[i]}, d = ...");
-            Console.WriteLine($"  M = C^d mod n = {decryptedNum} -> '{decryptedChar}'\n");
+            try
+            {
+                char decryptedChar = alph[(int)decryptedNum];
+                decryptedMessage += decryptedChar;
+                Console.WriteLine($"Символ {i + 1}: M = {(err ? encrypted[i] + 1 : encrypted[i])}^{enc_key.ToString().Substring(0, Math.Min(30, e.ToString().Length))}... mod n = {decryptedNum} -> '{decryptedChar}'\n");
+            }
+            catch
+            {
+                Console.WriteLine("\nВозникла ошибка при расшифровки, скорее всего ключи не те.\n");
+            }
         }
         decryptedMessage = decryptedMessage.ToLower();
 
@@ -279,9 +286,29 @@ class RSALab
         {
             Console.WriteLine("\nСообщения совпадают. Расшифрование выполнено корректно.");
         }
+        else if (enc_key == dec_key)
+        {
+            Console.WriteLine("\nСообщения не совпадают. Было введено два <e> или <d>.");
+        }
+        else if (err)
+        {
+            Console.WriteLine("\nСообщения не совпадают. При передаче сообщения была допущена ошибка.");
+        }
+        else if ((enc_key != e && enc_key != d) || (dec_key == e || dec_key == d))
+        {
+            Console.WriteLine("\nСообщения не совпадают. При шифровании использовался не тот ключ.");
+        }
+        else if ((dec_key != e && dec_key != d) || (enc_key == e || enc_key == d))
+        {
+            Console.WriteLine("\nСообщения не совпадают. При расшифровании использовался не тот ключ.");
+        }
+        else if ((enc_key != e && enc_key != d) && (dec_key != e && dec_key != d))
+        {
+            Console.WriteLine("\nСообщения не совпадают. При шифровании и расшифровании использовались не те ключи.");
+        }
         else
         {
-            Console.WriteLine("\nСообщения не совпадают. Ошибка!");
+            Console.WriteLine("\nСообщения не совпадают. Не предвиденная ошибка.");
         }
 
         Console.WriteLine("\nНажмите любую клавишу для завершения...");
