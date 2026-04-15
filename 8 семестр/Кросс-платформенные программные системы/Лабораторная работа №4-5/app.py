@@ -10,8 +10,15 @@ from PIL import Image
 import io
 import base64
 
+# Добавьте импорты для БД
+from results import Predictions
+from database.database import db_session, init_db
+
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+# Инициализация БД
+init_db()
 
 # Загружаем модель при старте
 print("Загрузка модели...")
@@ -32,17 +39,38 @@ def predict_route():
         if file.filename == '':
             return jsonify({'error': 'Файл не выбран'}), 400
         
-        # Открываем изображение
-        image = Image.open(file.stream)
+        # Читаем байты для сохранения в БД
+        image_bytes = file.read()
         
-        # Предсказание (с сохранением предобработанного изображения)
+        # Открываем изображение для предсказания
+        image = Image.open(io.BytesIO(image_bytes))
+        
+        # Предсказание
         result = predict(image, original_filename=file.filename)
         
+        # Получаем вероятности для каждой фигуры
+        probs = result['probabilities']
+        
+        # Конвертируем изображение в base64 для сохранения
+        image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+        
+        # Сохраняем в БД
+        new_prediction = Predictions(
+            filename=file.filename,
+            image_data=image_base64,
+            predicted_class=result['shape'],
+            confidence=result['confidence'] / 100.0,
+            probabilities_circle=probs['Круг'] / 100.0,
+            probabilities_square=probs['Квадрат'] / 100.0,
+            probabilities_triangle=probs['Треугольник'] / 100.0
+        )
+        
+        db_session.add(new_prediction)
+        db_session.commit()
+        print(f"Сохранено в БД: {file.filename} -> {result['shape']}")
+        
         # Подготовка изображения для отображения на сайте
-        if image.mode != 'RGB':
-            display = image.convert('RGB')
-        else:
-            display = image
+        display = image.convert('RGB') if image.mode != 'RGB' else image
         
         buffered = io.BytesIO()
         display.save(buffered, format='PNG')
@@ -60,6 +88,19 @@ def predict_route():
     except Exception as e:
         print(f"Ошибка: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/history', methods=['GET'])
+def get_history():
+    """Эндпоинт для просмотра истории предсказаний"""
+    from results import Predictions
+    predictions = db_session.query(Predictions).order_by(Predictions.created_at.desc()).limit(50).all()
+    return jsonify([{
+        'id': p.id,
+        'filename': p.filename,
+        'predicted_class': p.predicted_class,
+        'confidence': p.confidence,
+        'created_at': p.created_at.isoformat() if p.created_at else None
+    } for p in predictions])
 
 if __name__ == '__main__':
     app.run(debug=False, port=5000)

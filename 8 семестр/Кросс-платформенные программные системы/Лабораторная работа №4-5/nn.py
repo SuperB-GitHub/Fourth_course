@@ -12,7 +12,7 @@ PROCESSED_SAVE_DIR = 'processed_images'
 
 
 def create_model():
-    """Создает модель (такая же как при обучении)"""
+    """Создает модель"""
     model = Sequential([
         Dense(256, activation='relu', input_shape=(400,)),
         Dropout(0.4),
