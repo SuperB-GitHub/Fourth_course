@@ -147,6 +147,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.TB_GEF_k1 = new System.Windows.Forms.TextBox();
             this.TB_GEF_Fx1 = new System.Windows.Forms.TextBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -179,6 +180,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -1443,6 +1445,16 @@
             this.TB_GEF_Fx1.Size = new System.Drawing.Size(245, 22);
             this.TB_GEF_Fx1.TabIndex = 5;
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(1192, 671);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Графические методы";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1613,5 +1625,6 @@
         private System.Windows.Forms.TextBox TB_GEF_SP1;
         private System.Windows.Forms.Label Lab_GEF_S;
         private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TabPage tabPage5;
     }
 }

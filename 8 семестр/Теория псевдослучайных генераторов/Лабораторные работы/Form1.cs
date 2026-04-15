@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Web.Security;
 using System.Windows.Forms;
 using static MyLibrary.MathUtils;
 using static MyLibrary.StringUtils;
-using static System.Net.Mime.MediaTypeNames;
 
 
 
@@ -482,8 +483,8 @@ namespace Лабораторные_работы
                 return ((x1 * x2) == (x2 * x3) ? 1 : 0) == x3 ? 1 : 0;
             }
 
-            //try
-            //{
+            try
+            {
                 Input_Fk(TB_GEF_Fx1.Text, out List<long> Fk1, out long N1);
                 Input_Fk(TB_GEF_Fx2.Text, out List<long> Fk2, out long N2);
                 Input_Fk(TB_GEF_Fx3.Text, out List<long> Fk3, out long N3);
@@ -526,7 +527,7 @@ namespace Лабораторные_работы
                     }
                     else
                     {
-                        RTB_GEF_Output.Text += $"Т.к. НОД({S1}, {S2}, {S3}) = {(coprime ? 1 : 0)}, то S = НОK({S1}, {S2}, {S3}) = {S = HOK(S1, S2, S3)}\n\n";
+                        RTB_GEF_Output.Text += $"Т.к. НОД({S1}, {S2}, {S3}) = {(coprime ? 1 : 0)}, то S = НОK({S1}, {S2}, {S3}) = {S = HOK(S1, S2, S3)} Максисальный - {S1 * S2 * S3}\n\n";
                     }
                     Lab_GEF_S.Text = $" {S}";
                     PeriodGEF = (int)S;
@@ -545,13 +546,24 @@ namespace Лабораторные_работы
                         RTB_GEF_Output.Text += $"{elem}";
                     }
 
+                    string binaryString = string.Join("", SeqGEF);
+                    binaryString = binaryString.Substring(0, binaryString.Length - 1);
+
+                    //RTB_FIB_OutQs.Text = binaryString;
+                    BigInteger result = 0;
+                    foreach (char c in binaryString)
+                    {
+                        result = result * 2 + (c == '1' ? 1 : 0);
+                    }
+                    RTB_GEF_Output.Text += $"\n\nВ 10сс = {result*2}";
+
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
         }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при генерации последовательности: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+}
 
         // Обработчики кнопки "Сохранить"
         private void BTN_LCG_Save_Click(object sender, EventArgs e)
