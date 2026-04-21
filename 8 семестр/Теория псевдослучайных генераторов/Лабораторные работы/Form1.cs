@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Text;
-using System.Web.Security;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using static MyLibrary.MathUtils;
-using static MyLibrary.StringUtils;
 
 
 
@@ -549,14 +547,8 @@ namespace Лабораторные_работы
                     string binaryString = string.Join("", SeqGEF);
                     binaryString = binaryString.Substring(0, binaryString.Length - 1);
 
-                    //RTB_FIB_OutQs.Text = binaryString;
-                    BigInteger result = 0;
-                    foreach (char c in binaryString)
-                    {
-                        result = result * 2 + (c == '1' ? 1 : 0);
-                    }
-                    RTB_GEF_Output.Text += $"\n\nВ 10сс = {result*2}";
-
+                    string decString = string.Join(", ", Convert2to10(SeqGEF, 4));
+                    RTB_GEF_Output.Text += $"\n\nВ 10сс = {decString}";
                 }
         }
             catch (Exception ex)
@@ -802,8 +794,8 @@ namespace Лабораторные_работы
 
                     RTB_FIB_OutQs.Text = binaryString;
 
-                    RTB_FIB_Output.Text += $"\nq{selectedKey} = {Convert.ToInt64(binaryString, 2)}";
-
+                    string decString = string.Join(", ", Convert2to10(SeqFIB[selectedKey], 4));
+                    RTB_FIB_Output.Text += $"\nq{selectedKey} = {decString}";
                 }
                 else
                 {
@@ -965,7 +957,345 @@ namespace Лабораторные_работы
 
             CB.Sorted = true;
         }
+        private List<long> Convert2to10(List<long> binSeq, int count)
+        {
+            string binaryString = string.Join("", binSeq);
+            List<long> decimalNumbers = new List<long>();
 
+            for (int i = 0; i < binaryString.Length; i += count)
+            {
+                int length = Math.Min(count, binaryString.Length - i);
+                string byteString = binaryString.Substring(i, length);
 
+                if (length < count)
+                    byteString = byteString.PadRight(count, '0');
+
+                long decimalValue = Convert.ToInt64(byteString, 2);
+                decimalNumbers.Add(decimalValue);
+            }
+
+            return decimalNumbers;
+        }
+
+        //Рисование гистограмм
+        private void BTN_HistGraph1_Click(object sender, EventArgs e)
+        {
+            GB_HistGraph.Visible = true;
+            GB_HistGraph.Text = "Распределение на гистограмме";
+            Hist_graph.Visible = true;
+            Pan_Graph2.Visible = false;
+
+            List<long> numbers = RTB_SeqHist.Text
+                .Split(',')
+                .Select(part => part.Trim())
+                .Where(part => !string.IsNullOrEmpty(part))
+                .Select(part => long.Parse(part))
+                .ToList();
+
+            Dictionary<long, int> sortedDict = numbers
+                .GroupBy(x => x)
+                .OrderBy(g => g.Key)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            Hist_graph.Series.Clear();
+            Hist_graph.Legends[0].Enabled = false;
+
+            Series series = new Series("Частота встречаемости")
+            {
+                ChartType = SeriesChartType.Column, // Столбчатая диаграмма
+                BorderWidth = 1,
+                ShadowOffset = 2,
+                IsValueShownAsLabel = true // Показывать значения на столбцах
+            };
+
+            // Добавляем данные из словаря
+            foreach (var kvp in sortedDict)
+            {
+                series.Points.AddXY(kvp.Key, kvp.Value);
+            }
+
+            // Добавляем серию на график
+            Hist_graph.Series.Add(series);
+
+            ChartArea chartArea = Hist_graph.ChartAreas[0];
+            chartArea.AxisX.Title = "Числа";
+            chartArea.AxisY.Title = "Количество";
+            chartArea.AxisX.TitleFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold);
+            chartArea.AxisY.TitleFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold);
+            chartArea.AxisX.LabelStyle.Format = "0"; // Целые числа
+            chartArea.AxisX.Interval = 1;
+            chartArea.AxisX.IntervalOffset = 0;
+            chartArea.AxisY.Interval = 1;
+            chartArea.AxisY.Minimum = 0;
+
+            // Автоматическая подстройка ширины столбцов
+            chartArea.AxisX.IsMarginVisible = true;
+            // Заголовок
+            Hist_graph.Titles.Clear();
+            Hist_graph.Titles.Add("Гистограмма частоты встречаемости чисел");
+
+            chartArea.CursorX.IsUserEnabled = true;
+            chartArea.CursorX.IsUserSelectionEnabled = true;
+            chartArea.CursorY.IsUserEnabled = true;
+            chartArea.CursorY.IsUserSelectionEnabled = true;
+            chartArea.AxisX.ScaleView.Zoomable = true;
+            chartArea.AxisY.ScaleView.Zoomable = true;
+            chartArea.AxisX.ScaleView.Zoom(0, 30);
+
+        }
+        private void BTN_HistGraph2_Click(object sender, EventArgs e)
+        {
+            GB_HistGraph.Visible = true;
+            GB_HistGraph.Text = "Распределение на плоскости";
+            Hist_graph.Visible = false;
+            Pan_Graph2.Visible = true;
+
+            List<long> numbers = RTB_SeqHist.Text
+                .Split(',')
+                .Select(part => part.Trim())
+                .Where(part => !string.IsNullOrEmpty(part))
+                .Select(part => long.Parse(part))
+                .ToList();
+
+            if (numbers.Count < 2)
+            {
+                MessageBox.Show("Для построения графика нужно минимум 2 числа!", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            List<PointF> points = new List<PointF>();
+            for (int i = 0; i < numbers.Count - 1; i++)
+            {
+                points.Add(new PointF(numbers[i], numbers[i + 1]));
+            }
+
+            var zoomData = new ZoomData
+            {
+                Points = points,
+                ZoomFactor = 1.0f,
+                MinX = points.Min(p => p.X),
+                MaxX = points.Max(p => p.X),
+                MinY = points.Min(p => p.Y),
+                MaxY = points.Max(p => p.Y)
+            };
+
+            float paddingX = (zoomData.MaxX - zoomData.MinX) * 0.1f;
+            float paddingY = (zoomData.MaxY - zoomData.MinY) * 0.1f;
+            zoomData.MinX -= paddingX;
+            zoomData.MaxX += paddingX;
+            zoomData.MinY -= paddingY;
+            zoomData.MaxY += paddingY;
+
+            Pan_Graph2.Tag = zoomData;
+
+            Pan_Graph2.Paint -= Pan_Graph2_Paint;
+            Pan_Graph2.Paint += Pan_Graph2_Paint;
+
+            Pan_Graph2.MouseWheel -= Pan_Graph2_MouseWheel;
+            Pan_Graph2.MouseWheel += Pan_Graph2_MouseWheel;
+
+            Pan_Graph2.DoubleClick -= Pan_Graph2_DoubleClick;
+            Pan_Graph2.DoubleClick += Pan_Graph2_DoubleClick;
+
+            Pan_Graph2.Invalidate();
+        }
+        private class ZoomData
+        {
+            public List<PointF> Points { get; set; }
+            public float ZoomFactor { get; set; }
+            public float MinX { get; set; }
+            public float MaxX { get; set; }
+            public float MinY { get; set; }
+            public float MaxY { get; set; }
+        }
+        private void Pan_Graph2_MouseWheel(object sender, MouseEventArgs e)
+        {
+            ZoomData zoomData = Pan_Graph2.Tag as ZoomData;
+            if (zoomData == null) return;
+
+            Panel panel = sender as Panel;
+            Size panelSize = panel.ClientSize;
+
+            int marginLeft = 60;
+            int marginRight = 40;
+            int marginTop = 40;
+            int marginBottom = 60;
+
+            int width = panelSize.Width - marginLeft - marginRight;
+            int height = panelSize.Height - marginTop - marginBottom;
+
+            float mouseX_graph = zoomData.MinX + (e.X - marginLeft) / (float)width * (zoomData.MaxX - zoomData.MinX);
+            float mouseY_graph = zoomData.MaxY - (e.Y - marginTop) / (float)height * (zoomData.MaxY - zoomData.MinY);
+
+            float delta = e.Delta > 0 ? 0.8f : 1.25f;
+            float newZoom = zoomData.ZoomFactor * delta;
+
+            if (newZoom >= 0.2f && newZoom <= 1.25f)
+            {
+                float oldMinX = zoomData.MinX;
+                float oldMaxX = zoomData.MaxX;
+                float oldMinY = zoomData.MinY;
+                float oldMaxY = zoomData.MaxY;
+
+                float rangeX = (oldMaxX - oldMinX) * delta;
+                float rangeY = (oldMaxY - oldMinY) * delta;
+
+                float tX = (mouseX_graph - oldMinX) / (oldMaxX - oldMinX);
+                float tY = (mouseY_graph - oldMinY) / (oldMaxY - oldMinY);
+
+                zoomData.MinX = mouseX_graph - rangeX * tX;
+                zoomData.MaxX = mouseX_graph + rangeX * (1 - tX);
+                zoomData.MinY = mouseY_graph - rangeY * tY;
+                zoomData.MaxY = mouseY_graph + rangeY * (1 - tY);
+
+                zoomData.ZoomFactor = newZoom;
+                Pan_Graph2.Invalidate();
+            }
+        }
+        private void Pan_Graph2_DoubleClick(object sender, EventArgs e)
+        {
+            ZoomData zoomData = Pan_Graph2.Tag as ZoomData;
+            if (zoomData != null && zoomData.Points != null)
+            {
+                zoomData.ZoomFactor = 1.0f;
+                zoomData.MinX = zoomData.Points.Min(p => p.X);
+                zoomData.MaxX = zoomData.Points.Max(p => p.X);
+                zoomData.MinY = zoomData.Points.Min(p => p.Y);
+                zoomData.MaxY = zoomData.Points.Max(p => p.Y);
+
+                float paddingX = (zoomData.MaxX - zoomData.MinX) * 0.1f;
+                float paddingY = (zoomData.MaxY - zoomData.MinY) * 0.1f;
+                zoomData.MinX -= paddingX;
+                zoomData.MaxX += paddingX;
+                zoomData.MinY -= paddingY;
+                zoomData.MaxY += paddingY;
+
+                Pan_Graph2.Invalidate();
+            }
+        }
+        private void Pan_Graph2_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Panel panel = sender as Panel;
+
+            ZoomData zoomData = panel.Tag as ZoomData;
+            if (zoomData == null || zoomData.Points == null || zoomData.Points.Count == 0) return;
+
+            List<PointF> points = zoomData.Points;
+            Size panelSize = panel.ClientSize;
+
+            int marginLeft = 60;
+            int marginRight = 40;
+            int marginTop = 40;
+            int marginBottom = 60;
+
+            int width = panelSize.Width - marginLeft - marginRight;
+            int height = panelSize.Height - marginTop - marginBottom;
+
+            if (width <= 0 || height <= 0) return;
+
+            float minX = zoomData.MinX;
+            float maxX = zoomData.MaxX;
+            float minY = zoomData.MinY;
+            float maxY = zoomData.MaxY;
+
+            Func<float, float> toScreenX = (x) => marginLeft + (x - minX) / (maxX - minX) * width;
+            Func<float, float> toScreenY = (y) => marginTop + height - (y - minY) / (maxY - minY) * height;
+
+            g.Clear(Color.White);
+
+            using (Pen axisPen = new Pen(Color.Black, 2))
+            {
+                float zeroY = toScreenY(0);
+                if (zeroY >= marginTop && zeroY <= marginTop + height)
+                    g.DrawLine(axisPen, marginLeft, zeroY, marginLeft + width, zeroY);
+                else
+                    g.DrawLine(axisPen, marginLeft, marginTop + height, marginLeft + width, marginTop + height);
+
+                float zeroX = toScreenX(0);
+                if (zeroX >= marginLeft && zeroX <= marginLeft + width)
+                    g.DrawLine(axisPen, zeroX, marginTop, zeroX, marginTop + height);
+                else
+                    g.DrawLine(axisPen, marginLeft, marginTop, marginLeft, marginTop + height);
+            }
+
+            using (Pen gridPen = new Pen(Color.LightGray, 1))
+            using (Font labelFont = new Font("Arial", 8))
+            using (Brush textBrush = new SolidBrush(Color.Black))
+            {
+                int xDivisions = Math.Min(10, Math.Max(5, (int)(maxX - minX)));
+                for (int i = 0; i <= xDivisions; i++)
+                {
+                    float x = minX + (maxX - minX) * i / xDivisions;
+                    float screenX = toScreenX(x);
+                    if (screenX >= marginLeft && screenX <= marginLeft + width)
+                    {
+                        g.DrawLine(gridPen, screenX, marginTop, screenX, marginTop + height);
+
+                        string label = x.ToString("F0");
+                        SizeF labelSize = g.MeasureString(label, labelFont);
+                        g.DrawString(label, labelFont, textBrush, screenX - labelSize.Width / 2, marginTop + height + 5);
+                    }
+                }
+
+                int yDivisions = Math.Min(10, Math.Max(5, (int)(maxY - minY)));
+                for (int i = 0; i <= yDivisions; i++)
+                {
+                    float y = minY + (maxY - minY) * i / yDivisions;
+                    float screenY = toScreenY(y);
+                    if (screenY >= marginTop && screenY <= marginTop + height)
+                    {
+                        g.DrawLine(gridPen, marginLeft, screenY, marginLeft + width, screenY);
+
+                        string label = y.ToString("F0");
+                        SizeF labelSize = g.MeasureString(label, labelFont);
+                        g.DrawString(label, labelFont, textBrush, marginLeft - labelSize.Width - 5, screenY - labelSize.Height / 2);
+                    }
+                }
+            }
+
+            using (Font axisFont = new Font("Arial", 10, FontStyle.Bold))
+            using (Brush textBrush = new SolidBrush(Color.Black))
+            {
+                g.DrawString("X (n)", axisFont, textBrush, marginLeft + width + 5, toScreenY(0) - 10);
+                g.DrawString("Y (n+1)", axisFont, textBrush, toScreenX(0) + 5, marginTop - 25);
+
+                string title = $"Зависимость Y от X (зум: {zoomData.ZoomFactor:F1}x)";
+                SizeF titleSize = g.MeasureString(title, axisFont);
+                g.DrawString(title, axisFont, textBrush, (panelSize.Width - titleSize.Width) / 2, 10);
+
+                using (Font hintFont = new Font("Arial", 7))
+                {
+                    string hint = "Колесо мыши - зум в точку курсора | Двойной клик - сброс";
+                    SizeF hintSize = g.MeasureString(hint, hintFont);
+                    g.DrawString(hint, hintFont, textBrush, (panelSize.Width - hintSize.Width) / 2, panelSize.Height - 20);
+                }
+            }
+
+            using (SolidBrush pointBrush = new SolidBrush(Color.Red))
+            {
+                foreach (var point in points)
+                {
+                    float screenX = toScreenX(point.X);
+                    float screenY = toScreenY(point.Y);
+
+                    if (screenX >= marginLeft - 10 && screenX <= marginLeft + width + 10 &&
+                        screenY >= marginTop - 10 && screenY <= marginTop + height + 10)
+                    {
+                        g.FillEllipse(pointBrush, screenX - 4, screenY - 4, 8, 8);
+                    }
+                }
+            }
+        }
+        private void ClearGraph2()
+        {
+            Pan_Graph2.Paint -= Pan_Graph2_Paint;
+            Pan_Graph2.MouseWheel -= Pan_Graph2_MouseWheel;
+            Pan_Graph2.DoubleClick -= Pan_Graph2_DoubleClick;
+            Pan_Graph2.Tag = null;
+            Pan_Graph2.Invalidate();
+            Pan_Graph2.Refresh();
+        }
     }
 }

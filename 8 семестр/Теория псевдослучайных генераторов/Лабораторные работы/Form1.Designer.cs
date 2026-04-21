@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -148,6 +151,15 @@
             this.TB_GEF_k1 = new System.Windows.Forms.TextBox();
             this.TB_GEF_Fx1 = new System.Windows.Forms.TextBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.GB_HistGraph = new System.Windows.Forms.GroupBox();
+            this.BTN_HistGraph1 = new System.Windows.Forms.Button();
+            this.BTN_HistGraph2 = new System.Windows.Forms.Button();
+            this.RTB_SeqHist = new System.Windows.Forms.RichTextBox();
+            this.Hist_graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.Pan_Graph2 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -172,6 +184,12 @@
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            this.GB_HistGraph.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Hist_graph)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -1447,6 +1465,7 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.tableLayoutPanel1);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
@@ -1454,6 +1473,123 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Графические методы";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.groupBox12, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.GB_HistGraph, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.93985F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.172933F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1186, 665);
+            this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.BTN_HistGraph2, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.BTN_HistGraph1, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 606);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1180, 56);
+            this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.RTB_SeqHist);
+            this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox12.Location = new System.Drawing.Point(3, 3);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(1180, 226);
+            this.groupBox12.TabIndex = 1;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Последовательность";
+            // 
+            // GB_HistGraph
+            // 
+            this.GB_HistGraph.Controls.Add(this.Pan_Graph2);
+            this.GB_HistGraph.Controls.Add(this.Hist_graph);
+            this.GB_HistGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GB_HistGraph.Location = new System.Drawing.Point(3, 235);
+            this.GB_HistGraph.Name = "GB_HistGraph";
+            this.GB_HistGraph.Size = new System.Drawing.Size(1180, 365);
+            this.GB_HistGraph.TabIndex = 2;
+            this.GB_HistGraph.TabStop = false;
+            this.GB_HistGraph.Text = "Гистограмма теста";
+            this.GB_HistGraph.Visible = false;
+            // 
+            // BTN_HistGraph1
+            // 
+            this.BTN_HistGraph1.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.BTN_HistGraph1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_HistGraph1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_HistGraph1.Location = new System.Drawing.Point(3, 3);
+            this.BTN_HistGraph1.Name = "BTN_HistGraph1";
+            this.BTN_HistGraph1.Size = new System.Drawing.Size(584, 50);
+            this.BTN_HistGraph1.TabIndex = 16;
+            this.BTN_HistGraph1.Text = "Распределение элементов";
+            this.BTN_HistGraph1.UseVisualStyleBackColor = false;
+            this.BTN_HistGraph1.Click += new System.EventHandler(this.BTN_HistGraph1_Click);
+            // 
+            // BTN_HistGraph2
+            // 
+            this.BTN_HistGraph2.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.BTN_HistGraph2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_HistGraph2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_HistGraph2.Location = new System.Drawing.Point(593, 3);
+            this.BTN_HistGraph2.Name = "BTN_HistGraph2";
+            this.BTN_HistGraph2.Size = new System.Drawing.Size(584, 50);
+            this.BTN_HistGraph2.TabIndex = 17;
+            this.BTN_HistGraph2.Text = "Распределение на плоскости";
+            this.BTN_HistGraph2.UseVisualStyleBackColor = false;
+            this.BTN_HistGraph2.Click += new System.EventHandler(this.BTN_HistGraph2_Click);
+            // 
+            // RTB_SeqHist
+            // 
+            this.RTB_SeqHist.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_SeqHist.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RTB_SeqHist.Location = new System.Drawing.Point(3, 18);
+            this.RTB_SeqHist.Name = "RTB_SeqHist";
+            this.RTB_SeqHist.Size = new System.Drawing.Size(1174, 205);
+            this.RTB_SeqHist.TabIndex = 0;
+            this.RTB_SeqHist.Text = "";
+            // 
+            // Hist_graph
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.Hist_graph.ChartAreas.Add(chartArea2);
+            this.Hist_graph.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend2.Name = "Legend1";
+            this.Hist_graph.Legends.Add(legend2);
+            this.Hist_graph.Location = new System.Drawing.Point(3, 18);
+            this.Hist_graph.Name = "Hist_graph";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.Hist_graph.Series.Add(series2);
+            this.Hist_graph.Size = new System.Drawing.Size(1174, 344);
+            this.Hist_graph.TabIndex = 0;
+            this.Hist_graph.Text = "chart1";
+            // 
+            // Pan_Graph2
+            // 
+            this.Pan_Graph2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Pan_Graph2.Location = new System.Drawing.Point(3, 18);
+            this.Pan_Graph2.Name = "Pan_Graph2";
+            this.Pan_Graph2.Size = new System.Drawing.Size(1174, 344);
+            this.Pan_Graph2.TabIndex = 1;
             // 
             // Form1
             // 
@@ -1500,6 +1636,12 @@
             this.groupBox10.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.groupBox12.ResumeLayout(false);
+            this.GB_HistGraph.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Hist_graph)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1626,5 +1768,14 @@
         private System.Windows.Forms.Label Lab_GEF_S;
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Button BTN_HistGraph2;
+        private System.Windows.Forms.Button BTN_HistGraph1;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.RichTextBox RTB_SeqHist;
+        private System.Windows.Forms.GroupBox GB_HistGraph;
+        private System.Windows.Forms.DataVisualization.Charting.Chart Hist_graph;
+        private System.Windows.Forms.Panel Pan_Graph2;
     }
 }
