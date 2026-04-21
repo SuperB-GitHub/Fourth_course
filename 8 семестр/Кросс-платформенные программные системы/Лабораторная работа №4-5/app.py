@@ -29,6 +29,10 @@ print("Модель готова")
 def index():
     return render_template('index.html')
 
+@app.route('/history-page')
+def history_page():
+    return render_template('history.html')
+
 @app.route('/predict', methods=['POST'])
 def predict_route():
     try:
@@ -91,7 +95,6 @@ def predict_route():
 
 @app.route('/history', methods=['GET'])
 def get_history():
-    """Эндпоинт для просмотра истории предсказаний"""
     from results import Predictions
     predictions = db_session.query(Predictions).order_by(Predictions.created_at.desc()).limit(50).all()
     return jsonify([{
@@ -99,6 +102,7 @@ def get_history():
         'filename': p.filename,
         'predicted_class': p.predicted_class,
         'confidence': p.confidence,
+        'image_data': p.image_data,  # Добавьте это поле в ответ
         'created_at': p.created_at.isoformat() if p.created_at else None
     } for p in predictions])
 
