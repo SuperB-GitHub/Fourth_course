@@ -1,9 +1,10 @@
-﻿using System;
-using System.Numerics;
-using System.Text;
-using System.Security.Cryptography;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 
 class RSASignatureLab
 {
@@ -561,5 +562,27 @@ class RSASignatureLab
                     break;
             }
         }
+    }
+}
+
+class GostSignatureLab
+{
+    static void Main()
+    {
+        string input = "Hello, world!";
+        byte[] hash94_256 = ComputeGost94Hash(Encoding.UTF8.GetBytes(input));
+        Console.WriteLine("ГОСТ 34.11-94 (256 бит): " + Convert.ToHexString(hash94_256));
+    }
+
+    /// <summary>
+    /// ГОСТ Р 34.11-94 на основе GOST3411Digest (BouncyCastle).
+    /// </summary>
+    static byte[] ComputeGost94Hash(byte[] input)
+    {
+        IDigest digest = new Gost3411Digest();
+        digest.BlockUpdate(input, 0, input.Length);
+        byte[] result = new byte[digest.GetDigestSize()];
+        digest.DoFinal(result, 0);
+        return result;
     }
 }
