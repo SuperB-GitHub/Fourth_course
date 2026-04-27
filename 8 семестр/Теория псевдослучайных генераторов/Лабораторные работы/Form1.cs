@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using static MyLibrary.MathUtils;
+using static MyLibrary.StringUtils;
 
 
 
@@ -976,6 +978,43 @@ namespace Лабораторные_работы
 
             return decimalNumbers;
         }
+        private string Convert10to2(string decSeq, int count = 0)
+        {
+            string[] numbers = decSeq.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var result = new StringBuilder();
+
+            foreach (string numStr in numbers)
+            {
+                if (int.TryParse(numStr, out int number))
+                {
+                    string binary = Convert.ToString(number, 2);
+
+                    if (count > 0)
+                    {
+                        binary = Convert.ToString(number, 2).PadLeft(count, '0');
+                    }
+                    
+                    result.Append(binary);
+                }
+            }
+
+            return result.ToString();
+        }
+        public static List<string> SplitBinStr(string binaryString, int size)
+        {
+            var result = new List<string>();
+
+            if (string.IsNullOrEmpty(binaryString) || size <= 0)
+                return result;
+
+            for (int i = 0; i <= binaryString.Length - size; i += size)
+            {
+                result.Add(binaryString.Substring(i, size));
+            }
+
+            return result;
+        }
 
         //Рисование гистограмм
         private void BTN_HistGraph1_Click(object sender, EventArgs e)
@@ -1000,7 +1039,7 @@ namespace Лабораторные_работы
             Hist_graph.Series.Clear();
             Hist_graph.Legends[0].Enabled = false;
 
-            Series series = new Series("Частота встречаемости")
+            var series = new System.Windows.Forms.DataVisualization.Charting.Series("Частота встречаемости")
             {
                 ChartType = SeriesChartType.Column, // Столбчатая диаграмма
                 BorderWidth = 1,
@@ -1288,14 +1327,126 @@ namespace Лабораторные_работы
                 }
             }
         }
-        private void ClearGraph2()
+
+        //Оценочные тесты
+        private void RTB_binSeq_TextChanged(object sender, EventArgs e)
         {
-            Pan_Graph2.Paint -= Pan_Graph2_Paint;
-            Pan_Graph2.MouseWheel -= Pan_Graph2_MouseWheel;
-            Pan_Graph2.DoubleClick -= Pan_Graph2_DoubleClick;
-            Pan_Graph2.Tag = null;
-            Pan_Graph2.Invalidate();
-            Pan_Graph2.Refresh();
+            string seq = RTB_binSeq.Text;
+            if (seq.Contains(", "))
+            {
+                seq = Convert10to2(seq);
+                RTB_binSeq.Text = seq;
+            }
+
+            if (seq.Length > 5)
+            {
+                if (FirstTest(seq))
+                {
+                    if (SecondTest(seq))
+                    {
+                        ThirdTest(seq);
+                    }
+                }
+            }
+            else
+            {
+                RTB_FirstTest.Text = ""; 
+                RTB_SecondTest.Text = "";
+                RTB_ThirdTest.Text = "";
+            }
+                
+
+        }
+        private bool FirstTest(string seq)
+        {
+            long n = seq.Length;
+            RTB_FirstTest.Text = $"Количество элементов:\nn = {n}\n";
+            long one = seq.Count(c => c == '1');
+            long zero = seq.Count(c => c == '0');
+            RTB_FirstTest.Text += $"`1` - {one}\n`0` - {zero}\n\nSn = {one} - {zero} = {one - zero}\n\n";
+            double S_obs = Math.Round((one - zero) / Math.Sqrt(n), 4);
+            RTB_FirstTest.Text += $"Sobs = {one - zero}/√{n} = {S_obs}\n\n";
+            double P_val = Math.Round(SpecialFunctions.Erfc(S_obs / Math.Sqrt(2)), 4);
+            RTB_FirstTest.Text += $"Pvalue = erfc({S_obs}/√2) = erfc({Math.Round(S_obs / Math.Sqrt(2), 2)}) = {P_val}\n\n";
+
+            RTB_FirstTest.Text += P_val > 0.01 ?
+                "Так как Pvalue > α (α= 0,01), то данная последовательность признается случайной для данного теста" :
+                "Так как Pvalue < α (α= 0,01), то данная последовательность не признается случайной для данного теста";
+
+            return P_val > 0.01;
+        }
+        private bool SecondTest(string seq)
+        {
+            long n = seq.Length;
+            RTB_SecondTest.Text = $"Количество элементов: n = {n}\n\n";
+
+            int count;
+
+            if (n < 100) count = 10;
+            else if (n > 100 && n < 1000) count = (int)Math.Ceiling(0.05 * n);
+            else count = (int)Math.Ceiling(0.01 * n);
+
+            var chunks = SplitBinStr(seq, count);
+            RTB_SecondTest.Text += $"Разбитая последовательность по {count} битов:\n{string.Join(" ", chunks.Take(5))}...\n\n";
+            RTB_SecondTest.Text += $"M = {count}, N = {chunks.Count}, разбито: {count * chunks.Count}, остаток: {n - count * chunks.Count}\n\n";
+            RTB_SecondTest.Text += $"Доля единиц в каждом блоке:\n";
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                RTB_SecondTest.Text += $"π{ToLowerIndex(i + 1)} = {chunks[i].Count(c => c == '1')}/{count}; ";
+            }
+
+            RTB_SecondTest.Text += $"...\n\nχ = 4 * {count} * (";
+            double sum = 0;
+            foreach (var block in chunks)
+            {
+                sum += Math.Pow(((double)block.Count(c => c == '1') / (double)count) - 0.5, 2);
+                RTB_SecondTest.Text += $"({block.Count(c => c == '1')}/{count} - 1/2){ToUpperIndex(2)}{(block != chunks.Last() ? " + " : "")}";
+
+            }
+
+            double hi = 4 * count * sum;
+            RTB_SecondTest.Text += $") = {hi}\n\n";
+
+            double P_val = SpecialFunctions.GammaUpperRegularized((double)chunks.Count / 2, (double)hi / 2);
+            RTB_SecondTest.Text += $"Pvalue = gammaincc({chunks.Count} / 2, {hi} / 2) = {Math.Round(P_val, 4)}\n\n";
+
+            RTB_SecondTest.Text += P_val > 0.01 ?
+                "Так как Pvalue > α (α= 0,01), то данная последовательность признается случайной для данного теста" :
+                "Так как Pvalue < α (α= 0,01), то данная последовательность не признается случайной для данного теста";
+
+            return P_val > 0.01;
+        }
+        private void ThirdTest(string seq)
+        {
+            double n = seq.Length;
+            RTB_ThirdTest.Text = $"Количество элементов: n = {n}\n\n";
+            double pi = (double)seq.Count(c => c == '1') / n;
+            RTB_ThirdTest.Text += $"Доля единиц: π = {seq.Count(c => c == '1')}/{n} = {Math.Round(pi, 4)}\n\n";
+            RTB_ThirdTest.Text += $"Проверяем условия |π - 1/2| < 2/√n:\n";
+            double cond1 = 0, cond2 = 0;
+            RTB_ThirdTest.Text += $"|π - 1/2| = |{Math.Round(pi, 4)} - 0.5| = {cond1 = Math.Abs(Math.Round((pi - 0.5), 4))}; \n";
+            RTB_ThirdTest.Text += $"2/√n = 2/√{n} = {cond2 = Math.Round(((double)2 / Math.Sqrt(n)), 4)}\n\n";
+            if(cond1 < cond2)
+            {
+                RTB_ThirdTest.Text += $"{cond1} < {cond2} => условие выполнено\n\n";
+                RTB_ThirdTest.Text += $"Вычисляем статистику:\n";
+                double Vobs = 0;
+                for (int i = 1; i < seq.Length; i++)
+                {
+                    Vobs += seq[i - 1] == seq[i] ? 0 : 1;
+                }
+                RTB_ThirdTest.Text += $"V{ToLowerIndex(n)}obs = {Vobs} + 1 = {Vobs = Vobs+1}\n\n";
+                double P_val = Math.Abs(Vobs - (2 * n * pi * (1 - pi))) / (2 * Math.Sqrt(2 * n) * pi * (1 - pi));
+                RTB_ThirdTest.Text += $"Pvalue = erfc(|Vobs - 2 * n * π * (1 - π)| / (2 * √2n * pi * (1 - pi))) = erfc({Math.Round(P_val, 4)}) = ";
+                RTB_ThirdTest.Text += $"{P_val = Math.Round(SpecialFunctions.Erfc(P_val),4)}\n\n";
+                RTB_ThirdTest.Text += P_val > 0.01 ?
+                "Так как Pvalue > α (α= 0,01), то данная последовательность признается случайной для данного теста" :
+                "Так как Pvalue < α (α= 0,01), то данная последовательность не признается случайной для данного теста";
+            }
+            else
+            {
+                RTB_ThirdTest.Text += $"{cond1} ≥ {cond2} => условие не выполнено";
+            }
         }
     }
 }

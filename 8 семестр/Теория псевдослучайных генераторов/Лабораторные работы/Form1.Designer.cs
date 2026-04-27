@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -153,13 +153,24 @@
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.GB_HistGraph = new System.Windows.Forms.GroupBox();
-            this.BTN_HistGraph1 = new System.Windows.Forms.Button();
             this.BTN_HistGraph2 = new System.Windows.Forms.Button();
+            this.BTN_HistGraph1 = new System.Windows.Forms.Button();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.RTB_SeqHist = new System.Windows.Forms.RichTextBox();
-            this.Hist_graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.GB_HistGraph = new System.Windows.Forms.GroupBox();
             this.Pan_Graph2 = new System.Windows.Forms.Panel();
+            this.Hist_graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.RTB_binSeq = new System.Windows.Forms.RichTextBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.RTB_FirstTest = new System.Windows.Forms.RichTextBox();
+            this.RTB_SecondTest = new System.Windows.Forms.RichTextBox();
+            this.RTB_ThirdTest = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -190,6 +201,13 @@
             this.groupBox12.SuspendLayout();
             this.GB_HistGraph.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Hist_graph)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.groupBox13.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.groupBox14.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -199,6 +217,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -1506,29 +1525,18 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1180, 56);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // groupBox12
+            // BTN_HistGraph2
             // 
-            this.groupBox12.Controls.Add(this.RTB_SeqHist);
-            this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox12.Location = new System.Drawing.Point(3, 3);
-            this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(1180, 226);
-            this.groupBox12.TabIndex = 1;
-            this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "Последовательность";
-            // 
-            // GB_HistGraph
-            // 
-            this.GB_HistGraph.Controls.Add(this.Pan_Graph2);
-            this.GB_HistGraph.Controls.Add(this.Hist_graph);
-            this.GB_HistGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GB_HistGraph.Location = new System.Drawing.Point(3, 235);
-            this.GB_HistGraph.Name = "GB_HistGraph";
-            this.GB_HistGraph.Size = new System.Drawing.Size(1180, 365);
-            this.GB_HistGraph.TabIndex = 2;
-            this.GB_HistGraph.TabStop = false;
-            this.GB_HistGraph.Text = "Гистограмма теста";
-            this.GB_HistGraph.Visible = false;
+            this.BTN_HistGraph2.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.BTN_HistGraph2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BTN_HistGraph2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BTN_HistGraph2.Location = new System.Drawing.Point(593, 3);
+            this.BTN_HistGraph2.Name = "BTN_HistGraph2";
+            this.BTN_HistGraph2.Size = new System.Drawing.Size(584, 50);
+            this.BTN_HistGraph2.TabIndex = 17;
+            this.BTN_HistGraph2.Text = "Распределение на плоскости";
+            this.BTN_HistGraph2.UseVisualStyleBackColor = false;
+            this.BTN_HistGraph2.Click += new System.EventHandler(this.BTN_HistGraph2_Click);
             // 
             // BTN_HistGraph1
             // 
@@ -1543,18 +1551,16 @@
             this.BTN_HistGraph1.UseVisualStyleBackColor = false;
             this.BTN_HistGraph1.Click += new System.EventHandler(this.BTN_HistGraph1_Click);
             // 
-            // BTN_HistGraph2
+            // groupBox12
             // 
-            this.BTN_HistGraph2.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.BTN_HistGraph2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BTN_HistGraph2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.BTN_HistGraph2.Location = new System.Drawing.Point(593, 3);
-            this.BTN_HistGraph2.Name = "BTN_HistGraph2";
-            this.BTN_HistGraph2.Size = new System.Drawing.Size(584, 50);
-            this.BTN_HistGraph2.TabIndex = 17;
-            this.BTN_HistGraph2.Text = "Распределение на плоскости";
-            this.BTN_HistGraph2.UseVisualStyleBackColor = false;
-            this.BTN_HistGraph2.Click += new System.EventHandler(this.BTN_HistGraph2_Click);
+            this.groupBox12.Controls.Add(this.RTB_SeqHist);
+            this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox12.Location = new System.Drawing.Point(3, 3);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(1180, 226);
+            this.groupBox12.TabIndex = 1;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Последовательность";
             // 
             // RTB_SeqHist
             // 
@@ -1566,22 +1572,18 @@
             this.RTB_SeqHist.TabIndex = 0;
             this.RTB_SeqHist.Text = "";
             // 
-            // Hist_graph
+            // GB_HistGraph
             // 
-            chartArea2.Name = "ChartArea1";
-            this.Hist_graph.ChartAreas.Add(chartArea2);
-            this.Hist_graph.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.Hist_graph.Legends.Add(legend2);
-            this.Hist_graph.Location = new System.Drawing.Point(3, 18);
-            this.Hist_graph.Name = "Hist_graph";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.Hist_graph.Series.Add(series2);
-            this.Hist_graph.Size = new System.Drawing.Size(1174, 344);
-            this.Hist_graph.TabIndex = 0;
-            this.Hist_graph.Text = "chart1";
+            this.GB_HistGraph.Controls.Add(this.Pan_Graph2);
+            this.GB_HistGraph.Controls.Add(this.Hist_graph);
+            this.GB_HistGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GB_HistGraph.Location = new System.Drawing.Point(3, 235);
+            this.GB_HistGraph.Name = "GB_HistGraph";
+            this.GB_HistGraph.Size = new System.Drawing.Size(1180, 365);
+            this.GB_HistGraph.TabIndex = 2;
+            this.GB_HistGraph.TabStop = false;
+            this.GB_HistGraph.Text = "Гистограмма теста";
+            this.GB_HistGraph.Visible = false;
             // 
             // Pan_Graph2
             // 
@@ -1590,6 +1592,151 @@
             this.Pan_Graph2.Name = "Pan_Graph2";
             this.Pan_Graph2.Size = new System.Drawing.Size(1174, 344);
             this.Pan_Graph2.TabIndex = 1;
+            // 
+            // Hist_graph
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.Hist_graph.ChartAreas.Add(chartArea1);
+            this.Hist_graph.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.Hist_graph.Legends.Add(legend1);
+            this.Hist_graph.Location = new System.Drawing.Point(3, 18);
+            this.Hist_graph.Name = "Hist_graph";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.Hist_graph.Series.Add(series1);
+            this.Hist_graph.Size = new System.Drawing.Size(1174, 344);
+            this.Hist_graph.TabIndex = 0;
+            this.Hist_graph.Text = "chart1";
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.tableLayoutPanel3);
+            this.tabPage6.Location = new System.Drawing.Point(4, 25);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(1192, 671);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Оценочные методы";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.groupBox13, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 65F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1186, 665);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.RTB_binSeq);
+            this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox13.Location = new System.Drawing.Point(3, 3);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(1180, 226);
+            this.groupBox13.TabIndex = 2;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Последовательность";
+            // 
+            // RTB_binSeq
+            // 
+            this.RTB_binSeq.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_binSeq.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RTB_binSeq.Location = new System.Drawing.Point(3, 18);
+            this.RTB_binSeq.Name = "RTB_binSeq";
+            this.RTB_binSeq.Size = new System.Drawing.Size(1174, 205);
+            this.RTB_binSeq.TabIndex = 0;
+            this.RTB_binSeq.Text = "";
+            this.RTB_binSeq.TextChanged += new System.EventHandler(this.RTB_binSeq_TextChanged);
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel4.Controls.Add(this.groupBox16, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.groupBox15, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.groupBox14, 0, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 235);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1180, 427);
+            this.tableLayoutPanel4.TabIndex = 3;
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.RTB_ThirdTest);
+            this.groupBox16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox16.Location = new System.Drawing.Point(789, 3);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(388, 421);
+            this.groupBox16.TabIndex = 2;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "3. Тест на последовательность одинаковых бит";
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.RTB_SecondTest);
+            this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox15.Location = new System.Drawing.Point(396, 3);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(387, 421);
+            this.groupBox15.TabIndex = 1;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "2.\tЧастотный блочный тест";
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.RTB_FirstTest);
+            this.groupBox14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox14.Location = new System.Drawing.Point(3, 3);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(387, 421);
+            this.groupBox14.TabIndex = 0;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "1. Частотный побитовый тест";
+            // 
+            // RTB_FirstTest
+            // 
+            this.RTB_FirstTest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_FirstTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RTB_FirstTest.Location = new System.Drawing.Point(3, 18);
+            this.RTB_FirstTest.Name = "RTB_FirstTest";
+            this.RTB_FirstTest.Size = new System.Drawing.Size(381, 400);
+            this.RTB_FirstTest.TabIndex = 0;
+            this.RTB_FirstTest.Text = "";
+            // 
+            // RTB_SecondTest
+            // 
+            this.RTB_SecondTest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_SecondTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RTB_SecondTest.Location = new System.Drawing.Point(3, 18);
+            this.RTB_SecondTest.Name = "RTB_SecondTest";
+            this.RTB_SecondTest.Size = new System.Drawing.Size(381, 400);
+            this.RTB_SecondTest.TabIndex = 1;
+            this.RTB_SecondTest.Text = "";
+            // 
+            // RTB_ThirdTest
+            // 
+            this.RTB_ThirdTest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RTB_ThirdTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RTB_ThirdTest.Location = new System.Drawing.Point(3, 18);
+            this.RTB_ThirdTest.Name = "RTB_ThirdTest";
+            this.RTB_ThirdTest.Size = new System.Drawing.Size(382, 400);
+            this.RTB_ThirdTest.TabIndex = 1;
+            this.RTB_ThirdTest.Text = "";
             // 
             // Form1
             // 
@@ -1642,6 +1789,13 @@
             this.groupBox12.ResumeLayout(false);
             this.GB_HistGraph.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Hist_graph)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.groupBox13.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox14.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1777,5 +1931,16 @@
         private System.Windows.Forms.GroupBox GB_HistGraph;
         private System.Windows.Forms.DataVisualization.Charting.Chart Hist_graph;
         private System.Windows.Forms.Panel Pan_Graph2;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.RichTextBox RTB_binSeq;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.RichTextBox RTB_ThirdTest;
+        private System.Windows.Forms.RichTextBox RTB_SecondTest;
+        private System.Windows.Forms.RichTextBox RTB_FirstTest;
     }
 }

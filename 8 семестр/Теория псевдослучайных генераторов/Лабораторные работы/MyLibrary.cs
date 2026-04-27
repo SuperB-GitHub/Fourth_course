@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MyLibrary
 {
@@ -432,7 +434,7 @@ namespace MyLibrary
     /// <summary>
     /// Мои самописные строковые функции для лабораторных работ 
     /// 
-    /// Ver. 28032026
+    /// Ver. 26042026
     /// </summary>
     public static class StringUtils
     {
@@ -519,6 +521,90 @@ namespace MyLibrary
         public static long InputNumber(string startMess, string errMess = "Некорректный ввод. Введите целое число: ", string finalMess = "")
         {
             return InputList(startMess, errMess, finalMess, 1).First();
+        }
+
+        /// <summary>
+        /// Функция для представления верхних числовых индексов
+        /// </summary>
+        /// <param name="num">Число (int или string)</param>
+        /// <param name="sign">Знак (опционально)</param>
+        /// <returns>Строка с верхними индексами</returns>
+        public static string ToUpperIndex(object num, string sign = "")
+        {
+            // Извлекаем знак минус, если он есть
+            string signOnly = Regex.Match(sign, @"[^-]").Value;
+            if (signOnly.Length > 0)
+                signOnly = signOnly.Substring(0, 1);
+
+            string strNum = signOnly + num.ToString();
+
+            var upperIndexDigits = new Dictionary<char, string>
+        {
+            { '-', "⁻" },
+            { '0', "⁰" },
+            { '1', "¹" },
+            { '2', "²" },
+            { '3', "³" },
+            { '4', "⁴" },
+            { '5', "⁵" },
+            { '6', "⁶" },
+            { '7', "⁷" },
+            { '8', "⁸" },
+            { '9', "⁹" }
+        };
+
+            var result = new StringBuilder();
+            foreach (char digit in strNum)
+            {
+                if (upperIndexDigits.ContainsKey(digit))
+                    result.Append(upperIndexDigits[digit]);
+                else
+                    result.Append(digit);
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Функция для представления нижних числовых индексов
+        /// </summary>
+        /// <param name="num">Число (int или string)</param>
+        /// <param name="sign">Знак (опционально)</param>
+        /// <returns>Строка с нижними индексами</returns>
+        public static string ToLowerIndex(object num, string sign = "")
+        {
+            // Извлекаем знак минус, если он есть
+            string signOnly = Regex.Match(sign, @"[^-]").Value;
+            if (signOnly.Length > 0)
+                signOnly = signOnly.Substring(0, 1);
+
+            string strNum = signOnly + num.ToString();
+
+            var lowerIndexDigits = new Dictionary<char, string>
+        {
+            { '-', "₋" },
+            { '0', "₀" },
+            { '1', "₁" },
+            { '2', "₂" },
+            { '3', "₃" },
+            { '4', "₄" },
+            { '5', "₅" },
+            { '6', "₆" },
+            { '7', "₇" },
+            { '8', "₈" },
+            { '9', "₉" }
+        };
+
+            var result = new StringBuilder();
+            foreach (char digit in strNum)
+            {
+                if (lowerIndexDigits.ContainsKey(digit))
+                    result.Append(lowerIndexDigits[digit]);
+                else
+                    result.Append(digit);
+            }
+
+            return result.ToString();
         }
     }
 }
