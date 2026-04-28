@@ -1346,8 +1346,10 @@ namespace Лабораторные_работы
                     {
                         ThirdTest(seq);
                     }
+                    else RTB_ThirdTest.Text = "";
                 }
-            }
+                else { RTB_SecondTest.Text = ""; RTB_ThirdTest.Text = ""; }
+                }
             else
             {
                 RTB_FirstTest.Text = ""; 
@@ -1382,7 +1384,8 @@ namespace Лабораторные_работы
 
             int count;
 
-            if (n < 100) count = 10;
+            if (n <= 50) count = (int)Math.Ceiling((double)n / 3);
+            else if (n > 50 && n <=100) count = (int)Math.Ceiling((double)n / 5);
             else if (n > 100 && n < 1000) count = (int)Math.Ceiling(0.05 * n);
             else count = (int)Math.Ceiling(0.01 * n);
 
