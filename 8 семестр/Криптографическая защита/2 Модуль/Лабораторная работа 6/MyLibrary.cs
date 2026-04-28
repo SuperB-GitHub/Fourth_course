@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -167,6 +168,52 @@ namespace MyLibrary
                     return false;
             }
 
+            return true;
+        }
+
+        /// <summary>
+        /// Проверяет, является ли число простым (Миллер-Рабин)
+        /// </summary>
+        public static bool IsPrime(BigInteger n, int k = 5)
+        {
+            if (n <= 1) return false;
+            if (n == 2 || n == 3) return true;
+            if (n % 2 == 0) return false;
+
+            BigInteger d = n - 1;
+            int s = 0;
+            while (d % 2 == 0)
+            {
+                d /= 2;
+                s++;
+            }
+
+            byte[] bytes = new byte[n.GetByteCount()];
+
+            for (int i = 0; i < k; i++)
+            {
+                BigInteger a;
+                do
+                {
+                    Random.Shared.NextBytes(bytes);
+                    a = BigInteger.Abs(new BigInteger(bytes)) % (n - 2) + 2;
+                } while (a < 2 || a >= n - 1);
+
+                BigInteger x = BigInteger.ModPow(a, d, n);
+                if (x == 1 || x == n - 1) continue;
+
+                bool composite = true;
+                for (int r = 1; r < s; r++)
+                {
+                    x = BigInteger.ModPow(x, 2, n);
+                    if (x == n - 1)
+                    {
+                        composite = false;
+                        break;
+                    }
+                }
+                if (composite) return false;
+            }
             return true;
         }
 
@@ -361,7 +408,6 @@ namespace MyLibrary
             return true;
         }
 
-
         /// <summary>
         /// Вычисляет функцию Эйлера φ(n) - количество чисел от 1 до n, взаимно простых с n
         /// </summary>
@@ -427,6 +473,25 @@ namespace MyLibrary
             if (!CrossSimple(n,m)) return 0;
 
             return FastPowMod(n, EulerPhi(m) - 1, m);
+        }
+
+        /// <summary>
+        /// Вычисляет обратный элемент при помощи расширенного алгоритма Евклида
+        /// </summary>
+        public static BigInteger ModInverse(BigInteger e, BigInteger m)
+        {
+            BigInteger t = 0, newT = 1;
+            BigInteger r = m, newR = e;
+
+            while (newR != 0)
+            {
+                BigInteger quotient = r / newR;
+                (t, newT) = (newT, t - quotient * newT);
+                (r, newR) = (newR, r - quotient * newR);
+            }
+
+            if (t < 0) t += m;
+            return t;
         }
 
     }

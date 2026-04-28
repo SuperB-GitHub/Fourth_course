@@ -1,10 +1,11 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Digests;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
+using static Лабораторная_работа_6.GOST;
+using static Лабораторная_работа_6.RSA;
+using static MyLibrary.MathUtils;
 
 class RSASignatureLab
 {
@@ -15,77 +16,6 @@ class RSASignatureLab
     static BigInteger savedE;
     static BigInteger savedD;
 
-    static bool IsPrimeBig(BigInteger n, int k = 5)
-    {
-        if (n <= 1) return false;
-        if (n == 2 || n == 3) return true;
-        if (n % 2 == 0) return false;
-
-        BigInteger d = n - 1;
-        int s = 0;
-        while (d % 2 == 0)
-        {
-            d /= 2;
-            s++;
-        }
-
-        byte[] bytes = new byte[n.GetByteCount()];
-
-        for (int i = 0; i < k; i++)
-        {
-            BigInteger a;
-            do
-            {
-                Random.Shared.NextBytes(bytes);
-                a = BigInteger.Abs(new BigInteger(bytes)) % (n - 2) + 2;
-            } while (a < 2 || a >= n - 1);
-
-            BigInteger x = BigInteger.ModPow(a, d, n);
-            if (x == 1 || x == n - 1) continue;
-
-            bool composite = true;
-            for (int r = 1; r < s; r++)
-            {
-                x = BigInteger.ModPow(x, 2, n);
-                if (x == n - 1)
-                {
-                    composite = false;
-                    break;
-                }
-            }
-            if (composite) return false;
-        }
-        return true;
-    }
-    static BigInteger GeneratePrime(int bits)
-    {
-        BigInteger candidate;
-        do
-        {
-            byte[] bytes = new byte[bits / 8 + 1];
-            Random.Shared.NextBytes(bytes);
-            bytes[bytes.Length - 1] |= 0x80;
-            bytes[0] |= 0x01;
-            candidate = new BigInteger(bytes);
-            if (candidate < 0) candidate = -candidate;
-        } while (!IsPrimeBig(candidate, 10));
-        return candidate;
-    }
-    static BigInteger ModInverse(BigInteger e, BigInteger m)
-    {
-        BigInteger t = 0, newT = 1;
-        BigInteger r = m, newR = e;
-
-        while (newR != 0)
-        {
-            BigInteger quotient = r / newR;
-            (t, newT) = (newT, t - quotient * newT);
-            (r, newR) = (newR, r - quotient * newR);
-        }
-
-        if (t < 0) t += m;
-        return t;
-    }
     static string ReadTextFromWord(string filePath)
     {
         try
@@ -117,40 +47,41 @@ class RSASignatureLab
             return null!;
         }
     }
-    static byte[] ComputeSHA256Hash(string text)
+    static string ReadTextDataFromWord(string filePath)
     {
-        using (SHA256 sha256 = SHA256.Create())
+        try
         {
-            byte[] inputBytes = Encoding.UTF8.GetBytes(text);
-            return sha256.ComputeHash(inputBytes);
+            StringBuilder text = new StringBuilder();
+
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+            {
+                Body body = wordDoc.MainDocumentPart!.Document!.Body!;
+
+                foreach (var paragraph in body.Elements<Paragraph>())
+                {
+                    foreach (var run in paragraph.Elements<Run>())
+                    {
+                        foreach (var textElement in run.Elements<Text>())
+                        {
+                            text.Append(textElement.Text);
+                        }
+                    }
+                    text.AppendLine();
+                }
+            }
+
+            // Просто добавляем дату последнего изменения файла в конец
+            FileInfo fileInfo = new FileInfo(filePath);
+            text.AppendLine();
+            text.Append($"[Последнее изменение: {fileInfo.LastWriteTime:yyyy-MM-dd HH:mm:ss}]");
+
+            return text.ToString();
         }
-    }
-    static BigInteger BytesToBigInteger(byte[] bytes)
-    {
-        byte[] padded = new byte[bytes.Length + 1];
-        Array.Copy(bytes, 0, padded, 0, bytes.Length);
-        padded[bytes.Length] = 0;
-        return new BigInteger(padded);
-    }
-    static BigInteger SignHash(byte[] hash, BigInteger d, BigInteger n)
-    {
-        BigInteger hashInt = BytesToBigInteger(hash);
-        return BigInteger.ModPow(hashInt, d, n);
-    }
-    static bool VerifySignature(byte[] hash, BigInteger signature, BigInteger e, BigInteger n)
-    {
-        BigInteger hashInt = BytesToBigInteger(hash);
-        BigInteger decryptedHash = BigInteger.ModPow(signature, e, n);
-
-        byte[] decryptedBytes = decryptedHash.ToByteArray();
-
-        int minLength = Math.Min(hash.Length, decryptedBytes.Length);
-        for (int i = 0; i < minLength && i < 32; i++)
+        catch (Exception ex)
         {
-            if (hash[i] != decryptedBytes[i])
-                return false;
+            Console.WriteLine($"Ошибка при чтении файла: {ex.Message}");
+            return null!;
         }
-        return true;
     }
     static void PrintKey(string name, BigInteger key)
     {
@@ -166,16 +97,16 @@ class RSASignatureLab
     }
     static void SaveSignatureToFile(BigInteger signature, string documentPath)
     {
-        string signaturePath = System.IO.Path.ChangeExtension(documentPath, ".sig");
-        System.IO.File.WriteAllText(signaturePath, signature.ToString());
+        string signaturePath = Path.ChangeExtension(documentPath, ".sig");
+        File.WriteAllText(signaturePath, signature.ToString());
         Console.WriteLine($"\n✓ Подпись сохранена в файл: {signaturePath}");
     }
     static BigInteger LoadSignatureFromFile(string documentPath)
     {
-        string signaturePath = System.IO.Path.ChangeExtension(documentPath, ".sig");
-        if (System.IO.File.Exists(signaturePath))
+        string signaturePath = Path.ChangeExtension(documentPath, ".sig");
+        if (File.Exists(signaturePath))
         {
-            string signatureText = System.IO.File.ReadAllText(signaturePath);
+            string signatureText = File.ReadAllText(signaturePath);
             return BigInteger.Parse(signatureText);
         }
         return 0;
@@ -194,11 +125,11 @@ class RSASignatureLab
     static bool LoadKeysFromFile()
     {
         string keyPath = "rsa_keys.txt";
-        if (System.IO.File.Exists(keyPath))
+        if (File.Exists(keyPath))
         {
             try
             {
-                string[] lines = System.IO.File.ReadAllLines(keyPath);
+                string[] lines = File.ReadAllLines(keyPath);
                 savedN = BigInteger.Parse(lines[0].Substring(2));
                 savedE = BigInteger.Parse(lines[1].Substring(2));
                 savedD = BigInteger.Parse(lines[2].Substring(2));
@@ -228,9 +159,9 @@ class RSASignatureLab
         Console.WriteLine($"Генерация {bits}-битных простых чисел p и q...");
         Console.WriteLine("Это может занять несколько секунд...");
 
-        BigInteger p = GeneratePrime(bits);
-        BigInteger q = GeneratePrime(bits);
-        while (p == q) q = GeneratePrime(bits);
+        BigInteger p = GenPrime(bits);
+        BigInteger q = GenPrime(bits);
+        while (p == q) q = GenPrime(bits);
 
         Console.WriteLine($"✓ Простое число p сгенерировано");
         Console.WriteLine($"✓ Простое число q сгенерировано");
@@ -293,7 +224,7 @@ class RSASignatureLab
             filePath = Console.ReadLine()!.Trim('"');
         }
 
-        if (!System.IO.File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             Console.WriteLine($"Файл не найден: {filePath}");
             Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
@@ -328,7 +259,7 @@ class RSASignatureLab
 
         // Вычисление хеша
         Console.WriteLine("\nВычисление SHA-256 хеша документа...");
-        byte[] hash = ComputeSHA256Hash(documentText);
+        byte[] hash = SHA256Hash(documentText);
         Console.WriteLine($"Хеш документа (SHA-256): {BitConverter.ToString(hash).Replace("-", "").ToLower()}");
 
         // Подписание хеша (используем d - закрытый ключ)
@@ -407,7 +338,7 @@ class RSASignatureLab
             return;
         }
 
-        if (!System.IO.File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             Console.WriteLine($"Файл не найден: {filePath}");
             Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
@@ -423,8 +354,8 @@ class RSASignatureLab
 
         if (signature == 0)
         {
-            Console.WriteLine($"Не найден файл подписи для документа {System.IO.Path.GetFileName(filePath)}");
-            Console.WriteLine($"Файл подписи должен называться: {System.IO.Path.ChangeExtension(filePath, ".sig")}");
+            Console.WriteLine($"Не найден файл подписи для документа {Path.GetFileName(filePath)}");
+            Console.WriteLine($"Файл подписи должен называться: {Path.ChangeExtension(filePath, ".sig")}");
             Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
             Console.ReadKey();
             return;
@@ -458,7 +389,7 @@ class RSASignatureLab
 
         // Вычисление хеша
         Console.WriteLine("\nВычисление SHA-256 хеша документа...");
-        byte[] hash = ComputeSHA256Hash(documentText);
+        byte[] hash = SHA256Hash(documentText);
         Console.WriteLine($"Хеш документа (SHA-256): {BitConverter.ToString(hash).Replace("-", "").ToLower()}");
 
         // Проверка подписи
@@ -492,7 +423,7 @@ class RSASignatureLab
         {
             Console.WriteLine("\nВносим минимальное изменение (добавляем пробел в конец)...");
             string modifiedText = documentText + " ";
-            byte[] modifiedHash = ComputeSHA256Hash(modifiedText);
+            byte[] modifiedHash = SHA256Hash(modifiedText);
 
             Console.WriteLine($"Исходный хеш (первые 32 символа): {BitConverter.ToString(hash).Replace("-", "").ToLower().Substring(0, 32)}...");
             Console.WriteLine($"Измененный хеш (первые 32 символа): {BitConverter.ToString(modifiedHash).Replace("-", "").ToLower().Substring(0, 32)}...");
@@ -559,30 +490,11 @@ class RSASignatureLab
                 default:
                     Console.WriteLine("\nНеверный выбор. Нажмите любую клавишу...");
                     Console.ReadKey();
+                    byte[] hash94_256 = Gost94Hash("Hello, world!");
+                    Console.WriteLine("ГОСТ 34.11-94 (256 бит): " + Convert.ToHexString(hash94_256));
                     break;
             }
         }
     }
 }
 
-class GostSignatureLab
-{
-    static void Main()
-    {
-        string input = "Hello, world!";
-        byte[] hash94_256 = ComputeGost94Hash(Encoding.UTF8.GetBytes(input));
-        Console.WriteLine("ГОСТ 34.11-94 (256 бит): " + Convert.ToHexString(hash94_256));
-    }
-
-    /// <summary>
-    /// ГОСТ Р 34.11-94 на основе GOST3411Digest (BouncyCastle).
-    /// </summary>
-    static byte[] ComputeGost94Hash(byte[] input)
-    {
-        IDigest digest = new Gost3411Digest();
-        digest.BlockUpdate(input, 0, input.Length);
-        byte[] result = new byte[digest.GetDigestSize()];
-        digest.DoFinal(result, 0);
-        return result;
-    }
-}
