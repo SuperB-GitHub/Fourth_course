@@ -1,20 +1,15 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Numerics;
-using System.Security.Cryptography;
 using System.Text;
+using static MyLibrary.MathUtils;
 using static Лабораторная_работа_6.GOST;
 using static Лабораторная_работа_6.RSA;
-using static MyLibrary.MathUtils;
 
-class RSASignatureLab
+class Lab6_7
 {
     static Random random = new Random();
-
-    // Глобальные переменные для ключей
-    static BigInteger savedN;
-    static BigInteger savedE;
-    static BigInteger savedD;
 
     static string ReadTextFromWord(string filePath)
     {
@@ -83,418 +78,516 @@ class RSASignatureLab
             return null!;
         }
     }
-    static void PrintKey(string name, BigInteger key)
+
+    static void SaveSignRSA(BigInteger sign, string docPath)
     {
-        string keyStr = key.ToString();
-        if (keyStr.Length > 64)
+        string signaturePath = Path.ChangeExtension(docPath, ".sig");
+        int count = 1;
+        while (File.Exists(signaturePath))
         {
-            Console.WriteLine($"{name}:\n{keyStr.Substring(0, 32)}...{keyStr.Substring(keyStr.Length - 32)}");
+            signaturePath = Path.Combine(Path.GetDirectoryName(signaturePath)!, $"{Path.GetFileNameWithoutExtension(signaturePath)}_{count}.sig");
+            count++;
         }
-        else
+        File.WriteAllText(signaturePath, sign.ToString());
+        Console.WriteLine($"\nПодпись сохранена в файл: {signaturePath}");
+    }
+    static void SaveSignGOST(BigInteger r, BigInteger s, string docPath)
+    {
+        string signPath = Path.ChangeExtension(docPath, ".sig");
+        int count = 1;
+        while (File.Exists(signPath))
         {
-            Console.WriteLine($"{name}:\n{keyStr}");
+            signPath = Path.Combine(Path.GetDirectoryName(signPath)!, $"{Path.GetFileNameWithoutExtension(signPath)}_{count}.sig");
+            count++;
         }
+        using StreamWriter sw = new(signPath);
+        sw.WriteLine($"r={r}");
+        sw.WriteLine($"s={s}");
+        Console.WriteLine($"\nПодпись сохранена в файл: {signPath}");
     }
-    static void SaveSignatureToFile(BigInteger signature, string documentPath)
+    static void SaveKeysRSA(string docPath, BigInteger n, BigInteger e, BigInteger d)
     {
-        string signaturePath = Path.ChangeExtension(documentPath, ".sig");
-        File.WriteAllText(signaturePath, signature.ToString());
-        Console.WriteLine($"\n✓ Подпись сохранена в файл: {signaturePath}");
-    }
-    static BigInteger LoadSignatureFromFile(string documentPath)
-    {
-        string signaturePath = Path.ChangeExtension(documentPath, ".sig");
-        if (File.Exists(signaturePath))
+        string keysPath = Path.ChangeExtension(docPath, ".keys");
+        int count = 1;
+        while (File.Exists(keysPath))
         {
-            string signatureText = File.ReadAllText(signaturePath);
+            keysPath = Path.Combine(Path.GetDirectoryName(keysPath)!, $"{Path.GetFileNameWithoutExtension(keysPath)}_{count}.keys");
+            count++;
+        }
+        using StreamWriter sw = new(keysPath);
+        sw.WriteLine($"N={n}");
+        sw.WriteLine($"E={e}");
+        sw.WriteLine($"D={d}");
+        Console.WriteLine($"\nКлючи сохранены в файл: {keysPath}");
+    }
+    static void SaveParamsGOST(string docPath, BigInteger p, BigInteger q, BigInteger a, BigInteger x, BigInteger y)
+    {
+        string keysPath = Path.ChangeExtension(docPath, ".params");
+        int count = 1;
+        while (File.Exists(keysPath))
+        {
+            keysPath = Path.Combine(Path.GetDirectoryName(keysPath)!, $"{Path.GetFileNameWithoutExtension(keysPath)}_{count}.keys");
+            count++;
+        }
+        using StreamWriter sw = new(keysPath);
+        sw.WriteLine($"p={p}");
+        sw.WriteLine($"q={q}");
+        sw.WriteLine($"a={a}");
+        sw.WriteLine($"x={x}");
+        sw.WriteLine($"y={y}");
+        Console.WriteLine($"\nКлючи сохранены в файл: {keysPath}");
+    }
+    
+    static BigInteger LoadSignRSA(string sigPath)
+    {
+        if (File.Exists(sigPath))
+        {
+            string signatureText = File.ReadAllText(sigPath);
             return BigInteger.Parse(signatureText);
         }
         return 0;
     }
-    static void SaveKeysToFile()
+    static void LoadSignGOST(string sigPath, out BigInteger r, out BigInteger s)
     {
-        string keyPath = "rsa_keys.txt";
-        using (StreamWriter sw = new StreamWriter(keyPath))
-        {
-            sw.WriteLine($"N={savedN}");
-            sw.WriteLine($"E={savedE}");
-            sw.WriteLine($"D={savedD}");
-        }
-        Console.WriteLine($"✓ Ключи сохранены в файл: {keyPath}");
-    }
-    static bool LoadKeysFromFile()
-    {
-        string keyPath = "rsa_keys.txt";
-        if (File.Exists(keyPath))
+        if (File.Exists(sigPath))
         {
             try
             {
-                string[] lines = File.ReadAllLines(keyPath);
-                savedN = BigInteger.Parse(lines[0].Substring(2));
-                savedE = BigInteger.Parse(lines[1].Substring(2));
-                savedD = BigInteger.Parse(lines[2].Substring(2));
+                string[] lines = File.ReadAllLines(sigPath);
+                r = BigInteger.Parse(lines[0].Substring(2));
+                s = BigInteger.Parse(lines[1].Substring(2));
+            }
+            catch
+            {
+                r = s = BigInteger.Zero;
+            }
+        }
+        else r = s = BigInteger.Zero;
+    }
+    static bool LoadKeysRSA(string keysPath, out BigInteger n, out BigInteger e, out BigInteger d)
+    {
+        if (File.Exists(keysPath))
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(keysPath);
+                n = BigInteger.Parse(lines[0].Substring(2));
+                e = BigInteger.Parse(lines[1].Substring(2));
+                d = BigInteger.Parse(lines[2].Substring(2));
                 return true;
             }
             catch
             {
+                n = e = d = BigInteger.Zero;
                 return false;
             }
         }
+        n = e = d = BigInteger.Zero;
         return false;
     }
-    static void CreateAndSign()
+    static bool LoadParamsGOST(string keysPath, out BigInteger p, out BigInteger q, out BigInteger a, out BigInteger x, out BigInteger y)
+    {
+        if (File.Exists(keysPath))
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(keysPath);
+                p = BigInteger.Parse(lines[0].Substring(2));
+                q = BigInteger.Parse(lines[1].Substring(2));
+                a = BigInteger.Parse(lines[2].Substring(2));
+                x = BigInteger.Parse(lines[3].Substring(2));
+                y = BigInteger.Parse(lines[4].Substring(2));
+                return true;
+            }
+            catch
+            {
+                p = q = a = x = y = BigInteger.Zero;
+                return false;
+            }
+        }
+        p = q = a = x = y = BigInteger.Zero;
+        return false;
+    }
+
+    static void CreateAndSignRSA()
     {
         Console.Clear();
-        Console.WriteLine("=".PadRight(80, '='));
-        Console.WriteLine("ПУНКТ 1: СОЗДАНИЕ И ПОДПИСАНИЕ ДОКУМЕНТА");
-        Console.WriteLine("=".PadRight(80, '='));
+        Console.WriteLine("\nДействие 1: Создание и подписание документа");
         Console.WriteLine();
 
-        // Генерация ключей
-        Console.WriteLine("ГЕНЕРАЦИЯ КЛЮЧЕВ RSA");
-        Console.WriteLine("-".PadRight(80, '-'));
+        Console.WriteLine("Генерация ключей по алгоритму RSA");
         Console.WriteLine();
 
         int bits = 1024;
         Console.WriteLine($"Генерация {bits}-битных простых чисел p и q...");
-        Console.WriteLine("Это может занять несколько секунд...");
+        Console.WriteLine();
 
         BigInteger p = GenPrime(bits);
         BigInteger q = GenPrime(bits);
         while (p == q) q = GenPrime(bits);
 
-        Console.WriteLine($"✓ Простое число p сгенерировано");
-        Console.WriteLine($"✓ Простое число q сгенерировано");
+        Console.WriteLine($"Простое число p = {p.ToString().Substring(0, Math.Min(30, p.ToString().Length))}...\n");
+        Console.WriteLine($"Простое число q = {q.ToString().Substring(0, Math.Min(30, q.ToString().Length))}...\n");
 
         BigInteger n = p * q;
-        BigInteger phi = (p - 1) * (q - 1);
+        BigInteger m = (p - 1) * (q - 1);
 
-        Console.WriteLine($"✓ Модуль n = p * q (битность: {n.GetBitLength()} бит)");
+        Console.WriteLine($"Модуль n = p * q (битность: {n.GetBitLength()} бит): \n{n.ToString().Substring(0, Math.Min(30, n.ToString().Length))}...\n");
+        Console.WriteLine($"Число m = (p - 1) * (q - 1) = {m.ToString().Substring(0, Math.Min(30, m.ToString().Length))}...\n");
 
-        // Выбор открытой экспоненты e
-        BigInteger e = 65537;
-        if (BigInteger.GreatestCommonDivisor(e, phi) != 1)
+        BigInteger e = 0;
+        do
         {
-            Console.WriteLine("   e = 65537 не подходит, ищем другое значение...");
-            do
-            {
-                byte[] bytes = new byte[phi.GetByteCount()];
-                random.NextBytes(bytes);
-                e = BigInteger.Abs(new BigInteger(bytes)) % (phi - 2) + 2;
-            } while (BigInteger.GreatestCommonDivisor(e, phi) != 1);
-        }
+            byte[] bytes = new byte[m.GetByteCount()];
+            random.NextBytes(bytes);
+            e = BigInteger.Abs(new BigInteger(bytes)) % (m - 2) + 2;
+        } while (BigInteger.GreatestCommonDivisor(e, m) != 1);
 
-        Console.WriteLine($"✓ Открытая экспонента e = {e}");
+        Console.WriteLine($"Открытая экспонента e = {e.ToString().Substring(0, Math.Min(30, e.ToString().Length))}...\n");
 
-        // Вычисление секретной экспоненты d
-        BigInteger d = ModInverse(e, phi);
-        Console.WriteLine("✓ Секретная экспонента d вычислена");
+        BigInteger d = ModInverse(e, m);
+        Console.WriteLine($"Секретная экспонента d = {d.ToString().Substring(0, Math.Min(30, d.ToString().Length))}...\n");
+
+        Console.WriteLine("Созданные ключи:\n");
+        Console.WriteLine($"Открытый ключ (e): {e.ToString().Substring(0, Math.Min(30, e.ToString().Length))}...");
+        Console.WriteLine($"Открытый ключ (n): {n.ToString().Substring(0, Math.Min(30, n.ToString().Length))}...");
         Console.WriteLine();
-
-        // Сохраняем ключи в глобальные переменные
-        savedN = n;
-        savedE = e;
-        savedD = d;
-
-        Console.WriteLine("СОЗДАННЫЕ КЛЮЧИ:");
-        Console.WriteLine("---------------");
-        PrintKey("Открытый ключ (e)", e);
-        PrintKey("Открытый ключ (n)", n);
-        Console.WriteLine();
-        PrintKey("Закрытый ключ (d)", d);
-        PrintKey("Закрытый ключ (n)", n);
-        Console.WriteLine();
-
-        // Сохраняем ключи в файл
-        SaveKeysToFile();
-        Console.WriteLine();
-
-        // Выбор документа
-        Console.WriteLine("ВЫБОР ДОКУМЕНТА ДЛЯ ПОДПИСАНИЯ");
-        Console.WriteLine("-".PadRight(80, '-'));
+        Console.WriteLine($"Закрытый ключ (d): {d.ToString().Substring(0, Math.Min(30, d.ToString().Length))}...");
+        Console.WriteLine($"Закрытый ключ (n): {n.ToString().Substring(0, Math.Min(30, n.ToString().Length))}...");
         Console.WriteLine();
 
         Console.Write("Введите путь к документу Word (.docx): ");
         string filePath = Console.ReadLine()!.Trim('"');
 
-        if (string.IsNullOrWhiteSpace(filePath))
+        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
         {
-            Console.WriteLine("Путь не указан. Создайте файл 'document.docx' в папке с программой.");
-            Console.Write("Введите путь заново: ");
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
             filePath = Console.ReadLine()!.Trim('"');
         }
 
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Файл не найден: {filePath}");
-            Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
-        }
+        SaveKeysRSA(filePath, n, e, d);
 
-        // Чтение документа
-        Console.WriteLine("\nЧтение текста из документа...");
         string documentText = ReadTextFromWord(filePath);
-
-        if (documentText == null)
-        {
-            Console.WriteLine("Не удалось прочитать документ.");
-            Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
-        }
-
         if (string.IsNullOrWhiteSpace(documentText))
         {
             Console.WriteLine("Документ пуст или не содержит текста.");
             documentText = "Тестовый документ для подписания.";
         }
 
-        Console.WriteLine($"\nТекст документа (первые 200 символов):");
-        Console.WriteLine(new string('-', 60));
+        Console.WriteLine($"\nТекст документа:");
         string preview = documentText.Length > 200 ? documentText.Substring(0, 200) + "..." : documentText;
         Console.WriteLine(preview);
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine($"Полная длина текста: {documentText.Length} символов");
+        Console.WriteLine($"\nПолная длина текста: {documentText.Length} символов");
 
-        // Вычисление хеша
         Console.WriteLine("\nВычисление SHA-256 хеша документа...");
         byte[] hash = SHA256Hash(documentText);
-        Console.WriteLine($"Хеш документа (SHA-256): {BitConverter.ToString(hash).Replace("-", "").ToLower()}");
+        Console.WriteLine($"Хеш документа (SHA-256): {Convert.ToHexStringLower(hash)}");
 
-        // Подписание хеша (используем d - закрытый ключ)
         Console.WriteLine("\nПодписание хеша с использованием закрытого ключа (d, n)...");
         BigInteger signature = SignHash(hash, d, n);
         string sigStr = signature.ToString();
-        Console.WriteLine($"Цифровая подпись:");
-        if (sigStr.Length > 100)
-        {
-            Console.WriteLine($"{sigStr.Substring(0, 50)}...{sigStr.Substring(sigStr.Length - 50)}");
-        }
-        else
-        {
-            Console.WriteLine(sigStr);
-        }
+        Console.WriteLine($"Цифровая подпись: {sigStr.Substring(0, 50)}...");
 
-        // Сохранение подписи
-        SaveSignatureToFile(signature, filePath);
+        SaveSignRSA(signature, filePath);
 
-        // Проверка подписи (сразу после создания)
-        Console.WriteLine("\nПРОВЕРКА ПОДПИСИ (после создания)");
-        Console.WriteLine("-".PadRight(80, '-'));
+        Console.WriteLine("\nПроверка создания подписи:");
 
         bool isValid = VerifySignature(hash, signature, e, n);
 
         if (isValid)
         {
-            Console.WriteLine("\n✓ ПОДПИСЬ ВЕРНА! Документ успешно подписан.");
+            Console.WriteLine("\nПодпись верна! Документ успешно подписан.");
         }
         else
         {
-            Console.WriteLine("\n✗ ОШИБКА! Подпись не прошла проверку.");
+            Console.WriteLine("\nПодпись не ликвидна! Подпись не прошла проверку.");
         }
 
         Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
         Console.ReadKey();
     }
-    static void VerifySignatureFromFile()
+    static void VerifySignatureRSA()
     {
         Console.Clear();
-        Console.WriteLine("=".PadRight(80, '='));
-        Console.WriteLine("ПУНКТ 2: ПРОВЕРКА ПОДПИСИ ДОКУМЕНТА");
-        Console.WriteLine("=".PadRight(80, '='));
+        Console.WriteLine("\nДействие 2: Проверка подписи документа");
         Console.WriteLine();
-
-        // Загрузка ключей
-        Console.WriteLine("ЗАГРУЗКА КЛЮЧЕЙ");
-        Console.WriteLine("-".PadRight(80, '-'));
-
-        if (!LoadKeysFromFile())
-        {
-            Console.WriteLine("Не найдены сохраненные ключи!");
-            Console.WriteLine("Сначала выполните пункт 1 (Создание и подписание документа).");
-            Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
-        }
-
-        Console.WriteLine("✓ Ключи успешно загружены:");
-        PrintKey("Открытый ключ (e)", savedE);
-        PrintKey("Открытый ключ (n)", savedN);
-        Console.WriteLine();
-
-        // Выбор документа
-        Console.WriteLine("ВЫБОР ДОКУМЕНТА ДЛЯ ПРОВЕРКИ");
-        Console.WriteLine("-".PadRight(80, '-'));
 
         Console.Write("Введите путь к документу Word (.docx): ");
         string filePath = Console.ReadLine()!.Trim('"');
 
-        if (string.IsNullOrWhiteSpace(filePath))
+        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
         {
-            Console.WriteLine("Путь не указан.");
-            Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            filePath = Console.ReadLine()!.Trim('"');
         }
-
-        if (!File.Exists(filePath))
-        {
-            Console.WriteLine($"Файл не найден: {filePath}");
-            Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
-        }
-
-        // Загрузка подписи
-        Console.WriteLine("\nЗАГРУЗКА ПОДПИСИ");
-        Console.WriteLine("-".PadRight(80, '-'));
-
-        BigInteger signature = LoadSignatureFromFile(filePath);
-
-        if (signature == 0)
-        {
-            Console.WriteLine($"Не найден файл подписи для документа {Path.GetFileName(filePath)}");
-            Console.WriteLine($"Файл подписи должен называться: {Path.ChangeExtension(filePath, ".sig")}");
-            Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
-        }
-
-        Console.WriteLine("✓ Подпись успешно загружена");
-        string sigStr = signature.ToString();
-        Console.WriteLine($"Подпись: {(sigStr.Length > 100 ? sigStr.Substring(0, 50) + "..." + sigStr.Substring(sigStr.Length - 50) : sigStr)}");
-        Console.WriteLine();
-
-        // Чтение документа
-        Console.WriteLine("ЧТЕНИЕ ДОКУМЕНТА");
-        Console.WriteLine("-".PadRight(80, '-'));
-
         string documentText = ReadTextFromWord(filePath);
 
-        if (documentText == null)
-        {
-            Console.WriteLine("Не удалось прочитать документ.");
-            Console.WriteLine("Нажмите любую клавишу для возврата в меню...");
-            Console.ReadKey();
-            return;
-        }
-
-        Console.WriteLine($"\nТекст документа (первые 200 символов):");
-        Console.WriteLine(new string('-', 60));
+        Console.WriteLine($"\nТекст документа:");
         string preview = documentText.Length > 200 ? documentText.Substring(0, 200) + "..." : documentText;
         Console.WriteLine(preview);
-        Console.WriteLine(new string('-', 60));
-        Console.WriteLine($"Полная длина текста: {documentText.Length} символов");
+        Console.WriteLine($"\nПолная длина текста: {documentText.Length} символов");
 
-        // Вычисление хеша
+        Console.Write("Введите путь к файлу с ключами (.keys): ");
+        string keysPath = Console.ReadLine()!.Trim('"');
+
+        if (string.IsNullOrWhiteSpace(keysPath) || !File.Exists(keysPath))
+        {
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            keysPath = Console.ReadLine()!.Trim('"');
+        }
+        LoadKeysRSA(keysPath, out BigInteger n, out BigInteger e, out BigInteger d);
+
+        Console.WriteLine($"\nОткрытый ключ (e): {e.ToString().Substring(0, Math.Min(30, e.ToString().Length))}...");
+        Console.WriteLine($"Открытый ключ (n): {n.ToString().Substring(0, Math.Min(30, n.ToString().Length))}...");
+        Console.WriteLine();
+
+        Console.Write("Введите путь к файлу с подписью (.sig): ");
+        string sigPath = Console.ReadLine()!.Trim('"');
+
+        if (string.IsNullOrWhiteSpace(sigPath) || !File.Exists(sigPath))
+        {
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            sigPath = Console.ReadLine()!.Trim('"');
+        }
+
+        BigInteger signature = LoadSignRSA(sigPath);
+
+        string sigStr = signature.ToString();
+        Console.WriteLine($"Подпись: {sigStr.Substring(0, 50)}...");
+        Console.WriteLine();
+
         Console.WriteLine("\nВычисление SHA-256 хеша документа...");
         byte[] hash = SHA256Hash(documentText);
-        Console.WriteLine($"Хеш документа (SHA-256): {BitConverter.ToString(hash).Replace("-", "").ToLower()}");
+        Console.WriteLine($"Хеш документа (SHA-256): {Convert.ToHexStringLower(hash)}");
 
-        // Проверка подписи
-        Console.WriteLine("\nПРОВЕРКА ПОДПИСИ");
-        Console.WriteLine("-".PadRight(80, '-'));
+        Console.WriteLine("\nПроверка подписи с использованием открытого ключа (e, n)...");
+        bool isValid = VerifySignature(hash, signature, e, n);
 
-        Console.WriteLine("Проверка подписи с использованием открытого ключа (e, n)...");
-        bool isValid = VerifySignature(hash, signature, savedE, savedN);
-
-        Console.WriteLine("\n" + "=".PadRight(60, '='));
         if (isValid)
         {
-            Console.WriteLine("✓ РЕЗУЛЬТАТ: ПОДПИСЬ ВЕРНА!");
-            Console.WriteLine("  Документ аутентичен и не был изменен после подписания.");
+            Console.WriteLine("Подпись верна! Документ аутентичен и не был изменен после подписания.");
         }
         else
         {
-            Console.WriteLine("✗ РЕЗУЛЬТАТ: ПОДПИСЬ НЕВЕРНА!");
-            Console.WriteLine("  Документ был изменен или подпись подделана.");
+            Console.WriteLine("Подпись не ликвидна! Документ был изменен или подпись подделана.");
         }
-        Console.WriteLine("=".PadRight(60, '='));
 
-        // Дополнительно: проверка на изменение
-        Console.WriteLine("\nДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА");
-        Console.WriteLine("-".PadRight(80, '-'));
-        Console.WriteLine("Хотите проверить, как изменится результат при изменении документа? (д/н)");
-        Console.Write("> ");
-        string answer = Console.ReadLine()!.Trim().ToLower();
 
-        if (answer == "д" || answer == "да" || answer == "l" || answer == "yes")
+        Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
+        Console.ReadKey();
+    }
+
+    static void CreateAndSignGOST()
+    {
+        Console.Clear();
+        Console.WriteLine("\nДействие 1: Создание и подписание документа");
+        Console.WriteLine();
+
+        Console.WriteLine("Генерация ключей по алгоритму ГОСТ 34.10 - 94");
+        Console.WriteLine();
+
+        Console.WriteLine($"Генерация p - 1024-битного и q - 256-битного простых чисел...");
+        Console.WriteLine();
+
+        (BigInteger p, BigInteger q) = GenGOSTParam();
+        Console.WriteLine($"Простое {p.GetBitLength()}-битное число p = {p.ToString().Substring(0, Math.Min(30, p.ToString().Length))}...\n");
+        Console.WriteLine($"Простое {q.GetBitLength()}-битное число q = {q.ToString().Substring(0, Math.Min(30, q.ToString().Length))}...\n");
+
+        Console.WriteLine($"Вычисление образующего числа а ...");
+        BigInteger a = FindA(p, q);
+        Console.WriteLine($"Образующее число а = {a.ToString().Substring(0, Math.Min(30, a.ToString().Length))}...\n");
+
+        Console.WriteLine($"Генерация открытого ключа x и закрытого y...");
+        (BigInteger x, BigInteger y) = GenKeys(a, p, q);
+        Console.WriteLine($"Закрытый ключ x = {x.ToString().Substring(0, Math.Min(30, x.ToString().Length))}...\n");
+        Console.WriteLine($"Открытый ключ y = {y.ToString().Substring(0, Math.Min(30, y.ToString().Length))}...\n");
+
+        Console.Write("Введите путь к документу Word (.docx): ");
+        string filePath = Console.ReadLine()!.Trim('"');
+
+        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
         {
-            Console.WriteLine("\nВносим минимальное изменение (добавляем пробел в конец)...");
-            string modifiedText = documentText + " ";
-            byte[] modifiedHash = SHA256Hash(modifiedText);
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            filePath = Console.ReadLine()!.Trim('"');
+        }
 
-            Console.WriteLine($"Исходный хеш (первые 32 символа): {BitConverter.ToString(hash).Replace("-", "").ToLower().Substring(0, 32)}...");
-            Console.WriteLine($"Измененный хеш (первые 32 символа): {BitConverter.ToString(modifiedHash).Replace("-", "").ToLower().Substring(0, 32)}...");
+        string documentText = ReadTextDataFromWord(filePath);
+        if (string.IsNullOrWhiteSpace(documentText))
+        {
+            Console.WriteLine("Документ пуст или не содержит текста.");
+            documentText = "Тестовый документ для подписания.";
+        }
 
-            bool isModifiedValid = VerifySignature(modifiedHash, signature, savedE, savedN);
+        Console.WriteLine($"\nТекст документа:");
+        string preview = documentText.Length > 200 ? documentText.Substring(0, 200) + "..." : documentText;
+        Console.WriteLine(preview);
+        Console.WriteLine($"\nПолная длина текста: {documentText.Length} символов");
 
-            if (!isModifiedValid)
-            {
-                Console.WriteLine("\n✓ Результат: Подпись успешно обнаружила изменение!");
-                Console.WriteLine("  Даже минимальное изменение текста делает подпись недействительной.");
-            }
-            else
-            {
-                Console.WriteLine("\n✗ Результат: Подпись НЕ обнаружила изменение!");
-            }
+        SaveParamsGOST(filePath, p, q, a, x, y);
+
+        Console.WriteLine("\nВычисление ГОСТ 34.11-94 хеша документа...");
+        byte[] hashBytes = Gost94Hash(documentText);
+        Console.WriteLine($"Хеш документа (ГОСТ 34.11-94): {Convert.ToHexStringLower(hashBytes)}\n");
+        BigInteger hash = new BigInteger(hashBytes, true);
+        hash = hash % q;
+
+        Console.WriteLine("\nПодписание хеша с использованием закрытого ключа (x)...");
+        (BigInteger r, BigInteger s) = Sign(hash, x, q, p, a);
+        Console.WriteLine($"Цифровая подпись: \nr: {r.ToString().Substring(0, 50)}...\ns: {s.ToString().Substring(0, 50)}");
+
+        SaveSignGOST(r, s, filePath);
+
+        Console.WriteLine("\nПроверка создания подписи:");
+
+        bool isValid = Verify(hash, r, s, y, q, p, a);
+
+        if (isValid)
+        {
+            Console.WriteLine("\nПодпись верна! Документ успешно подписан.");
+        }
+        else
+        {
+            Console.WriteLine("\nПодпись не ликвидна! Подпись не прошла проверку.");
         }
 
         Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
         Console.ReadKey();
+    }
+    static void VerifySignatureGOST()
+    {
+        Console.Clear();
+        Console.WriteLine("\nДействие 2: Проверка подписи документа");
+        Console.WriteLine();
+
+        Console.Write("Введите путь к документу Word (.docx): ");
+        string filePath = Console.ReadLine()!.Trim('"');
+
+        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+        {
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            filePath = Console.ReadLine()!.Trim('"');
+        }
+        string documentText = ReadTextDataFromWord(filePath);
+
+        Console.WriteLine($"\nТекст документа:");
+        string preview = documentText.Length > 200 ? documentText.Substring(0, 200) + "..." : documentText;
+        Console.WriteLine(preview);
+        Console.WriteLine($"\nПолная длина текста: {documentText.Length} символов");
+
+        Console.Write("Введите путь к файлу с ключами (.params): ");
+        string keysPath = Console.ReadLine()!.Trim('"');
+
+        if (string.IsNullOrWhiteSpace(keysPath) || !File.Exists(keysPath))
+        {
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            keysPath = Console.ReadLine()!.Trim('"');
+        }
+        LoadParamsGOST(keysPath, out BigInteger p, out BigInteger q, out BigInteger a, out BigInteger x, out BigInteger y);
+
+        Console.WriteLine($"\nОткрытый ключ (y): {y.ToString().Substring(0, Math.Min(30, y.ToString().Length))}...");
+        Console.WriteLine();
+
+        Console.Write("Введите путь к файлу с подписью (.sig): ");
+        string sigPath = Console.ReadLine()!.Trim('"');
+
+        if (string.IsNullOrWhiteSpace(sigPath) || !File.Exists(sigPath))
+        {
+            Console.Write("Путь не указан или Файл не найден. Введите путь заново: ");
+            sigPath = Console.ReadLine()!.Trim('"');
+        }
+
+        LoadSignGOST(sigPath, out BigInteger r, out BigInteger s);
+
+        Console.WriteLine($"Цифровая подпись: \nr: {r.ToString().Substring(0, 50)}...\ns: {s.ToString().Substring(0, 50)}");
+        Console.WriteLine();
+
+        Console.WriteLine("\nВычисление ГОСТ 34.11-94 хеша документа...");
+        byte[] hashBytes = Gost94Hash(documentText);
+        Console.WriteLine($"Хеш документа (ГОСТ 34.11-94): {Convert.ToHexStringLower(hashBytes)}\n");
+        BigInteger hash = new BigInteger(hashBytes, true);
+        hash = hash % q;
+
+        Console.WriteLine("Проверка подписи с использованием открытого ключа (y)...");
+
+        bool isValid = Verify(hash, r, s, y, q, p, a);
+
+        if(isValid)
+        {
+            Console.WriteLine("Подпись верна! Документ аутентичен и не был изменен после подписания.");
+        }
+        else
+        {
+            Console.WriteLine("Подпись не ликвидна! Документ был изменен или подпись подделана.");
+        }
+
+        Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
+        Console.ReadKey();
+    }
+
+    static void MenuLab(ConsoleKeyInfo varLab)
+    {
+        Console.Clear();
+        Console.WriteLine();
+        Console.WriteLine("Выберите действие:");
+        Console.WriteLine();
+        Console.WriteLine("  1 - Создание и подписание документа");
+        Console.WriteLine();
+        Console.WriteLine("  2 - Проверка подписи документа");
+        Console.WriteLine();
+        Console.WriteLine("  0 - Выход");
+        Console.WriteLine();
+        Console.Write("\nВыберите пункт меню: ");
+        var varEx = Console.ReadKey();
+
+        switch (varEx.Key, varLab.Key)
+        {
+            case (ConsoleKey.D1, ConsoleKey.D6) or (ConsoleKey.D1, ConsoleKey.D1):
+                CreateAndSignRSA();
+                break;
+            case (ConsoleKey.D2, ConsoleKey.D6) or (ConsoleKey.D2, ConsoleKey.D1):
+                VerifySignatureRSA();
+                break;
+            case (ConsoleKey.D1, ConsoleKey.D7) or (ConsoleKey.D1, ConsoleKey.D2):
+                CreateAndSignGOST();
+                break;
+            case (ConsoleKey.D2, ConsoleKey.D7) or (ConsoleKey.D2, ConsoleKey.D2):
+                VerifySignatureGOST();
+                break;
+            case (ConsoleKey.D0, _):
+                Console.WriteLine("\nДо свидания!");
+                return;
+            default:
+                Console.WriteLine("\nНеверный выбор. Нажмите любую клавишу...");
+                Console.ReadKey();
+                break;
+        }
     }
 
     static void Main(string[] args)
     {
         Console.OutputEncoding = Encoding.UTF8;
-        Console.Title = "ЭЦП RSA - Лабораторная работа 6";
+        Console.Title = "ЭЦП - Лабораторная работа 6 - 7";
 
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("=".PadRight(80, '='));
-            Console.WriteLine("ЛАБОРАТОРНАЯ РАБОТА 6");
-            Console.WriteLine("РЕАЛИЗАЦИЯ ЭЛЕМЕНТОВ ЭЦП RSA");
-            Console.WriteLine("=".PadRight(80, '='));
+            Console.WriteLine("\nЛабораторная работа 6-7 - Реализация элементов ЭЦП");
             Console.WriteLine();
-            Console.WriteLine("ГЛАВНОЕ МЕНЮ:");
-            Console.WriteLine("-".PadRight(80, '-'));
-            Console.WriteLine();
-            Console.WriteLine("  1 - Создание и подписание документа");
-            Console.WriteLine("      (генерация ключей, загрузка документа, вычисление хеша,");
-            Console.WriteLine("       подписание, сохранение подписи)");
-            Console.WriteLine();
-            Console.WriteLine("  2 - Проверка подписи документа");
-            Console.WriteLine("      (загрузка документа, загрузка подписи, вычисление хеша,");
-            Console.WriteLine("       сверка с открытым ключом)");
-            Console.WriteLine();
-            Console.WriteLine("  0 - Выход");
-            Console.WriteLine();
-            Console.WriteLine("-".PadRight(80, '-'));
-            Console.Write("\nВыберите пункт меню: ");
-
-            string choice = Console.ReadLine()!;
-
-            switch (choice)
+            Console.Write("Выберите лабораторную работу: ");
+            var varLab = Console.ReadKey();
+            switch (varLab.Key)
             {
-                case "1":
-                    CreateAndSign();
+                case ConsoleKey.D6 or ConsoleKey.D1 or ConsoleKey.D7 or ConsoleKey.D2:
+                    MenuLab(varLab);
                     break;
-                case "2":
-                    VerifySignatureFromFile();
-                    break;
-                case "0":
+                case ConsoleKey.D0:
                     Console.WriteLine("\nДо свидания!");
                     return;
                 default:
                     Console.WriteLine("\nНеверный выбор. Нажмите любую клавишу...");
                     Console.ReadKey();
-                    byte[] hash94_256 = Gost94Hash("Hello, world!");
-                    Console.WriteLine("ГОСТ 34.11-94 (256 бит): " + Convert.ToHexString(hash94_256));
                     break;
             }
         }
     }
 }
-
