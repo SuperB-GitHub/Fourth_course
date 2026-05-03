@@ -1,4 +1,5 @@
-﻿using static MyLibrary.MathUtils;
+﻿using System.Text;
+using static MyLibrary.MathUtils;
 using static MyLibrary.StringUtils;
 using static Лабораторная_работа_8.Consts;
 
@@ -11,8 +12,7 @@ namespace Лабораторная_работа_8
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             var abm = new List<long> { 1, 1, 751 };
-            Console.WriteLine($"Полученное выражение: E{ToLowerIndex(abm[2])}({abm[0]}, {abm[1]}) => y² = x³ + x + 1");
-            //var points = TableXandY(abm);
+            Console.WriteLine($"Эллиптическая кривая: E{ToLowerIndex(abm[2])}({abm[0]}, {abm[1]}) => y² = x³ + x + 1");
             Coords P = new Coords(0, 1);
             Console.WriteLine($"\nГенерирующая точка P{P.print()}");
 
@@ -65,24 +65,26 @@ namespace Лабораторная_работа_8
             Coords Qb = PublicKeyB[variant];
             List<int> ks = RandK[variant];
 
-            Console.WriteLine($"Вариант {variant}: Откр.текст: {OpenText}; Qb{Qb.print()}; k:({string.Join(' ', ks)})");
+            Console.WriteLine($"\nВариант {variant}: \nОткр.текст: {OpenText}; Qb{Qb.print()}; k:({string.Join(' ', ks)})\n");
             Console.WriteLine($"Шифрование:\n");
+            var sb = new StringBuilder();
 
             for (int i = 0; i < OpenText.Length; i++)
             {
                 int k = ks[i];
                 Coords kp = SkalMul(P, k, abm);
                 Coords kQb = SkalMul(Qb, k, abm);
-                Console.WriteLine($"1) При k={k} => kP{kp.print()}\nk * Qb = kQb{kQb.print()}\n");
+                Console.WriteLine($"1) При k={k} => kP{kp.print()}");
+                Console.WriteLine($"            => k * Qb = kQb{kQb.print()}\n");
 
                 Coords M = Alph[OpenText[i]];
                 Coords R = AddFunc(M, kQb, abm);
-                Console.WriteLine($"2) R = M:{M.print()} + kP:{kp.print()} = {R.print()}\n");
+                Console.WriteLine($"2) R = M:{M.print()} + kQb:{kQb.print()} = {R.print()}\n");
                 CipherText.Add((kp, R));
                 Console.WriteLine($"Зашифрована буква `{OpenText[i]}`{M.print()} = {R.print()}\n");
+                sb.Append($"`{OpenText[i]}` = ({kp.print()}, {R.print()});\n");
             }
-
-            Console.WriteLine($"Весь шифртекст: \n");
+            Console.WriteLine($"Весь шифртекст: \n{sb}");
 
             return CipherText;
         }

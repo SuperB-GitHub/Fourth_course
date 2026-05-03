@@ -266,36 +266,6 @@ namespace Лабораторная_работа_8
         {30, new List<int> {2, 9, 18, 2, 19, 4, 5, 11, 9}}
     };
 
-        //public static HashSet<Coords> TableXandY(List<long> abm)
-        //{
-        //    var xi = new List<long>();
-        //    var yi = new List<long>();
-        //    List<long> num = new List<long>();
-        //    for (int x_y = 0; x_y <= abm[2] - 1; x_y++)
-        //    {
-        //        num.Add(x_y);
-        //        xi.Add(Mod(FastPowMod(x_y, 3, abm[2]) + abm[0] * x_y + abm[1], abm[2]));
-        //        yi.Add(FastPowMod(x_y, 2, abm[2]));
-        //    }
-
-        //    Console.WriteLine("\nНайденные точки: ");
-        //    HashSet<Coords> fine = new HashSet<Coords>();
-        //    for (int x = 0; x <= xi.Count() - 1; x++)
-        //    {
-        //        for (int y = 0; y <= yi.Count() - 1; y++)
-        //        {
-        //            Coords tmp = new Coords(x, y);
-        //            if (checkCoords(abm, tmp))
-        //            {
-        //                fine.Add(tmp);
-        //                Console.Write($"{tmp.print()} ");
-        //            }
-        //        }
-        //    }
-        //    Console.WriteLine($"и O\nПЭК = {fine.Count() + 1}\n");
-
-        //    return fine;
-        //}
         public static bool checkCoords(List<long> abm, Coords xy)
         {
             long x = Mod(FastPowMod(xy.x, 3, abm[2]) + abm[0] * xy.x + abm[1], abm[2]);
@@ -383,37 +353,5 @@ namespace Лабораторная_работа_8
             }
             return R;
         }
-        //static void Input_Point(out Coords t, List<long> abm)
-        //{
-        //    int cursorTop = Console.CursorTop;
-
-        //    Console.Write($"Выберите значения для x и y от через пробел: ");
-        //    string input = Console.ReadLine()!.Trim();
-        //    while (string.IsNullOrWhiteSpace(input))
-        //    {
-        //        Console.Write("Некорректный ввод. Введите целые числа: ");
-        //        input = Console.ReadLine()!.Trim();
-        //    }
-
-        //    t = new Coords();
-        //    t.insert(input.Split(' ')
-        //        .Where(x => !string.IsNullOrWhiteSpace(x))
-        //        .Select(long.Parse)
-        //        .ToList());
-
-        //    Console.SetCursorPosition(0, cursorTop);
-        //    Console.Write(new string(' ', Console.WindowWidth));
-        //    Console.SetCursorPosition(0, cursorTop);
-
-        //    if (checkCoords(abm, t))
-        //    {
-        //        Console.WriteLine($"Значения подходят: {t.print()}");
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine($"Значения не подходят: {t.print()}");
-        //        Input_Point(out t, abm);
-        //    }
-        //}
     }
 }
