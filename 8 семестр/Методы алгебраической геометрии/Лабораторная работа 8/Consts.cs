@@ -265,6 +265,39 @@ namespace Лабораторная_работа_8
         {29, new List<int> {16, 2, 17, 19, 8, 4, 3, 2, 8}},
         {30, new List<int> {2, 9, 18, 2, 19, 4, 5, 11, 9}}
     };
+        public static List<(long, List<(Coords, Coords)>)> CipherTextCon = new List<(long, List<(Coords, Coords)>)>
+        {
+            (29, new List<(Coords, Coords)>{
+                (new Coords(440, 539), new Coords(128, 672)),
+                (new Coords(489, 468), new Coords(282, 341)),
+                (new Coords(425, 663), new Coords(106, 24)),
+                (new Coords(568, 355), new Coords(145, 608)),}),
+
+            (12, new List<(Coords, Coords)>{
+                (new Coords(16, 416),  new Coords(128, 672)),
+                (new Coords(56, 419),  new Coords(59, 386)), 
+                (new Coords(425, 663), new Coords(106, 24)),
+                (new Coords(568, 355), new Coords(145, 608)),
+                (new Coords(188, 93),  new Coords(279, 398)),
+                (new Coords(425, 663), new Coords(99, 295)),
+                (new Coords(179, 275), new Coords(269, 187)),
+                (new Coords(188, 93),  new Coords(395, 337)),
+                (new Coords(188, 93),  new Coords(311, 68)),
+                (new Coords(135, 82),  new Coords(556, 484)),
+                (new Coords(56, 419),  new Coords(106, 727)),
+                (new Coords(16, 416),  new Coords(307, 693)),}),
+
+            (0, new List<(Coords, Coords)>{
+                (new Coords(179, 275), new Coords(663, 275)),
+                (new Coords(1, 1),     new Coords(638, 131)),
+                (new Coords(327, 108), new Coords(228, 480)),
+                (new Coords(179, 275), new Coords(329, 447)),
+                (new Coords(283, 258), new Coords(463, 736)),
+                (new Coords(286, 136), new Coords(688, 741)),
+                (new Coords(179, 275), new Coords(407, 669)),
+                (new Coords(135, 669), new Coords(6, 218)),
+                (new Coords(591, 555), new Coords(561, 140))}),
+        };
 
         public static bool checkCoords(List<long> abm, Coords xy)
         {
