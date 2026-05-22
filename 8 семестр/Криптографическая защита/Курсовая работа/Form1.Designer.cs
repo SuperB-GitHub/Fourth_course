@@ -154,19 +154,6 @@ namespace Курсовая_работа
             TP_ModeMech = new TabPage();
             tableLayoutPanel44 = new TableLayoutPanel();
             tableLayoutPanel45 = new TableLayoutPanel();
-            Bulb_Z = new YellowBulb();
-            Bulb_Y = new YellowBulb();
-            Bulb_X = new YellowBulb();
-            Bulb_W = new YellowBulb();
-            Bulb_V = new YellowBulb();
-            Bulb_U = new YellowBulb();
-            Bulb_T = new YellowBulb();
-            Bulb_S = new YellowBulb();
-            Bulb_R = new YellowBulb();
-            Bulb_Q = new YellowBulb();
-            Bulb_P = new YellowBulb();
-            Bulb_O = new YellowBulb();
-            Bulb_N = new YellowBulb();
             label54 = new Label();
             label53 = new Label();
             label52 = new Label();
@@ -180,18 +167,6 @@ namespace Курсовая_работа
             label44 = new Label();
             label43 = new Label();
             label42 = new Label();
-            Bulb_M = new YellowBulb();
-            Bulb_L = new YellowBulb();
-            Bulb_K = new YellowBulb();
-            Bulb_J = new YellowBulb();
-            Bulb_I = new YellowBulb();
-            Bulb_H = new YellowBulb();
-            Bulb_G = new YellowBulb();
-            Bulb_F = new YellowBulb();
-            Bulb_E = new YellowBulb();
-            Bulb_D = new YellowBulb();
-            Bulb_C = new YellowBulb();
-            Bulb_B = new YellowBulb();
             label41 = new Label();
             label40 = new Label();
             label39 = new Label();
@@ -205,7 +180,6 @@ namespace Курсовая_работа
             label31 = new Label();
             label30 = new Label();
             label29 = new Label();
-            Bulb_A = new YellowBulb();
             tableLayoutPanel46 = new TableLayoutPanel();
             groupBox7 = new GroupBox();
             RTB_Notebook = new RichTextBox();
@@ -1848,7 +1822,7 @@ namespace Курсовая_работа
             BTN_StepEnDe.Name = "BTN_StepEnDe";
             BTN_StepEnDe.Size = new Size(151, 33);
             BTN_StepEnDe.TabIndex = 1;
-            BTN_StepEnDe.Text = "Поэтапно ";
+            BTN_StepEnDe.Text = "Поэтапно";
             BTN_StepEnDe.UseVisualStyleBackColor = false;
             BTN_StepEnDe.Click += BTN_StepEnDe_Click;
             // 
@@ -1916,19 +1890,6 @@ namespace Курсовая_работа
             tableLayoutPanel45.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.692309F));
             tableLayoutPanel45.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.692309F));
             tableLayoutPanel45.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7.692309F));
-            tableLayoutPanel45.Controls.Add(Bulb_Z, 12, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_Y, 11, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_X, 10, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_W, 9, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_V, 8, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_U, 7, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_T, 6, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_S, 5, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_R, 4, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_Q, 3, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_P, 2, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_O, 1, 3);
-            tableLayoutPanel45.Controls.Add(Bulb_N, 0, 3);
             tableLayoutPanel45.Controls.Add(label54, 12, 2);
             tableLayoutPanel45.Controls.Add(label53, 11, 2);
             tableLayoutPanel45.Controls.Add(label52, 10, 2);
@@ -1942,18 +1903,6 @@ namespace Курсовая_работа
             tableLayoutPanel45.Controls.Add(label44, 2, 2);
             tableLayoutPanel45.Controls.Add(label43, 1, 2);
             tableLayoutPanel45.Controls.Add(label42, 0, 2);
-            tableLayoutPanel45.Controls.Add(Bulb_M, 12, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_L, 11, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_K, 10, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_J, 9, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_I, 8, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_H, 7, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_G, 6, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_F, 5, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_E, 4, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_D, 3, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_C, 2, 1);
-            tableLayoutPanel45.Controls.Add(Bulb_B, 1, 1);
             tableLayoutPanel45.Controls.Add(label41, 12, 0);
             tableLayoutPanel45.Controls.Add(label40, 11, 0);
             tableLayoutPanel45.Controls.Add(label39, 10, 0);
@@ -1967,7 +1916,6 @@ namespace Курсовая_работа
             tableLayoutPanel45.Controls.Add(label31, 2, 0);
             tableLayoutPanel45.Controls.Add(label30, 1, 0);
             tableLayoutPanel45.Controls.Add(label29, 0, 0);
-            tableLayoutPanel45.Controls.Add(Bulb_A, 0, 1);
             tableLayoutPanel45.Dock = DockStyle.Fill;
             tableLayoutPanel45.Location = new Point(3, 3);
             tableLayoutPanel45.Name = "tableLayoutPanel45";
@@ -1978,123 +1926,6 @@ namespace Курсовая_работа
             tableLayoutPanel45.RowStyles.Add(new RowStyle(SizeType.Percent, 34F));
             tableLayoutPanel45.Size = new Size(858, 334);
             tableLayoutPanel45.TabIndex = 1;
-            // 
-            // Bulb_Z
-            // 
-            Bulb_Z.BackColor = Color.Transparent;
-            Bulb_Z.Dock = DockStyle.Fill;
-            Bulb_Z.Location = new Point(795, 222);
-            Bulb_Z.Name = "Bulb_Z";
-            Bulb_Z.Size = new Size(60, 60);
-            Bulb_Z.TabIndex = 51;
-            // 
-            // Bulb_Y
-            // 
-            Bulb_Y.BackColor = Color.Transparent;
-            Bulb_Y.Dock = DockStyle.Fill;
-            Bulb_Y.Location = new Point(729, 222);
-            Bulb_Y.Name = "Bulb_Y";
-            Bulb_Y.Size = new Size(60, 60);
-            Bulb_Y.TabIndex = 50;
-            // 
-            // Bulb_X
-            // 
-            Bulb_X.BackColor = Color.Transparent;
-            Bulb_X.Dock = DockStyle.Fill;
-            Bulb_X.Location = new Point(663, 222);
-            Bulb_X.Name = "Bulb_X";
-            Bulb_X.Size = new Size(60, 60);
-            Bulb_X.TabIndex = 49;
-            // 
-            // Bulb_W
-            // 
-            Bulb_W.BackColor = Color.Transparent;
-            Bulb_W.Dock = DockStyle.Fill;
-            Bulb_W.Location = new Point(597, 222);
-            Bulb_W.Name = "Bulb_W";
-            Bulb_W.Size = new Size(60, 60);
-            Bulb_W.TabIndex = 48;
-            // 
-            // Bulb_V
-            // 
-            Bulb_V.BackColor = Color.Transparent;
-            Bulb_V.Dock = DockStyle.Fill;
-            Bulb_V.Location = new Point(531, 222);
-            Bulb_V.Name = "Bulb_V";
-            Bulb_V.Size = new Size(60, 60);
-            Bulb_V.TabIndex = 47;
-            // 
-            // Bulb_U
-            // 
-            Bulb_U.BackColor = Color.Transparent;
-            Bulb_U.Dock = DockStyle.Fill;
-            Bulb_U.Location = new Point(465, 222);
-            Bulb_U.Name = "Bulb_U";
-            Bulb_U.Size = new Size(60, 60);
-            Bulb_U.TabIndex = 46;
-            // 
-            // Bulb_T
-            // 
-            Bulb_T.BackColor = Color.Transparent;
-            Bulb_T.Dock = DockStyle.Fill;
-            Bulb_T.Location = new Point(399, 222);
-            Bulb_T.Name = "Bulb_T";
-            Bulb_T.Size = new Size(60, 60);
-            Bulb_T.TabIndex = 45;
-            // 
-            // Bulb_S
-            // 
-            Bulb_S.BackColor = Color.Transparent;
-            Bulb_S.Dock = DockStyle.Fill;
-            Bulb_S.Location = new Point(333, 222);
-            Bulb_S.Name = "Bulb_S";
-            Bulb_S.Size = new Size(60, 60);
-            Bulb_S.TabIndex = 44;
-            // 
-            // Bulb_R
-            // 
-            Bulb_R.BackColor = Color.Transparent;
-            Bulb_R.Dock = DockStyle.Fill;
-            Bulb_R.Location = new Point(267, 222);
-            Bulb_R.Name = "Bulb_R";
-            Bulb_R.Size = new Size(60, 60);
-            Bulb_R.TabIndex = 43;
-            // 
-            // Bulb_Q
-            // 
-            Bulb_Q.BackColor = Color.Transparent;
-            Bulb_Q.Dock = DockStyle.Fill;
-            Bulb_Q.Location = new Point(201, 222);
-            Bulb_Q.Name = "Bulb_Q";
-            Bulb_Q.Size = new Size(60, 60);
-            Bulb_Q.TabIndex = 42;
-            // 
-            // Bulb_P
-            // 
-            Bulb_P.BackColor = Color.Transparent;
-            Bulb_P.Dock = DockStyle.Fill;
-            Bulb_P.Location = new Point(135, 222);
-            Bulb_P.Name = "Bulb_P";
-            Bulb_P.Size = new Size(60, 60);
-            Bulb_P.TabIndex = 41;
-            // 
-            // Bulb_O
-            // 
-            Bulb_O.BackColor = Color.Transparent;
-            Bulb_O.Dock = DockStyle.Fill;
-            Bulb_O.Location = new Point(69, 222);
-            Bulb_O.Name = "Bulb_O";
-            Bulb_O.Size = new Size(60, 60);
-            Bulb_O.TabIndex = 40;
-            // 
-            // Bulb_N
-            // 
-            Bulb_N.BackColor = Color.Transparent;
-            Bulb_N.Dock = DockStyle.Fill;
-            Bulb_N.Location = new Point(3, 222);
-            Bulb_N.Name = "Bulb_N";
-            Bulb_N.Size = new Size(60, 60);
-            Bulb_N.TabIndex = 39;
             // 
             // label54
             // 
@@ -2252,114 +2083,6 @@ namespace Курсовая_работа
             label42.Text = "N";
             label42.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // Bulb_M
-            // 
-            Bulb_M.BackColor = Color.Transparent;
-            Bulb_M.Dock = DockStyle.Fill;
-            Bulb_M.Location = new Point(795, 56);
-            Bulb_M.Name = "Bulb_M";
-            Bulb_M.Size = new Size(60, 60);
-            Bulb_M.TabIndex = 25;
-            // 
-            // Bulb_L
-            // 
-            Bulb_L.BackColor = Color.Transparent;
-            Bulb_L.Dock = DockStyle.Fill;
-            Bulb_L.Location = new Point(729, 56);
-            Bulb_L.Name = "Bulb_L";
-            Bulb_L.Size = new Size(60, 60);
-            Bulb_L.TabIndex = 24;
-            // 
-            // Bulb_K
-            // 
-            Bulb_K.BackColor = Color.Transparent;
-            Bulb_K.Dock = DockStyle.Fill;
-            Bulb_K.Location = new Point(663, 56);
-            Bulb_K.Name = "Bulb_K";
-            Bulb_K.Size = new Size(60, 60);
-            Bulb_K.TabIndex = 23;
-            // 
-            // Bulb_J
-            // 
-            Bulb_J.BackColor = Color.Transparent;
-            Bulb_J.Dock = DockStyle.Fill;
-            Bulb_J.Location = new Point(597, 56);
-            Bulb_J.Name = "Bulb_J";
-            Bulb_J.Size = new Size(60, 60);
-            Bulb_J.TabIndex = 22;
-            // 
-            // Bulb_I
-            // 
-            Bulb_I.BackColor = Color.Transparent;
-            Bulb_I.Dock = DockStyle.Fill;
-            Bulb_I.Location = new Point(531, 56);
-            Bulb_I.Name = "Bulb_I";
-            Bulb_I.Size = new Size(60, 60);
-            Bulb_I.TabIndex = 21;
-            // 
-            // Bulb_H
-            // 
-            Bulb_H.BackColor = Color.Transparent;
-            Bulb_H.Dock = DockStyle.Fill;
-            Bulb_H.Location = new Point(465, 56);
-            Bulb_H.Name = "Bulb_H";
-            Bulb_H.Size = new Size(60, 60);
-            Bulb_H.TabIndex = 20;
-            // 
-            // Bulb_G
-            // 
-            Bulb_G.BackColor = Color.Transparent;
-            Bulb_G.Dock = DockStyle.Fill;
-            Bulb_G.Location = new Point(399, 56);
-            Bulb_G.Name = "Bulb_G";
-            Bulb_G.Size = new Size(60, 60);
-            Bulb_G.TabIndex = 19;
-            // 
-            // Bulb_F
-            // 
-            Bulb_F.BackColor = Color.Transparent;
-            Bulb_F.Dock = DockStyle.Fill;
-            Bulb_F.Location = new Point(333, 56);
-            Bulb_F.Name = "Bulb_F";
-            Bulb_F.Size = new Size(60, 60);
-            Bulb_F.TabIndex = 18;
-            // 
-            // Bulb_E
-            // 
-            Bulb_E.BackColor = Color.Transparent;
-            Bulb_E.Dock = DockStyle.Fill;
-            Bulb_E.Location = new Point(267, 56);
-            Bulb_E.Name = "Bulb_E";
-            Bulb_E.Size = new Size(60, 60);
-            Bulb_E.TabIndex = 17;
-            // 
-            // Bulb_D
-            // 
-            Bulb_D.BackColor = Color.Transparent;
-            Bulb_D.Dock = DockStyle.Fill;
-            Bulb_D.Location = new Point(201, 56);
-            Bulb_D.Name = "Bulb_D";
-            Bulb_D.Size = new Size(60, 60);
-            Bulb_D.TabIndex = 16;
-            // 
-            // Bulb_C
-            // 
-            Bulb_C.BackColor = Color.Transparent;
-            Bulb_C.Dock = DockStyle.Fill;
-            Bulb_C.Location = new Point(135, 56);
-            Bulb_C.Name = "Bulb_C";
-            Bulb_C.Size = new Size(60, 60);
-            Bulb_C.TabIndex = 15;
-            // 
-            // Bulb_B
-            // 
-            Bulb_B.BackColor = Color.Transparent;
-            Bulb_B.Dock = DockStyle.Fill;
-            Bulb_B.Location = new Point(69, 56);
-            Bulb_B.Name = "Bulb_B";
-            Bulb_B.Size = new Size(60, 60);
-            Bulb_B.TabIndex = 14;
-            // 
             // label41
             // 
             label41.AutoSize = true;
@@ -2515,15 +2238,6 @@ namespace Курсовая_работа
             label29.TabIndex = 0;
             label29.Text = "A";
             label29.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Bulb_A
-            // 
-            Bulb_A.BackColor = Color.Transparent;
-            Bulb_A.Dock = DockStyle.Fill;
-            Bulb_A.Location = new Point(3, 56);
-            Bulb_A.Name = "Bulb_A";
-            Bulb_A.Size = new Size(60, 60);
-            Bulb_A.TabIndex = 13;
             // 
             // tableLayoutPanel46
             // 

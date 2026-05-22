@@ -323,7 +323,7 @@ namespace Курсовая_работа
 
             if (countLetters == queue)
             {
-                BTN_StepEnDe.Text = "Поэтапно шифр/расшифр";
+                BTN_StepEnDe.Text = "Поэтапно";
                 countLetters = 0;
                 queue = 0;
             }
@@ -337,6 +337,10 @@ namespace Курсовая_работа
             CB_SP_RR.SelectedIndex = 0;
             CB_SP_MR.SelectedIndex = 0;
             CB_SP_LR.SelectedIndex = 0;
+            BTN_StepEnDe.Text = "Поэтапно";
+            countLetters = 0;
+            queue = 0;
+            ProgBar.Value = 0;
         }
         #endregion
 
